@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint pages"
+    "type-check": "tsc",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "license": "MIT",
   "devDependencies": {

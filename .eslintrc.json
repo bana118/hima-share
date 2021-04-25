@@ -17,7 +17,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "rules": {},
+  "rules": { "react/react-in-jsx-scope": "off" },
   "settings": {
     "react": {
       "version": "detect"
