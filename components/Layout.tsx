@@ -36,7 +36,7 @@ const Layout = ({
     {children}
     <footer>
       <hr />
-      <span>I&quot;m here to stay (Footer)</span>
+      <span>I&#39;m here to stay (Footer)</span>
     </footer>
   </div>
 );
