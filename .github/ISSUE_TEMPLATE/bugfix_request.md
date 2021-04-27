@@ -1,12 +1,14 @@
 ---
-name: 機能追加/改善
-about: 機能の追加，改善の提案
+name: バグ修正
+about: バグ修正の提案
 title: ""
-labels: "enhancement"
+labels: "bug"
 assignees: ""
 ---
 
 # 概要
+
+# 再現方法
 
 # 関連するコード
 
