@@ -9,7 +9,6 @@ const RegisterUserPage = (): JSX.Element => {
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // don't redirect the page
     await db.collection("users").withConverter(userConverter).add({
-      id: "",
       name: inputName,
     });
     setInputName("");

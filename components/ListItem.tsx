@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
 
-import { User } from "../interfaces";
+import { UserWithId } from "../interfaces";
 
 type Props = {
-  data: User;
+  data: UserWithId;
 };
 
 const ListItem = ({ data }: Props): JSX.Element => (

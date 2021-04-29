@@ -6,6 +6,10 @@
 import firebase from "firebase/app";
 
 export type User = {
+  name: string;
+};
+
+export type UserWithId = {
   id: string;
   name: string;
 };
@@ -19,6 +23,6 @@ export const userConverter = {
     options: firebase.firestore.SnapshotOptions
   ): User {
     const data = snapshot.data(options);
-    return { id: snapshot.id, name: data.name };
+    return { name: data.name };
   },
 };

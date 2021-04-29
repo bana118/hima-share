@@ -1,13 +1,13 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { User, userConverter } from "../../interfaces";
+import { userConverter, UserWithId } from "../../interfaces";
 import Layout from "../../components/Layout";
 import ListDetail from "../../components/ListDetail";
 
 import { db } from "../../utils/firebase";
 
 type Props = {
-  item?: User;
+  item?: UserWithId;
   errors?: string;
 };
 
@@ -40,10 +40,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .collection("users")
     .withConverter(userConverter)
     .get();
-  const items: User[] = querySnapshot.docs.map((doc) => {
-    return { id: doc.data().id, name: doc.data().name };
+  const usersWithId = querySnapshot.docs.map((doc) => {
+    return { id: doc.id, name: doc.data().name };
   });
-  const paths = items.map((user) => ({
+  const paths = usersWithId.map((user) => ({
     params: { id: user.id },
   }));
 
@@ -62,10 +62,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       .collection("users")
       .withConverter(userConverter)
       .get();
-    const items: User[] = querySnapshot.docs.map((doc) => {
-      return { id: doc.data().id, name: doc.data().name };
+    const usersWithId = querySnapshot.docs.map((doc) => {
+      return { id: doc.id, name: doc.data().name };
     });
-    const item = items.find((data) => data.id === id);
+    const item = usersWithId.find((user) => user.id === id);
     // By returning { props: item }, the StaticPropsDetail component
     // will receive `item` as a prop at build time
     return { props: { item } };

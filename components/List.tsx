@@ -1,9 +1,9 @@
 import * as React from "react";
 import ListItem from "./ListItem";
-import { User } from "../interfaces";
+import { UserWithId } from "../interfaces";
 
 type Props = {
-  items: User[];
+  items: UserWithId[];
 };
 
 const List = ({ items }: Props): JSX.Element => (

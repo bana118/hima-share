@@ -1,14 +1,14 @@
 import { GetStaticProps } from "next";
 import Link from "next/link";
 
-import { User, userConverter } from "../../interfaces";
+import { userConverter, UserWithId } from "../../interfaces";
 import Layout from "../../components/Layout";
 import List from "../../components/List";
 
 import { db } from "../../utils/firebase";
 
 type Props = {
-  items: User[];
+  items: UserWithId[];
 };
 
 const WithFirebaseProps = ({ items }: Props): JSX.Element => (
@@ -35,8 +35,8 @@ export const getStaticProps: GetStaticProps = async () => {
     .collection("users")
     .withConverter(userConverter)
     .get();
-  const items: User[] = querySnapshot.docs.map((doc) => {
-    return { id: doc.data().id, name: doc.data().name };
+  const items: UserWithId[] = querySnapshot.docs.map((doc) => {
+    return { id: doc.id, name: doc.data().name };
   });
   return { props: { items } };
 };
