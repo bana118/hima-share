@@ -1,7 +1,7 @@
 #!/bin/bash
 # Check if the version of package.json is already in the git tag
 VERSION=$(npx -c 'echo "$npm_package_version"')
-COUNT=$(git tag | grep -c ${VERSION})
+COUNT=$(git tag | grep -c v${VERSION}$)
 
 if [ ${COUNT} -eq 0 ]; then
     printf '%s\n' "OK v${VERSION} does not exist" >&1
