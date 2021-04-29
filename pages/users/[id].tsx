@@ -1,9 +1,10 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 
-import { User } from "../../interfaces";
-import { sampleUserData } from "../../utils/sample-data";
+import { User, userConverter } from "../../interfaces";
 import Layout from "../../components/Layout";
 import ListDetail from "../../components/ListDetail";
+
+import { db } from "../../utils/firebase";
 
 type Props = {
   item?: User;
@@ -35,9 +36,15 @@ const StaticPropsDetail = ({ item, errors }: Props): JSX.Element => {
 export default StaticPropsDetail;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get the paths we want to pre-render based on users
-  const paths = sampleUserData.map((user) => ({
-    params: { id: user.id.toString() },
+  const querySnapshot = await db
+    .collection("users")
+    .withConverter(userConverter)
+    .get();
+  const items: User[] = querySnapshot.docs.map((doc) => {
+    return { id: doc.data().id, name: doc.data().name };
+  });
+  const paths = items.map((user) => ({
+    params: { id: user.id },
   }));
 
   // We'll pre-render only these paths at build time.
@@ -51,7 +58,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const id = params?.id;
-    const item = sampleUserData.find((data) => data.id === Number(id));
+    const querySnapshot = await db
+      .collection("users")
+      .withConverter(userConverter)
+      .get();
+    const items: User[] = querySnapshot.docs.map((doc) => {
+      return { id: doc.data().id, name: doc.data().name };
+    });
+    const item = items.find((data) => data.id === id);
     // By returning { props: item }, the StaticPropsDetail component
     // will receive `item` as a prop at build time
     return { props: { item } };

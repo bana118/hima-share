@@ -6,7 +6,7 @@
 
 ```
 yarn install --frozen-lockfile
-npm run dev
+yarn dev
 ```
 
 http://localhost:3000 にアクセス

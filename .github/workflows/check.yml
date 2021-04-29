@@ -29,6 +29,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint
-        run: npm run lint
+        run: yarn lint
       - name: Check git tag
         run: bash scripts/git_tag_checker.sh
