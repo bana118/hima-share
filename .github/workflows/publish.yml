@@ -1,17 +1,12 @@
-name: Node
+name: Publish
 
 on:
   push:
     branches:
       - main
-      - develop
-  pull_request:
-    branches:
-      - main
-      - develop
 
 jobs:
-  lint_and_test:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +15,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Lint
-        run: npm run lint
+      - name: Set git tag
+        run: |-
+          echo v$(npx -c 'echo "$npm_package_version"') > TAG_NAME
+          git tag $(cat TAG_NAME)
+          git push origin $(cat TAG_NAME)
