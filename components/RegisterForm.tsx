@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { auth } from "../utils/firebase";
 
 type InputsType = {
   email: string;
@@ -33,8 +34,8 @@ export const RegisterForm = (): JSX.Element => {
     handleSubmit,
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
-  const registerUser = (data: InputsType) => {
-    console.log(data);
+  const registerUser = async (data: InputsType) => {
+    await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>
@@ -85,7 +86,7 @@ export const RegisterForm = (): JSX.Element => {
       </Form.Group>
 
       <Button variant="primary" type="submit">
-        Submit
+        登録
       </Button>
     </Form>
   );
