@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { auth } from "../utils/firebase";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 type InputsType = {
   email: string;
@@ -14,6 +16,8 @@ export const LoginForm = (): JSX.Element => {
     setError,
     formState: { errors },
   } = useForm<InputsType>();
+  const authContext = useContext(AuthContext);
+  console.log(authContext.user);
   const login = (data: InputsType) => {
     auth
       .signInWithEmailAndPassword(data["email"], data["password"])
