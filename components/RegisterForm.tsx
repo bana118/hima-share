@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import firebase from "firebase/app";
+import Router from "next/router";
 
 type InputsType = {
   email: string;
@@ -59,6 +60,7 @@ export const RegisterForm = (): JSX.Element => {
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
     await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
+    Router.push("/");
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>

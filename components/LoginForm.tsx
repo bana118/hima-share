@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { auth } from "../utils/firebase";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import Router from "next/router";
 
 type InputsType = {
   email: string;
@@ -17,12 +18,11 @@ export const LoginForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>();
   const authContext = useContext(AuthContext);
-  console.log(authContext.user);
   const login = (data: InputsType) => {
     auth
       .signInWithEmailAndPassword(data["email"], data["password"])
-      .then((userCredential) => {
-        console.log(userCredential.user);
+      .then(() => {
+        Router.push("/");
       })
       .catch(() => {
         const errorMessage =
