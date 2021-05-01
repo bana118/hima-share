@@ -27,13 +27,9 @@ const Layout = ({
           <a>About</a>
         </Link>{" "}
         |{" "}
-        <Link href="/users">
-          <a>Users List</a>
+        <Link href="/login">
+          <a>Login</a>
         </Link>{" "}
-        |{" "}
-        <Link href="/register">
-          <a>Register User</a>
-        </Link>
       </nav>
     </header>
     {children}

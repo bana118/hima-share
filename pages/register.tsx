@@ -2,19 +2,18 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 
-const RegisterPage = (): JSX.Element => {
+const LogingPage = (): JSX.Element => {
   return (
-    <Layout title="Register User | Next.js + TypeScript Example">
-      <h1>Register User</h1>
-      <p>Firebase examle</p>
+    <Layout title="Register">
+      <h1>Register</h1>
       <RegisterForm />
       <p>
-        <Link href="/">
-          <a>Go home</a>
+        <Link href="/login">
+          <a>ログイン</a>
         </Link>
       </p>
     </Layout>
   );
 };
 
-export default RegisterPage;
+export default LogingPage;

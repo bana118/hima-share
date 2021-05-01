@@ -14,7 +14,6 @@ const config = {
 };
 
 // initializeを複数回走らせない
-console.log(process.env);
 if (firebase.apps.length === 0) {
   firebase.initializeApp(config);
 }
