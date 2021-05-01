@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
+import firebase from "firebase/app";
 
 type InputsType = {
   email: string;
@@ -14,7 +15,29 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .email("メールアドレスの形式に誤りがあります")
-    .required("メールアドレスは必須です"),
+    .required("メールアドレスは必須です")
+    .test(
+      "email-test",
+      "入力したメールアドレスは既に登録されています",
+      async (value) => {
+        if (value == null) {
+          return true;
+        } else {
+          const providers = await auth.fetchSignInMethodsForEmail(value);
+          const isAlreadyUsed =
+            providers.findIndex(
+              (p) =>
+                p ===
+                firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD
+            ) !== -1;
+          if (isAlreadyUsed) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    ),
   password: yup
     .string()
     .min(8, "パスワードは8文字以上に設定してください")
