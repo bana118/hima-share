@@ -110,7 +110,7 @@ export const RegisterForm = (): JSX.Element => {
         )}
       </Form.Group>
 
-      <Button variant="primary" type="submit">
+      <Button variant="accent" type="submit">
         登録
       </Button>
     </Form>

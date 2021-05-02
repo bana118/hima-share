@@ -64,7 +64,7 @@ export const LoginForm = (): JSX.Element => {
         )}
       </Form.Group>
 
-      <Button variant="primary" type="submit">
+      <Button variant="accent" type="submit">
         ログイン
       </Button>
     </Form>
