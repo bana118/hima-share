@@ -1,0 +1,12 @@
+// Custom Bootstrap theme
+
+$theme-colors: (
+  "main": #ff0033,
+  "main-light": #ffa4b6,
+  "main-dark": #920122,
+  "accent": #06c755,
+  "accent-light": #80f8b1,
+  "accent-dark": #005723,
+);
+
+@import "bootstrap";

@@ -27,24 +27,26 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <header>
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="main" variant="dark">
           <Link href="/" passHref>
             <Navbar.Brand>Hima Share</Navbar.Brand>
           </Link>
           <Nav className="mr-auto">
             <Link href="/about" passHref>
-              <Nav.Link>About</Nav.Link>
+              <Nav.Link active>About</Nav.Link>
             </Link>
           </Nav>
           {authContext.user && (
             <Nav>
-              <Nav.Link onClick={logout}>Logout</Nav.Link>
+              <Nav.Link active onClick={logout}>
+                Logout
+              </Nav.Link>
             </Nav>
           )}
           {!authContext.user && (
             <Nav>
               <Link href="/login" passHref>
-                <Nav.Link>Login</Nav.Link>
+                <Nav.Link active>Login</Nav.Link>
               </Link>
             </Nav>
           )}

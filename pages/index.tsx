@@ -20,7 +20,7 @@ const IndexPage = (): JSX.Element => {
       )}
       {!user && (
         <React.Fragment>
-          <p>You are not logged in yet</p>
+          <p className="text-main">You are not logged in yet</p>
           <p>
             <Link href="/login">
               <a>Login</a>
