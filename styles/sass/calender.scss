@@ -2,6 +2,12 @@
 
 // Customize react-calender styles
 
+// Set calender text fonts
+
+.react-calendar {
+  font-family: "Roboto", "Noto Sans JP", Meiryo, sans-serif;
+}
+
 // Disable active color
 
 .react-calendar__tile--active {
