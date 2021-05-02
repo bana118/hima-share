@@ -31,26 +31,23 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           <Link href="/" passHref>
             <Navbar.Brand>Hima Share</Navbar.Brand>
           </Link>
-          <Navbar.Toggle />
-          <Navbar.Collapse>
+          <Nav className="mr-auto">
+            <Link href="/about" passHref>
+              <Nav.Link>About</Nav.Link>
+            </Link>
+          </Nav>
+          {authContext.user && (
             <Nav>
-              <Link href="/about" passHref>
-                <Nav.Link>About</Nav.Link>
+              <Nav.Link onClick={logout}>Logout</Nav.Link>
+            </Nav>
+          )}
+          {!authContext.user && (
+            <Nav>
+              <Link href="/login" passHref>
+                <Nav.Link>Login</Nav.Link>
               </Link>
             </Nav>
-            {authContext.user && (
-              <Nav>
-                <Nav.Link onClick={logout}>Logout</Nav.Link>
-              </Nav>
-            )}
-            {!authContext.user && (
-              <Nav>
-                <Link href="/login" passHref>
-                  <Nav.Link>Login</Nav.Link>
-                </Link>
-              </Nav>
-            )}
-          </Navbar.Collapse>
+          )}
         </Navbar>
       </header>
       {children}
