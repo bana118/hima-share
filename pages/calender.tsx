@@ -3,8 +3,7 @@ import { useState } from "react";
 
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
-import { DateStatus } from "../components/StatusCalender";
-import { StatusCalender } from "../components/StatusCalender";
+import { DateStatus, StatusCalender } from "../components/StatusCalendar";
 
 const CalenderPage = (): JSX.Element => {
   const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);

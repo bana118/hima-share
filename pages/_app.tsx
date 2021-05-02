@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-calendar/dist/Calendar.css";
 import { useEffect } from "react";
 import { useState } from "react";
 import firebase from "firebase/app";
