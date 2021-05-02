@@ -32,6 +32,7 @@ export const StatusCalender = ({
     }
   };
 
+  // TODO "dd日" ではなく "dd" だけ表示する
   return (
     <Calendar
       onClickDay={updateDateStatusList}
