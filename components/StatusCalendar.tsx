@@ -31,15 +31,13 @@ export const StatusCalender = ({
       setDateStatusList([...dateStatusList]);
     }
   };
-  const dateList = dateStatusList.map((dateStatus) => dateStatus.date);
 
   return (
     <Calendar
-      value={dateList.length == 0 ? null : dateList}
       onClickDay={updateDateStatusList}
       locale="ja-JP"
-      tileClassName={({ date, view }) => {
-        console.log(view[0]);
+      onClickMonth={undefined}
+      tileClassName={({ date }) => {
         const dateInList = dateStatusList.find(
           (d) => d.date.getTime() == date.getTime()
         );
