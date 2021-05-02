@@ -1,6 +1,6 @@
 import Calendar from "react-calendar";
 
-type Status = "calender-free" | "calender-busy";
+type Status = "calender-free" | "calender-busy" | "calender-previous";
 
 export type DateStatus = {
   date: Date;
@@ -16,10 +16,17 @@ export const StatusCalender = ({
   dateStatusList,
   setDateStatusList,
 }: StatusCalenderProps): JSX.Element => {
+  const isPreviousDate = (date: Date) => {
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return nowDate > date;
+  };
+
   const updateDateStatusList = (date: Date) => {
     const index = dateStatusList.findIndex(
       (ds) => ds.date.getTime() == date.getTime()
     );
+    if (isPreviousDate(date)) return;
     if (index == -1) {
       const newDateStatus: DateStatus = { date: date, status: "calender-free" };
       setDateStatusList([...dateStatusList, newDateStatus]);
@@ -43,7 +50,8 @@ export const StatusCalender = ({
       showNavigation={true}
       prev2Label={null}
       next2Label={null}
-      tileClassName={({ date }) => {
+      tileClassName={({ date }): Status | null => {
+        if (isPreviousDate(date)) return "calender-previous";
         const dateInList = dateStatusList.find(
           (d) => d.date.getTime() == date.getTime()
         );
