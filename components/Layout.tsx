@@ -27,7 +27,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <header>
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="main">
           <Link href="/" passHref>
             <Navbar.Brand>Hima Share</Navbar.Brand>
           </Link>
