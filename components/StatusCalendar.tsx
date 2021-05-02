@@ -36,7 +36,12 @@ export const StatusCalender = ({
     <Calendar
       onClickDay={updateDateStatusList}
       locale="ja-JP"
-      onClickMonth={undefined}
+      minDetail="month"
+      maxDetail="month"
+      defaultView="month"
+      showNavigation={true}
+      prev2Label={null}
+      next2Label={null}
       tileClassName={({ date }) => {
         const dateInList = dateStatusList.find(
           (d) => d.date.getTime() == date.getTime()

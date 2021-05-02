@@ -29,6 +29,13 @@
   color: #757575 !important;
 }
 
+// Set background to white and text to black at year and month navigation
+
+.react-calendar__navigation__label:disabled {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
 // Add Styles for app
 
 // Set free day's text color to accent color
