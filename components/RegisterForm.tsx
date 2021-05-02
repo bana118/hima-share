@@ -8,6 +8,7 @@ import Router from "next/router";
 
 type InputsType = {
   email: string;
+  displayName: string;
   password: string;
   confirmPassword: string;
 };
@@ -59,7 +60,17 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
+    await auth.createUserWithEmailAndPassword(data["email"], data["password"])
+    var user = firebase.auth().currentUser;
+    if (user) {
+      // User is signed in.
+      await user.updateProfile({
+        displayName: data["displayName"]
+      })
+    } else {
+      // No user is signed in.
+    }
+
     Router.push("/");
   };
   return (
@@ -76,6 +87,14 @@ export const RegisterForm = (): JSX.Element => {
             {errors.email.message}
           </Form.Control.Feedback>
         )}
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Display name</Form.Label>
+        <Form.Control
+          type="displayName"
+          {...register("displayName")}
+        />
       </Form.Group>
 
       <Form.Group>
