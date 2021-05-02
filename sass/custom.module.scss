@@ -1,0 +1,12 @@
+// Custom Bootstrap theme
+
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+
+$theme-colors: (
+  "main": #ff0033,
+  "main-light": #ffa4b6,
+  "main-dark": #920122,
+  "accent": #00ffb8,
+);
