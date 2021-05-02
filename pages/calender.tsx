@@ -4,7 +4,7 @@ import { useState } from "react";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
-import { SingleDatePicker } from "react-dates";
+import { DayPicker } from "react-dates";
 
 const CalenderPage = (): JSX.Element => {
   const [date, setDate] = useState<moment.Moment | null>(moment);
@@ -14,13 +14,7 @@ const CalenderPage = (): JSX.Element => {
       <h1>Calender</h1>
       <p>Calender example</p>
       <div>
-        <SingleDatePicker
-          date={date}
-          onDateChange={(d) => setDate(d)}
-          focused={focused}
-          onFocusChange={(f) => setFocused(f.focused)}
-          id="date"
-        />
+        <DayPicker numberOfMonths={1} />
       </div>
     </Layout>
   );
