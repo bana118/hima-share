@@ -6,7 +6,7 @@ import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 import { SingleDatePicker } from "react-dates";
 
-const RegisterPage = (): JSX.Element => {
+const CalenderPage = (): JSX.Element => {
   const [date, setDate] = useState<moment.Moment | null>(moment);
   const [focused, setFocused] = useState<boolean>(false);
   return (
@@ -26,4 +26,4 @@ const RegisterPage = (): JSX.Element => {
   );
 };
 
-export default RegisterPage;
+export default CalenderPage;
