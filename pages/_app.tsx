@@ -6,7 +6,7 @@ import { useState } from "react";
 import firebase from "firebase/app";
 import { auth } from "../utils/firebase";
 import { AuthContext } from "../context/AuthContext";
-import "../styles/sass/custom.scss";
+import "../styles/sass/bootstrap-custom.scss";
 import "../styles/sass/calender.scss";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {

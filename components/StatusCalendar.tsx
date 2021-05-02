@@ -38,7 +38,6 @@ export const StatusCalender = ({
       value={dateList.length == 0 ? null : dateList}
       onClickDay={updateDateStatusList}
       locale="ja-JP"
-      calendarType="US"
       tileClassName={({ date, view }) => {
         console.log(view[0]);
         const dateInList = dateStatusList.find(
