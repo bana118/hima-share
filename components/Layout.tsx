@@ -4,20 +4,20 @@ import Head from "next/head";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { auth } from "../utils/firebase";
+import { Navbar, Nav } from "react-bootstrap";
+import Router from "next/router";
 
 type Props = {
   children?: ReactNode;
   title?: string;
 };
 
-const Layout = ({
-  children,
-  title = "This is the default title",
-}: Props): JSX.Element => {
+const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
   const authContext = useContext(AuthContext);
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
     await auth.signOut();
+    Router.push("/");
   };
   return (
     <div>
@@ -27,26 +27,28 @@ const Layout = ({
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <header>
-        <nav>
-          <Link href="/">
-            <a>Home</a>
-          </Link>{" "}
-          |{" "}
-          <Link href="/about">
-            <a>About</a>
-          </Link>{" "}
-          |{" "}
+        <Navbar bg="light" expand="lg">
+          <Link href="/" passHref>
+            <Navbar.Brand>Hima Share</Navbar.Brand>
+          </Link>
+          <Nav className="mr-auto">
+            <Link href="/about" passHref>
+              <Nav.Link>About</Nav.Link>
+            </Link>
+          </Nav>
           {authContext.user && (
-            <a href="" onClick={logout}>
-              Logout
-            </a>
+            <Nav>
+              <Nav.Link onClick={logout}>Logout</Nav.Link>
+            </Nav>
           )}
           {!authContext.user && (
-            <Link href="/login">
-              <a>Login</a>
-            </Link>
+            <Nav>
+              <Link href="/login" passHref>
+                <Nav.Link>Login</Nav.Link>
+              </Link>
+            </Nav>
           )}
-        </nav>
+        </Navbar>
       </header>
       {children}
       <footer>
