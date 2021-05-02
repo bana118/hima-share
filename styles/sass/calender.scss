@@ -21,11 +21,11 @@
 
 // Set Saturday's text color to blue
 
-.react-calendar .react-calendar__tile:nth-child(7n-1) {
+.react-calendar__tile:nth-child(7n-1) {
   color: #0000ff;
 }
 
-.react-calendar .react-calendar__month-view__days__day--neighboringMonth {
+.react-calendar__month-view__days__day--neighboringMonth {
   color: #757575 !important;
 }
 
@@ -58,12 +58,4 @@
 
 .calender-busy:hover {
   background-color: $main-dark-color !important;
-}
-
-.calender-previous {
-  color: #757575 !important;
-}
-
-.calender-previous:hover {
-  background-color: #ffffff !important;
 }
