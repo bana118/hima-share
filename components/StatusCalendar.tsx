@@ -1,5 +1,4 @@
 import Calendar from "react-calendar";
-import { useState } from "react";
 
 type Status = "calender-free" | "calender-busy";
 

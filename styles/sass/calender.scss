@@ -1,9 +1,48 @@
 @import "./variables";
 
-.calender-free {
-  background-color: $accent-color;
+// Customize react-calender styles
+
+// Disable active color
+
+.react-calendar__tile--active {
+  background-color: #ffffff;
+  color: #000000;
 }
 
+.react-calendar__tile--active:hover {
+  background-color: #e6e6e6 !important;
+}
+
+// Set Saturday's text color to blue
+
+.react-calendar .react-calendar__tile:nth-child(7n) {
+  color: #0000ff;
+}
+
+.react-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575 !important;
+}
+
+// Add Styles for app
+
+// Set free day's text color to accent color
+
+.calender-free {
+  background-color: $accent-color !important;
+  color: #ffffff !important;
+}
+
+.calender-free:hover {
+  background-color: $accent-dark-color !important;
+}
+
+// Set busy day's text color to may color
+
 .calender-busy {
-  background-color: $main-color;
+  background-color: $main-color !important;
+  color: #ffffff !important;
+}
+
+.calender-busy:hover {
+  background-color: $main-dark-color !important;
 }
