@@ -1,8 +1,6 @@
 import Layout from "../components/Layout";
 import { useState } from "react";
 
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
 import { DateStatus, StatusCalender } from "../components/StatusCalendar";
 
 const CalenderPage = (): JSX.Element => {
