@@ -1,8 +1,8 @@
 @import "./variables";
 
-// Customize react-calender styles
+// Customize react-calendar styles
 
-// Set calender text fonts
+// Set calendar text fonts
 
 .react-calendar {
   font-family: "Roboto", "Noto Sans JP", Meiryo, sans-serif;
@@ -40,22 +40,22 @@
 
 // Set free day's text color to accent color
 
-.calender-free {
+.calendar-free {
   background-color: $accent-color !important;
   color: #ffffff !important;
 }
 
-.calender-free:hover {
+.calendar-free:hover {
   background-color: $accent-dark-color !important;
 }
 
 // Set busy day's text color to may color
 
-.calender-busy {
+.calendar-busy {
   background-color: $main-color !important;
   color: #ffffff !important;
 }
 
-.calender-busy:hover {
+.calendar-busy:hover {
   background-color: $main-dark-color !important;
 }

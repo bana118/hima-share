@@ -1,15 +1,15 @@
 import Layout from "../components/Layout";
 import { useState } from "react";
 
-import { DateStatus, UserCalender } from "../components/UserCalendar";
+import { DateStatus, UserCalendar } from "../components/UserCalendar";
 
-const CalenderPage = (): JSX.Element => {
+const CalendarPage = (): JSX.Element => {
   const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);
   return (
-    <Layout title="Calender example">
-      <h1>Calender</h1>
-      <p>Calender example</p>
-      <UserCalender
+    <Layout title="Calendar example">
+      <h1>Calendar</h1>
+      <p>Calendar example</p>
+      <UserCalendar
         dateStatusList={dateStatusList}
         setDateStatusList={(list: DateStatus[]) => setDateStatusList(list)}
       />
@@ -17,4 +17,4 @@ const CalenderPage = (): JSX.Element => {
   );
 };
 
-export default CalenderPage;
+export default CalendarPage;

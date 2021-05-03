@@ -1,31 +1,31 @@
 import Calendar from "react-calendar";
 
-type Status = "calender-free" | "calender-busy";
+type Status = "calendar-free" | "calendar-busy";
 
 export type DateStatus = {
   date: Date;
   status: Status;
 };
 
-type UserCalenderProps = {
+type UserCalendarProps = {
   dateStatusList: DateStatus[];
   setDateStatusList: (list: DateStatus[]) => void;
 };
 
-export const UserCalender = ({
+export const UserCalendar = ({
   dateStatusList,
   setDateStatusList,
-}: UserCalenderProps): JSX.Element => {
+}: UserCalendarProps): JSX.Element => {
   const updateDateStatusList = (date: Date) => {
     const index = dateStatusList.findIndex(
       (ds) => ds.date.getTime() == date.getTime()
     );
 
     if (index == -1) {
-      const newDateStatus: DateStatus = { date: date, status: "calender-free" };
+      const newDateStatus: DateStatus = { date: date, status: "calendar-free" };
       setDateStatusList([...dateStatusList, newDateStatus]);
-    } else if (dateStatusList[index].status == "calender-free") {
-      dateStatusList[index].status = "calender-busy";
+    } else if (dateStatusList[index].status == "calendar-free") {
+      dateStatusList[index].status = "calendar-busy";
       setDateStatusList([...dateStatusList]);
     } else {
       dateStatusList.splice(index, 1);
