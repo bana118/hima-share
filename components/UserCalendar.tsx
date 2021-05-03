@@ -10,7 +10,7 @@ export const UserCalendar = ({
   dateStatusList,
   setDateStatusList,
 }: UserCalendarProps): JSX.Element => {
-  const updateDateStatusList = (date: Date) => {
+  const updateDateStatusList = async (date: Date) => {
     const index = dateStatusList.findIndex(
       (ds) => ds.date.getTime() == date.getTime()
     );
