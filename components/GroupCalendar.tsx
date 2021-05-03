@@ -3,7 +3,7 @@ import { DateStatus } from "../interfaces/DateStatus";
 import firebase from "firebase/app";
 
 type UserDateStatusList = {
-  user: string; // TODO firebase.Userを使用
+  user: firebase.User;
   dateStatusList: DateStatus[];
 };
 
