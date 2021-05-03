@@ -1,14 +1,18 @@
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { userConverter, UserWithId } from "../interfaces";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
+import { db } from "../utils/firebase";
 import firebase from "firebase/app";
 import Router from "next/router";
 
 type InputsType = {
   email: string;
   password: string;
+  name: string;
+  userName: string;
   confirmPassword: string;
 };
 
@@ -59,8 +63,24 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
-    Router.push("/");
+    Promise.resolve(auth.createUserWithEmailAndPassword(data["email"], data["password"]))
+      .then((value) => {
+        const uid = (value.user || {}).uid;
+        db.collection("users").doc(uid).set({
+          name: data["userName"],
+          email: data["email"]
+        })
+          .then(() => {
+            // success
+          Router.push("/");
+          })
+          .catch((err) => {
+            // setError
+          })
+      })
+      .catch((err) => {
+        // registerError
+      })
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>
@@ -77,7 +97,13 @@ export const RegisterForm = (): JSX.Element => {
           </Form.Control.Feedback>
         )}
       </Form.Group>
-
+      <Form.Group>
+        <Form.Label>user name</Form.Label>
+        <Form.Control
+          type="userName"
+          {...register("userName")}
+        />
+      </Form.Group>
       <Form.Group>
         <Form.Label>Password</Form.Label>
         <Form.Control
