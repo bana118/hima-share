@@ -8,13 +8,17 @@ type UserDateStatusList = {
 };
 
 type GroupCalendarProps = {
-  groupDateStatus: UserDateStatusList[];
+  groupDateStatusList: UserDateStatusList[];
 };
 
 export const GroupCalendar = ({
-  groupDateStatus: groupDateStatus,
+  groupDateStatusList: groupDateStatusList,
 }: GroupCalendarProps): JSX.Element => {
   // TODO "dd日" ではなく "dd" だけ表示する
+
+  const countFreeNum = (date: Date): number => {
+    return 2;
+  };
   return (
     <Calendar
       locale="ja-JP"
@@ -25,6 +29,10 @@ export const GroupCalendar = ({
       showNavigation={true}
       prev2Label={null}
       next2Label={null}
+      tileContent={({ date }) => {
+        const freeNum = countFreeNum(date);
+        return <div>{freeNum}</div>;
+      }}
       //   tileClassName={({ date }): Status | null => {
       //     const dateInList = groupDateStatus.find(
       //       (d) => d.date.getTime() == date.getTime()
