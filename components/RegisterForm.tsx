@@ -53,9 +53,7 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "パスワードが一致しません")
     .required("パスワードは必須です"),
-  userName: yup
-    .string()
-    .required("名前は必須です")
+  userName: yup.string().required("名前は必須です"),
 });
 
 export const RegisterForm = (): JSX.Element => {
