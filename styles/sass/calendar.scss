@@ -49,6 +49,15 @@
   background-color: $accent-dark-color !important;
 }
 
+.calendar-light-free {
+  background-color: $accent-light-color !important;
+  color: #ffffff !important;
+}
+
+.calendar-light-free:hover {
+  background-color: $accent-dark-color !important;
+}
+
 // Set busy day's text color to may color
 
 .calendar-busy {

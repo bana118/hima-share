@@ -1,11 +1,5 @@
 import Calendar from "react-calendar";
-
-type Status = "calendar-free" | "calendar-busy";
-
-export type DateStatus = {
-  date: Date;
-  status: Status;
-};
+import { Status, DateStatus } from "../interfaces/DateStatus";
 
 type UserCalendarProps = {
   dateStatusList: DateStatus[];
