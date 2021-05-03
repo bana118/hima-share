@@ -53,6 +53,9 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "パスワードが一致しません")
     .required("パスワードは必須です"),
+  userName: yup
+    .string()
+    .required("名前は必須です")
 });
 
 export const RegisterForm = (): JSX.Element => {
@@ -79,10 +82,12 @@ export const RegisterForm = (): JSX.Element => {
           })
           .catch(() => {
             // setError
+            // TODO: error handling
           });
       })
       .catch(() => {
         // registerError
+        // TODO: error handling
       });
   };
   return (
@@ -102,7 +107,16 @@ export const RegisterForm = (): JSX.Element => {
       </Form.Group>
       <Form.Group>
         <Form.Label>user name</Form.Label>
-        <Form.Control type="userName" {...register("userName")} />
+        <Form.Control
+          type="userName"
+          isInvalid={!!errors.userName}
+          {...register("userName")}
+        />
+        {errors.userName && (
+          <Form.Control.Feedback type="invalid">
+            {errors.userName.message}
+          </Form.Control.Feedback>
+        )}
       </Form.Group>
       <Form.Group>
         <Form.Label>Password</Form.Label>
