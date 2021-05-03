@@ -7,15 +7,15 @@ export type DateStatus = {
   status: Status;
 };
 
-type StatusCalenderProps = {
+type UserCalenderProps = {
   dateStatusList: DateStatus[];
   setDateStatusList: (list: DateStatus[]) => void;
 };
 
-export const StatusCalender = ({
+export const UserCalender = ({
   dateStatusList,
   setDateStatusList,
-}: StatusCalenderProps): JSX.Element => {
+}: UserCalenderProps): JSX.Element => {
   const updateDateStatusList = (date: Date) => {
     const index = dateStatusList.findIndex(
       (ds) => ds.date.getTime() == date.getTime()
