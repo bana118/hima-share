@@ -63,24 +63,28 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    Promise.resolve(auth.createUserWithEmailAndPassword(data["email"], data["password"]))
+    Promise.resolve(
+      auth.createUserWithEmailAndPassword(data["email"], data["password"])
+    )
       .then((value) => {
         const uid = (value.user || {}).uid;
-        db.collection("users").doc(uid).set({
-          name: data["userName"],
-          email: data["email"]
-        })
+        db.collection("users")
+          .doc(uid)
+          .set({
+            name: data["userName"],
+            email: data["email"],
+          })
           .then(() => {
             // success
-          Router.push("/");
+            Router.push("/");
           })
           .catch((err) => {
             // setError
-          })
+          });
       })
       .catch((err) => {
         // registerError
-      })
+      });
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>
@@ -99,10 +103,7 @@ export const RegisterForm = (): JSX.Element => {
       </Form.Group>
       <Form.Group>
         <Form.Label>user name</Form.Label>
-        <Form.Control
-          type="userName"
-          {...register("userName")}
-        />
+        <Form.Control type="userName" {...register("userName")} />
       </Form.Group>
       <Form.Group>
         <Form.Label>Password</Form.Label>
