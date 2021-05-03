@@ -3,21 +3,49 @@ import { Status, DateStatus } from "../interfaces/DateStatus";
 import firebase from "firebase/app";
 
 type UserDateStatusList = {
-  user: firebase.User;
-  dateSatusList: DateStatus[];
+  user: string; // TODO firebase.Userを使用
+  dateStatusList: DateStatus[];
 };
 
 type GroupCalendarProps = {
   groupDateStatusList: UserDateStatusList[];
 };
 
+type DateToNum = {
+  date: Date;
+  num: number;
+};
+
 export const GroupCalendar = ({
   groupDateStatusList: groupDateStatusList,
 }: GroupCalendarProps): JSX.Element => {
   // TODO "dd日" ではなく "dd" だけ表示する
-
+  const dateToFreeNumList: DateToNum[] = [];
+  for (let userDateStatusList of groupDateStatusList) {
+    for (let dateStatus of userDateStatusList.dateStatusList) {
+      if (dateStatus.status == "calendar-free") {
+        const index = dateToFreeNumList.findIndex(
+          (e) => e.date.getTime() == dateStatus.date.getTime()
+        );
+        if (index == -1) {
+          dateToFreeNumList.push({ date: dateStatus.date, num: 1 });
+          console.log(dateToFreeNumList);
+        } else {
+          dateToFreeNumList[index].num += 1;
+          console.log(dateToFreeNumList);
+        }
+      }
+    }
+  }
   const countFreeNum = (date: Date): number => {
-    return 2;
+    const dateToFreeNum = dateToFreeNumList.find(
+      (e) => e.date.getTime() == date.getTime()
+    );
+    if (dateToFreeNum == null) {
+      return 0;
+    } else {
+      return dateToFreeNum.num;
+    }
   };
   return (
     <Calendar
@@ -33,16 +61,17 @@ export const GroupCalendar = ({
         const freeNum = countFreeNum(date);
         return <div>{freeNum}</div>;
       }}
-      //   tileClassName={({ date }): Status | null => {
-      //     const dateInList = groupDateStatus.find(
-      //       (d) => d.date.getTime() == date.getTime()
-      //     );
-      //     if (dateInList == null) {
-      //       return null;
-      //     } else {
-      //       return dateInList.status;
-      //     }
-      //   }}
+      tileClassName={({ date }) => {
+        const freeNum = countFreeNum(date);
+        // TODO 暇な人の人数でスタイルを変えるための基準人数を設定可能にする
+        if (freeNum >= 10) {
+          return "calendar-free";
+        } else if (freeNum >= 5) {
+          return "calendar-light-free";
+        } else {
+          return null;
+        }
+      }}
     />
   );
 };
