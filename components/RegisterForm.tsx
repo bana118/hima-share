@@ -63,29 +63,28 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    Promise.resolve(
-      auth.createUserWithEmailAndPassword(data["email"], data["password"])
-    )
-      .then((value) => {
-        const uid = (value.user || {}).uid;
-        db.collection("users")
-          .doc(uid)
-          .set({
-            name: data["userName"],
-            email: data["email"],
-          })
-          .then(() => {
-            // success
-            Router.push("/");
-          })
-          .catch(() => {
-            // setError
-            // TODO: error handling
-          });
+    auth
+      .createUserWithEmailAndPassword(data["email"], data["password"])
+      .then((userCredential) => {
+        const uid = userCredential.user?.uid;
+        if (uid != null) {
+          db.ref(`users/${uid}`)
+            .set({
+              name: data["userName"],
+              email: data["email"],
+            })
+            .then(() => {
+              Router.push("/");
+            })
+            .catch(() => {
+              // TODO: error handling
+              console.error("Database error!");
+            });
+        }
       })
       .catch(() => {
-        // registerError
         // TODO: error handling
+        console.error("Authentication error!");
       });
   };
   return (
