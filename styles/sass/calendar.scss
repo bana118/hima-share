@@ -1,0 +1,61 @@
+@import "./variables";
+
+// Customize react-calendar styles
+
+// Set calendar text fonts
+
+.react-calendar {
+  font-family: "Roboto", "Noto Sans JP", Meiryo, sans-serif;
+}
+
+// Disable active color
+
+.react-calendar__tile--active {
+  background-color: #ffffff !important;
+  color: #000000;
+}
+
+.react-calendar__tile--active:hover {
+  background-color: #e6e6e6 !important;
+}
+
+// Set Saturday's text color to blue
+
+.react-calendar__tile:nth-child(7n-1) {
+  color: #0000ff;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575 !important;
+}
+
+// Set background to white and text to black at year and month navigation
+
+.react-calendar__navigation__label:disabled {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+// Add Styles for app
+
+// Set free day's text color to accent color
+
+.calendar-free {
+  background-color: $accent-color !important;
+  color: #ffffff !important;
+}
+
+.calendar-free:hover {
+  background-color: $accent-dark-color !important;
+}
+
+// Set busy day's text color to may color
+
+.calendar-busy {
+  background-color: $main-color !important;
+  color: #ffffff !important;
+}
+
+.calendar-busy:hover {
+  background-color: $main-dark-color !important;
+}

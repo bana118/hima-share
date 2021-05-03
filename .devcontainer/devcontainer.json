@@ -5,10 +5,5 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "rvest.vs-code-prettier-eslint",
-    "esbenp.prettier-vscode",
-    "hookyqr.beautify"
-  ]
+  "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
 }

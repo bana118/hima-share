@@ -1,0 +1,15 @@
+@import "./variables";
+
+// Custom Bootstrap theme
+$theme-colors: (
+  "main": $main-color,
+  "main-light": $main-light-color,
+  "main-dark": $main-dark-color,
+  "accent": $accent-color,
+  "accent-light": $accent-light-color,
+  "accent-dark": $accent-dark-color,
+);
+
+$font-family-base: "Roboto", "Noto Sans JP", Meiryo, sans-serif;
+
+@import "bootstrap";
