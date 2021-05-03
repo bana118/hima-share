@@ -40,6 +40,8 @@ const schema = yup.object().shape({
         }
       }
     ),
+  displayName: yup
+    .string(),
   password: yup
     .string()
     .min(8, "パスワードは8文字以上に設定してください")
@@ -60,13 +62,14 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    await auth.createUserWithEmailAndPassword(data["email"], data["password"])
-    var user = firebase.auth().currentUser;
+    await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
+    const user = firebase.auth().currentUser;
     if (user) {
       // User is signed in.
       await user.updateProfile({
-        displayName: data["displayName"]
-      })
+        displayName: data["displayName"],
+        photoURL: null
+      });
     } else {
       // No user is signed in.
     }
@@ -93,8 +96,14 @@ export const RegisterForm = (): JSX.Element => {
         <Form.Label>Display name</Form.Label>
         <Form.Control
           type="displayName"
+          isInvalid={!!errors.displayName}
           {...register("displayName")}
         />
+        {errors.displayName && (
+          <Form.Control.Feedback type="invalid">
+            {errors.displayName.message}
+          </Form.Control.Feedback>
+        )}
       </Form.Group>
 
       <Form.Group>
