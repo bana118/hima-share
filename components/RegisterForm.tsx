@@ -3,8 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
-import { db } from "../utils/firebase";
-import { User } from "../interfaces/User";
+import { setUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
 import Router from "next/router";
 
@@ -73,9 +72,7 @@ export const RegisterForm = (): JSX.Element => {
             name: data["userName"],
             email: data["email"],
           };
-          // TODO type check when set data to db
-          db.ref(`users/${uid}`)
-            .set(user)
+          setUser(user, uid)
             .then(() => {
               Router.push("/");
             })
