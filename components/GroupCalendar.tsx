@@ -1,5 +1,5 @@
 import Calendar from "react-calendar";
-import { Status, DateStatus } from "../interfaces/DateStatus";
+import { DateStatus } from "../interfaces/DateStatus";
 import firebase from "firebase/app";
 
 type UserDateStatusList = {
@@ -64,9 +64,10 @@ export const GroupCalendar = ({
       tileClassName={({ date }) => {
         const freeNum = countFreeNum(date);
         // TODO 暇な人の人数でスタイルを変えるための基準人数を設定可能にする
-        if (freeNum >= 10) {
+        // TODO 色はグラデーションでもいいかもしれない
+        if (freeNum >= 5) {
           return "calendar-free";
-        } else if (freeNum >= 5) {
+        } else if (freeNum >= 2) {
           return "calendar-light-free";
         } else {
           return null;
