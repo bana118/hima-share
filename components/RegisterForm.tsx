@@ -3,12 +3,15 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
+import { db } from "../utils/firebase";
 import firebase from "firebase/app";
 import Router from "next/router";
 
 type InputsType = {
   email: string;
   password: string;
+  name: string;
+  userName: string;
   confirmPassword: string;
 };
 
@@ -50,6 +53,7 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "パスワードが一致しません")
     .required("パスワードは必須です"),
+  userName: yup.string().required("名前は必須です"),
 });
 
 export const RegisterForm = (): JSX.Element => {
@@ -59,8 +63,30 @@ export const RegisterForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const registerUser = async (data: InputsType) => {
-    await auth.createUserWithEmailAndPassword(data["email"], data["password"]);
-    Router.push("/");
+    Promise.resolve(
+      auth.createUserWithEmailAndPassword(data["email"], data["password"])
+    )
+      .then((value) => {
+        const uid = (value.user || {}).uid;
+        db.collection("users")
+          .doc(uid)
+          .set({
+            name: data["userName"],
+            email: data["email"],
+          })
+          .then(() => {
+            // success
+            Router.push("/");
+          })
+          .catch(() => {
+            // setError
+            // TODO: error handling
+          });
+      })
+      .catch(() => {
+        // registerError
+        // TODO: error handling
+      });
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>
@@ -77,7 +103,19 @@ export const RegisterForm = (): JSX.Element => {
           </Form.Control.Feedback>
         )}
       </Form.Group>
-
+      <Form.Group>
+        <Form.Label>user name</Form.Label>
+        <Form.Control
+          type="userName"
+          isInvalid={!!errors.userName}
+          {...register("userName")}
+        />
+        {errors.userName && (
+          <Form.Control.Feedback type="invalid">
+            {errors.userName.message}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
       <Form.Group>
         <Form.Label>Password</Form.Label>
         <Form.Control
