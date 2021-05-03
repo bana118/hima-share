@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userConverter, UserWithId } from "../interfaces";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import { db } from "../utils/firebase";
@@ -78,11 +77,11 @@ export const RegisterForm = (): JSX.Element => {
             // success
             Router.push("/");
           })
-          .catch((err) => {
+          .catch(() => {
             // setError
           });
       })
-      .catch((err) => {
+      .catch(() => {
         // registerError
       });
   };
