@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import { db } from "../utils/firebase";
+import { User } from "../interfaces/User";
 import firebase from "firebase/app";
 import Router from "next/router";
 
@@ -68,11 +69,13 @@ export const RegisterForm = (): JSX.Element => {
       .then((userCredential) => {
         const uid = userCredential.user?.uid;
         if (uid != null) {
+          const user: User = {
+            name: data["userName"],
+            email: data["email"],
+          };
+          // TODO type check when set data to db
           db.ref(`users/${uid}`)
-            .set({
-              name: data["userName"],
-              email: data["email"],
-            })
+            .set(user)
             .then(() => {
               Router.push("/");
             })
