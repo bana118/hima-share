@@ -21,8 +21,8 @@ export const GroupCalendar = ({
 }: GroupCalendarProps): JSX.Element => {
   // TODO "dd日" ではなく "dd" だけ表示する
   const dateToFreeNumList: DateToNum[] = [];
-  for (let userDateStatusList of groupDateStatusList) {
-    for (let dateStatus of userDateStatusList.dateStatusList) {
+  for (const userDateStatusList of groupDateStatusList) {
+    for (const dateStatus of userDateStatusList.dateStatusList) {
       if (dateStatus.status == "calendar-free") {
         const index = dateToFreeNumList.findIndex(
           (e) => e.date.getTime() == dateStatus.date.getTime()
