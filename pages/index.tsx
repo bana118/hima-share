@@ -49,33 +49,27 @@ const IndexPage = (): JSX.Element => {
     return cleanup;
   }, [authUser]);
 
-  const groupListComponent = (
-    groupList: GroupWithId[] | null | undefined
-  ): JSX.Element => {
-    if (groupList == null) {
-      return <React.Fragment />;
-    } else {
-      const component = groupList.map((g) => {
-        return (
-          <div key={g.id}>
-            <p>{g.name}</p>
-          </div>
-        );
-      });
+  const groupListComponent = (groupList: GroupWithId[]): JSX.Element => {
+    const component = groupList.map((g) => {
       return (
-        <React.Fragment>
-          <p>groups:</p>
-          {component}
-        </React.Fragment>
+        <div key={g.id}>
+          <p>{g.name}</p>
+        </div>
       );
-    }
+    });
+    return (
+      <React.Fragment>
+        <p>groups:</p>
+        {component}
+      </React.Fragment>
+    );
   };
 
   // デバッグ用にユーザー情報を表示
   return (
     <Layout title="Hima Share">
       <h1>Hello Hima Share 👋</h1>
-      {user && (
+      {user && groups && (
         <React.Fragment>
           <p>User info</p>
           <p>name: {user.name}</p>
