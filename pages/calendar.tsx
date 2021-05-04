@@ -42,6 +42,7 @@ const UserCalendarPage = (): JSX.Element => {
     const setToDatabase = async () => {
       if (authUser != null && dateStatusList != null) {
         // TODO エラー処理
+        // TODO 失敗したらカレンダーの色は変えない
         await storeDateStatusList(dateStatusList, authUser.uid);
       }
     };
