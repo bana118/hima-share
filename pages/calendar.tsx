@@ -13,7 +13,9 @@ import {
 
 const UserCalendarPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);
+  const [dateStatusList, setDateStatusList] = useState<
+    DateStatus[] | undefined
+  >(undefined);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
@@ -38,9 +40,7 @@ const UserCalendarPage = (): JSX.Element => {
   }, [authUser]);
   useEffect(() => {
     const setToDatabase = async () => {
-      if (authUser == null) {
-        Router.push("/login");
-      } else {
+      if (authUser != null && dateStatusList != null) {
         // TODO エラー処理
         await storeDateStatusList(dateStatusList, authUser.uid);
       }
@@ -51,7 +51,7 @@ const UserCalendarPage = (): JSX.Element => {
   }, [dateStatusList]);
   return (
     <React.Fragment>
-      {authUser && (
+      {authUser && dateStatusList && (
         <Layout title="カレンダー入力">
           <h1>カレンダー入力</h1>
           <p>カレンダーに予定を設定しよう！</p>
