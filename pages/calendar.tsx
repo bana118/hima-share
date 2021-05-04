@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Router from "next/router";
+import React from "react";
 import { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { UserCalendar } from "../components/UserCalendar";
@@ -11,8 +12,7 @@ import {
 } from "../interfaces/DateStatus";
 
 const UserCalendarPage = (): JSX.Element => {
-  const authContext = useContext(AuthContext);
-  const { user, isLoading } = authContext;
+  const { user, isLoading } = useContext(AuthContext);
   const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
@@ -50,19 +50,23 @@ const UserCalendarPage = (): JSX.Element => {
     }
   }, [dateStatusList]);
   return (
-    <Layout title="カレンダー入力">
-      <h1>カレンダー入力</h1>
-      <p>カレンダーに予定を設定しよう！</p>
-      <UserCalendar
-        dateStatusList={dateStatusList}
-        setDateStatusList={(list) => setDateStatusList(list)}
-      />
-      <p>
-        <Link href="/">
-          <a>ホーム</a>
-        </Link>
-      </p>
-    </Layout>
+    <React.Fragment>
+      {user && (
+        <Layout title="カレンダー入力">
+          <h1>カレンダー入力</h1>
+          <p>カレンダーに予定を設定しよう！</p>
+          <UserCalendar
+            dateStatusList={dateStatusList}
+            setDateStatusList={(list) => setDateStatusList(list)}
+          />
+          <p>
+            <Link href="/">
+              <a>ホーム</a>
+            </Link>
+          </p>
+        </Layout>
+      )}
+    </React.Fragment>
   );
 };
 

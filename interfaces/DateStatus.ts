@@ -35,12 +35,7 @@ export const storeDateStatusList = async (
   uid: string
 ): Promise<void> => {
   const data = toFormatData(dateStatusList);
-  return db
-    .ref(`calendars/${uid}`)
-    .set(data)
-    .catch(() => {
-      return Promise.reject<void>("Database Error!");
-    });
+  return db.ref(`calendars/${uid}`).set(data);
 };
 
 export const loadDateStatusList = async (
@@ -59,9 +54,7 @@ export const loadDateStatusList = async (
       } else {
         return null;
       }
-    })
-    .catch(() => {
-      return Promise.reject<null>("Database Error!");
     });
+
   return data;
 };
