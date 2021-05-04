@@ -16,7 +16,7 @@ const schema = yup.object().shape({
 });
 
 export const CreateGroupForm = (): JSX.Element => {
-  const { user } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -30,14 +30,14 @@ export const CreateGroupForm = (): JSX.Element => {
     });
   };
   const createGroup = async (data: InputsType) => {
-    if (user != null) {
+    if (authUser != null) {
       const group: Group = {
         name: data["name"],
         members: {
-          [user.uid]: true,
+          [authUser.uid]: true,
         },
       };
-      storeGroup(group, user.uid)
+      storeGroup(group, authUser.uid)
         .then(() => {
           Router.push("/");
         })

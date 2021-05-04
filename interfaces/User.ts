@@ -4,7 +4,7 @@ export interface User {
   name: string;
   email: string;
   groups: {
-    [key: string]: true;
+    [groupId: string]: true;
   };
 }
 

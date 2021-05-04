@@ -36,14 +36,14 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           <Link href="/" passHref>
             <Navbar.Brand className="mr-auto">Hima Share</Navbar.Brand>
           </Link>
-          {authContext.user && (
+          {authContext.authUser && (
             <Nav>
               <Nav.Link active onClick={logout}>
                 Logout
               </Nav.Link>
             </Nav>
           )}
-          {!authContext.user && (
+          {!authContext.authUser && (
             <Nav>
               <Link href="/login" passHref>
                 <Nav.Link active>Login</Nav.Link>

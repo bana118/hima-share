@@ -12,17 +12,17 @@ import {
 } from "../interfaces/DateStatus";
 
 const UserCalendarPage = (): JSX.Element => {
-  const { user, isLoading } = useContext(AuthContext);
+  const { authUser, isLoading } = useContext(AuthContext);
   const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
     const setFromDatabase = async () => {
-      if (user == null) {
+      if (authUser == null) {
         Router.push("/login");
       } else {
         // TODO エラー処理
-        const data = await loadDateStatusList(user.uid);
+        const data = await loadDateStatusList(authUser.uid);
         if (data != null && !unmounted) {
           setDateStatusList(data);
         }
@@ -38,11 +38,11 @@ const UserCalendarPage = (): JSX.Element => {
   }, [isLoading]);
   useEffect(() => {
     const setToDatabase = async () => {
-      if (user == null) {
+      if (authUser == null) {
         Router.push("/login");
       } else {
         // TODO エラー処理
-        await storeDateStatusList(dateStatusList, user.uid);
+        await storeDateStatusList(dateStatusList, authUser.uid);
       }
     };
     if (!isLoading) {
@@ -51,7 +51,7 @@ const UserCalendarPage = (): JSX.Element => {
   }, [dateStatusList]);
   return (
     <React.Fragment>
-      {user && (
+      {authUser && (
         <Layout title="カレンダー入力">
           <h1>カレンダー入力</h1>
           <p>カレンダーに予定を設定しよう！</p>

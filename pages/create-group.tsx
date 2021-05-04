@@ -6,15 +6,15 @@ import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
 
 const CreateGroupPage = (): JSX.Element => {
-  const { user, isLoading } = useContext(AuthContext);
+  const { authUser, isLoading } = useContext(AuthContext);
   useEffect(() => {
-    if (!isLoading && user == null) {
+    if (!isLoading && authUser == null) {
       Router.push("/login");
     }
   }, [isLoading]);
   return (
     <React.Fragment>
-      {user && (
+      {authUser && (
         <Layout title="Create Group">
           <h1>Create Group</h1>
           <CreateGroupForm />

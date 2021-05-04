@@ -20,7 +20,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading }}>
+    <AuthContext.Provider value={{ authUser: user, isLoading }}>
       <Component {...pageProps} />
     </AuthContext.Provider>
   );
