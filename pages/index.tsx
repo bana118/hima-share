@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { useContext } from "react";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
