@@ -51,11 +51,31 @@ const IndexPage = (): JSX.Element => {
 
   const groupListComponent = (groupList: GroupWithId[]): JSX.Element => {
     const component = groupList.map((g) => {
-      return (
-        <div key={g.id}>
-          <p>{g.name}</p>
-        </div>
-      );
+      if (g.invitationId == null) {
+        return (
+          <div key={g.id}>
+            <p>{g.name}</p>
+            <Link
+              href="/create-invitation/[id]"
+              as={`/create-invitation/${g.id}`}
+            >
+              <a>招待リンク作成</a>
+            </Link>
+          </div>
+        );
+      } else {
+        return (
+          <div key={g.id}>
+            <p>{g.name}</p>
+            <Link
+              href="/invitations/[id]"
+              as={`/invitations/${g.invitationId}`}
+            >
+              <a>招待リンク確認</a>
+            </Link>
+          </div>
+        );
+      }
     });
     return (
       <React.Fragment>
