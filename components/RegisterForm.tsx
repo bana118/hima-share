@@ -81,7 +81,7 @@ export const RegisterForm = (): JSX.Element => {
           };
           storeUser(user, uid)
             .then(() => {
-              Router.push("/");
+              Router.push("/calendar");
             })
             .catch(() => {
               setUnexpectedError();
