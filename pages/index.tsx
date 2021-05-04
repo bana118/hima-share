@@ -14,7 +14,6 @@ const IndexPage = (): JSX.Element => {
 
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
-    console.log(authUser);
     let unmounted = false;
     const setFromDatabase = async () => {
       if (authUser == null) {
@@ -27,7 +26,6 @@ const IndexPage = (): JSX.Element => {
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
           setUser(user);
-          console.log(user.groups);
           const groupIds = Object.keys(user.groups);
           const groupList: GroupWithId[] = [];
           for (const groupId of groupIds) {
@@ -58,7 +56,6 @@ const IndexPage = (): JSX.Element => {
       return <React.Fragment />;
     } else {
       const component = groupList.map((g) => {
-        console.log(g.id);
         return (
           <div key={g.id}>
             <p>{g.name}</p>
