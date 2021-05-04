@@ -3,15 +3,15 @@ import { db } from "../utils/firebase";
 export interface User {
   name: string;
   email: string;
+  groups: {
+    [groupId: string]: true;
+  };
 }
 
-export const storeUser = async (user: User, uid: string): Promise<void> => {
-  return db
-    .ref(`users/${uid}`)
-    .set(user)
-    .catch(() => {
-      return Promise.reject<void>("Database Error!");
-    });
+// TODO 必要になればUserWithIdを作る
+
+export const storeUser = (user: User, uid: string): Promise<void> => {
+  return db.ref(`users/${uid}`).set(user);
 };
 
 export const loadUser = (uid: string): Promise<User | null> => {
@@ -22,13 +22,19 @@ export const loadUser = (uid: string): Promise<User | null> => {
     .get()
     .then((snapShot) => {
       if (snapShot.exists()) {
-        return snapShot.val() as User;
+        const u = snapShot.val();
+        if (u.groups == null) {
+          u["groups"] = {};
+        }
+        return u as User;
       } else {
         return null;
       }
-    })
-    .catch(() => {
-      return Promise.reject<null>("Database Error!");
     });
+
   return user;
+};
+
+export const joinGroup = (uid: string, groupId: string): Promise<void> => {
+  return db.ref(`users/${uid}/groups`).set({ [groupId]: true });
 };

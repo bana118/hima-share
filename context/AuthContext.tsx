@@ -2,9 +2,7 @@ import { createContext } from "react";
 import firebase from "firebase/app";
 
 export const AuthContext = createContext<{
-  user: firebase.User | null;
-  isLoading: boolean;
+  authUser: firebase.User | null | undefined;
 }>({
-  user: null,
-  isLoading: true,
+  authUser: undefined,
 });

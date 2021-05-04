@@ -29,10 +29,8 @@ export const GroupCalendar = ({
         );
         if (index == -1) {
           dateToFreeNumList.push({ date: dateStatus.date, num: 1 });
-          console.log(dateToFreeNumList);
         } else {
           dateToFreeNumList[index].num += 1;
-          console.log(dateToFreeNumList);
         }
       }
     }
