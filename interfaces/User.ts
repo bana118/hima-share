@@ -5,7 +5,7 @@ export interface User {
   email: string;
 }
 
-export const setUser = async (user: User, uid: string): Promise<void> => {
+export const storeUser = async (user: User, uid: string): Promise<void> => {
   return db
     .ref(`users/${uid}`)
     .set(user)
@@ -14,7 +14,7 @@ export const setUser = async (user: User, uid: string): Promise<void> => {
     });
 };
 
-export const getUser = (uid: string): Promise<User | null> => {
+export const loadUser = (uid: string): Promise<User | null> => {
   const user = db
     .ref()
     .child("users")

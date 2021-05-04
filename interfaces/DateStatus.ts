@@ -30,7 +30,7 @@ const fromFormatData = (formatData: formatDataType) => {
   return dataStatusList;
 };
 
-export const setDateStatusList = async (
+export const storeDateStatusList = async (
   dateStatusList: DateStatus[],
   uid: string
 ): Promise<void> => {
@@ -43,7 +43,7 @@ export const setDateStatusList = async (
     });
 };
 
-export const getDateStatusList = async (
+export const loadDateStatusList = async (
   uid: string
 ): Promise<DateStatus[] | null> => {
   const data = db

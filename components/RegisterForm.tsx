@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
-import { setUser, User } from "../interfaces/User";
+import { storeUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
 import Router from "next/router";
 
@@ -79,7 +79,7 @@ export const RegisterForm = (): JSX.Element => {
             name: data["userName"],
             email: data["email"],
           };
-          setUser(user, uid)
+          storeUser(user, uid)
             .then(() => {
               Router.push("/");
             })

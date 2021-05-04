@@ -28,6 +28,7 @@ export const UserCalendar = ({
   };
 
   // TODO "dd日" ではなく "dd" だけ表示する
+  // TODO 過ぎた日の扱いを決める (e.g. 毎日自動で消す, そのまま残す)
   return (
     <Calendar
       onClickDay={updateDateStatusList}

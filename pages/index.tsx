@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
@@ -7,6 +7,10 @@ import { AuthContext } from "../context/AuthContext";
 const IndexPage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
   const user = authContext.user;
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
   return (
     <Layout title="Home | Next.js + TypeScript Example">
