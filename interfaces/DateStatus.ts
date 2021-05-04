@@ -59,7 +59,7 @@ export const getDateStatusList = async (
 ): Promise<DateStatus[] | null> => {
   const data = db
     .ref()
-    .child("calendar")
+    .child("calendars")
     .child(uid)
     .get()
     .then((snapShot) => {
