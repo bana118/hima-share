@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Router from "next/router";
 import { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -56,6 +57,11 @@ const UserCalendarPage = (): JSX.Element => {
         dateStatusList={dateStatusList}
         setDateStatusList={(list) => setDateStatusList(list)}
       />
+      <p>
+        <Link href="/">
+          <a>ホーム</a>
+        </Link>
+      </p>
     </Layout>
   );
 };

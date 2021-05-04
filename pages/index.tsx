@@ -8,10 +8,7 @@ const IndexPage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
   const user = authContext.user;
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
+  // デバッグ用にユーザー情報を表示
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <h1>Hello Next.js 👋</h1>
@@ -21,6 +18,11 @@ const IndexPage = (): JSX.Element => {
           <p>name: {user.displayName}</p>
           <p>email: {user.email}</p>
           <p>uid: {user.uid}</p>
+          <p>
+            <Link href="/calendar">
+              <a>カレンダー</a>
+            </Link>
+          </p>
         </React.Fragment>
       )}
       {!user && (
@@ -40,11 +42,6 @@ const IndexPage = (): JSX.Element => {
           </p>
         </React.Fragment>
       )}
-      <p>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </p>
     </Layout>
   );
 };
