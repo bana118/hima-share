@@ -79,14 +79,13 @@ export const RegisterForm = (): JSX.Element => {
             name: data["userName"],
             email: data["email"],
           };
-          await setUser(
-            user,
-            uid,
-            () => {
+          setUser(user, uid)
+            .then(() => {
               Router.push("/");
-            },
-            setUnexpectedError
-          );
+            })
+            .catch(() => {
+              setUnexpectedError();
+            });
         } else {
           setUnexpectedError();
         }

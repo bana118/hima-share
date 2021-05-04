@@ -5,31 +5,16 @@ export interface User {
   email: string;
 }
 
-export const setUser = async (
-  user: User,
-  uid: string,
-  onSet?: (u: User) => void,
-  onError?: () => void
-): Promise<void> => {
+export const setUser = async (user: User, uid: string): Promise<void> => {
   return db
     .ref(`users/${uid}`)
     .set(user)
-    .then(() => {
-      if (onSet != null) {
-        onSet;
-      }
-    })
     .catch(() => {
-      if (onError != null) {
-        onError();
-      }
+      return Promise.reject<void>("Database Error!");
     });
 };
 
-export const getUser = (
-  uid: string,
-  onError?: () => void
-): Promise<User | null> => {
+export const getUser = (uid: string): Promise<User | null> => {
   const user = db
     .ref()
     .child("users")
@@ -43,10 +28,7 @@ export const getUser = (
       }
     })
     .catch(() => {
-      if (onError != null) {
-        onError;
-      }
-      return null;
+      return Promise.reject<null>("Database Error!");
     });
   return user;
 };

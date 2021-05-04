@@ -32,30 +32,19 @@ const fromFormatData = (formatData: formatDataType) => {
 
 export const setDateStatusList = async (
   dateStatusList: DateStatus[],
-  uid: string,
-  onSet?: (dataStatusList: DateStatus[]) => void,
-  onError?: () => void
+  uid: string
 ): Promise<void> => {
   const data = toFormatData(dateStatusList);
   return db
     .ref(`calendars/${uid}`)
     .set(data)
-    .then(() => {
-      if (onSet != null) {
-        onSet;
-      }
-    })
     .catch(() => {
-      if (onError != null) {
-        onError();
-      }
       return Promise.reject<void>("Database Error!");
     });
 };
 
 export const getDateStatusList = async (
-  uid: string,
-  onError?: () => void
+  uid: string
 ): Promise<DateStatus[] | null> => {
   const data = db
     .ref()
@@ -72,9 +61,6 @@ export const getDateStatusList = async (
       }
     })
     .catch(() => {
-      if (onError != null) {
-        onError;
-      }
       return Promise.reject<null>("Database Error!");
     });
   return data;
