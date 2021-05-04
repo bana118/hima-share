@@ -7,6 +7,7 @@ export interface Group {
   members: {
     [uid: string]: true;
   };
+  invitationId?: string;
 }
 
 export interface GroupWithId extends Group {
