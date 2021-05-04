@@ -23,6 +23,11 @@ const IndexPage = (): JSX.Element => {
               <a>カレンダー</a>
             </Link>
           </p>
+          <p>
+            <Link href="/create-group">
+              <a>グループ作成</a>
+            </Link>
+          </p>
         </React.Fragment>
       )}
       {!user && (

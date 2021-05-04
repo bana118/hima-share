@@ -39,7 +39,7 @@ export const CreateGroupForm = (): JSX.Element => {
       };
       storeGroup(group, user.uid)
         .then(() => {
-          Router.push("/calendar");
+          Router.push("/");
         })
         .catch(() => {
           setUnexpectedError();
