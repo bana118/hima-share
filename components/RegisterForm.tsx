@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
-import { db } from "../utils/firebase";
+import { storeUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
 import Router from "next/router";
 
@@ -61,31 +61,37 @@ export const RegisterForm = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
+  const setUnexpectedError = () => {
+    setError("email", {
+      type: "manual",
+      message: "予期せぬエラーが発生しました！ もう一度お試しください",
+    });
+  };
   const registerUser = async (data: InputsType) => {
-    Promise.resolve(
-      auth.createUserWithEmailAndPassword(data["email"], data["password"])
-    )
-      .then((value) => {
-        const uid = (value.user || {}).uid;
-        db.collection("users")
-          .doc(uid)
-          .set({
+    auth
+      .createUserWithEmailAndPassword(data["email"], data["password"])
+      .then(async (userCredential) => {
+        const uid = userCredential.user?.uid;
+        if (uid != null) {
+          const user: User = {
             name: data["userName"],
             email: data["email"],
-          })
-          .then(() => {
-            // success
-            Router.push("/");
-          })
-          .catch(() => {
-            // setError
-            // TODO: error handling
-          });
+          };
+          storeUser(user, uid)
+            .then(() => {
+              Router.push("/calendar");
+            })
+            .catch(() => {
+              setUnexpectedError();
+            });
+        } else {
+          setUnexpectedError();
+        }
       })
       .catch(() => {
-        // registerError
-        // TODO: error handling
+        setUnexpectedError();
       });
   };
   return (
