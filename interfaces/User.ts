@@ -14,25 +14,17 @@ export const storeUser = (user: User, uid: string): Promise<void> => {
   return db.ref(`users/${uid}`).set(user);
 };
 
-export const loadUser = (uid: string): Promise<User | null> => {
-  const user = db
-    .ref()
-    .child("users")
-    .child(uid)
-    .get()
-    .then((snapShot) => {
-      if (snapShot.exists()) {
-        const u = snapShot.val();
-        if (u.groups == null) {
-          u["groups"] = {};
-        }
-        return u as User;
-      } else {
-        return null;
-      }
-    });
-
-  return user;
+export const loadUser = async (uid: string): Promise<User | null> => {
+  const snapShot = await db.ref().child("users").child(uid).get();
+  if (snapShot.exists()) {
+    const u = snapShot.val();
+    if (u.groups == null) {
+      u["groups"] = {};
+    }
+    return u as User;
+  } else {
+    return null;
+  }
 };
 
 export const joinGroup = (uid: string, groupId: string): Promise<void> => {

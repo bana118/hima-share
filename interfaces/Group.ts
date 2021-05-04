@@ -1,7 +1,7 @@
 import { db } from "../utils/firebase";
 import { joinGroup } from "./User";
 
-// TODO membersが空にならないようにする．空だたfirebaseには保存されずundefined扱い
+// TODO membersが空にならないようにする．空だとfirebaseには保存されずundefined扱い
 export interface Group {
   name: string;
   members: {
@@ -13,8 +13,9 @@ export interface GroupWithId extends Group {
   id: string;
 }
 
-export const storeGroup = (group: Group, uid: string): Promise<void> => {
-  const groupId = db.ref().child("groups").push(group).key;
+export const storeGroup = async (group: Group, uid: string): Promise<void> => {
+  const ref = await db.ref().child("groups").push(group);
+  const groupId = ref.key;
   if (groupId == null) {
     return Promise.reject("GroupId is null");
   } else {
@@ -22,20 +23,14 @@ export const storeGroup = (group: Group, uid: string): Promise<void> => {
   }
 };
 
-export const loadGroup = (groupId: string): Promise<GroupWithId | null> => {
-  const groupWithId = db
-    .ref()
-    .child("groups")
-    .child(groupId)
-    .get()
-    .then((snapShot) => {
-      if (snapShot.exists()) {
-        const group = snapShot.val() as Group;
-        return { ...group, id: groupId };
-      } else {
-        return null;
-      }
-    });
-
-  return groupWithId;
+export const loadGroup = async (
+  groupId: string
+): Promise<GroupWithId | null> => {
+  const snapShot = await db.ref().child("groups").child(groupId).get();
+  if (snapShot.exists()) {
+    const group = snapShot.val() as Group;
+    return { ...group, id: groupId };
+  } else {
+    return null;
+  }
 };
