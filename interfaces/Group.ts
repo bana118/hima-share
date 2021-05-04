@@ -1,6 +1,7 @@
 import { db } from "../utils/firebase";
 import { joinGroup } from "./User";
 
+// TODO membersが空にならないようにする．空だたfirebaseには保存されずundefined扱い
 export interface Group {
   name: string;
   members: {

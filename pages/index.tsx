@@ -19,6 +19,7 @@ const IndexPage = (): JSX.Element => {
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
           setUser(user);
+          console.log(user.groups);
           const groupIds = Object.keys(user.groups);
           const groupList: GroupWithId[] = [];
           for (const groupId of groupIds) {
