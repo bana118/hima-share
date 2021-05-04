@@ -1,10 +1,9 @@
 import { db } from "../utils/firebase";
-import firebase from "firebase/app";
 
-export type User = {
+export interface User {
   name: string;
   email: string;
-};
+}
 
 export const setUser = async (
   user: User,
@@ -27,7 +26,10 @@ export const setUser = async (
     });
 };
 
-export const getUser = (uid: string): Promise<User | null> => {
+export const getUser = (
+  uid: string,
+  onError?: () => void
+): Promise<User | null> => {
   const user = db
     .ref()
     .child("users")
@@ -41,6 +43,9 @@ export const getUser = (uid: string): Promise<User | null> => {
       }
     })
     .catch(() => {
+      if (onError != null) {
+        onError;
+      }
       return null;
     });
   return user;

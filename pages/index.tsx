@@ -3,10 +3,24 @@ import React from "react";
 import { useContext } from "react";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
+import { DateStatus, setDateStatusList } from "../interfaces/DateStatus";
 
 const IndexPage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
   const user = authContext.user;
+  if (user != null) {
+    const now = new Date();
+    const testDate = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate()
+    );
+    const testDateStatus: DateStatus = {
+      date: testDate,
+      status: "calendar-free",
+    };
+    setDateStatusList([testDateStatus], user.uid);
+  }
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <h1>Hello Next.js 👋</h1>
