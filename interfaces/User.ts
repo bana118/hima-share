@@ -6,12 +6,42 @@ export type User = {
   email: string;
 };
 
-export const setUser = (user: User, uid: string): Promise<undefined> => {
-  return db.ref(`users/${uid}`).set(user);
+export const setUser = async (
+  user: User,
+  uid: string,
+  onSet?: (u: User) => void,
+  onError?: () => void
+): Promise<void> => {
+  return db
+    .ref(`users/${uid}`)
+    .set(user)
+    .then(() => {
+      if (onSet != null) {
+        onSet;
+      }
+    })
+    .catch(() => {
+      if (onError != null) {
+        onError();
+      }
+    });
 };
 
-export const getUser = (
-  uid: string
-): Promise<firebase.database.DataSnapshot> => {
-  return db.ref(`users/${uid}`).get();
+export const getUser = (uid: string): Promise<User | null> => {
+  const user = db
+    .ref()
+    .child("users")
+    .child(uid)
+    .get()
+    .then((snapShot) => {
+      if (snapShot.exists()) {
+        return snapShot.val() as User;
+      } else {
+        return null;
+      }
+    })
+    .catch(() => {
+      return null;
+    });
+  return user;
 };

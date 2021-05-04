@@ -61,30 +61,38 @@ export const RegisterForm = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<InputsType>({ resolver: yupResolver(schema) });
+  const setUnexpectedError = () => {
+    setError("email", {
+      type: "manual",
+      message: "予期せぬエラーが発生しました！ もう一度お試しください",
+    });
+  };
   const registerUser = async (data: InputsType) => {
     auth
       .createUserWithEmailAndPassword(data["email"], data["password"])
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const uid = userCredential.user?.uid;
         if (uid != null) {
           const user: User = {
             name: data["userName"],
             email: data["email"],
           };
-          setUser(user, uid)
-            .then(() => {
+          await setUser(
+            user,
+            uid,
+            () => {
               Router.push("/");
-            })
-            .catch(() => {
-              // TODO: error handling
-              console.error("Database error!");
-            });
+            },
+            setUnexpectedError
+          );
+        } else {
+          setUnexpectedError();
         }
       })
       .catch(() => {
-        // TODO: error handling
-        console.error("Authentication error!");
+        setUnexpectedError();
       });
   };
   return (
