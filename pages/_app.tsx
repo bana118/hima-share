@@ -10,17 +10,17 @@ import "../styles/sass/bootstrap-custom.scss";
 import "../styles/sass/calendar.scss";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
-  const [user, setUser] = useState<firebase.User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
+    undefined
+  );
   useEffect(() => {
     auth.onAuthStateChanged((u) => {
-      setUser(u);
-      setIsLoading(false);
+      setAuthUser(u);
     });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authUser: user, isLoading }}>
+    <AuthContext.Provider value={{ authUser }}>
       <Component {...pageProps} />
     </AuthContext.Provider>
   );

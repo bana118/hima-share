@@ -12,7 +12,7 @@ import {
 } from "../interfaces/DateStatus";
 
 const UserCalendarPage = (): JSX.Element => {
-  const { authUser, isLoading } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const [dateStatusList, setDateStatusList] = useState<DateStatus[]>([]);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
@@ -28,14 +28,14 @@ const UserCalendarPage = (): JSX.Element => {
         }
       }
     };
-    if (!isLoading) {
+    if (authUser !== undefined) {
       setFromDatabase();
     }
     const cleanup = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [isLoading]);
+  }, [authUser]);
   useEffect(() => {
     const setToDatabase = async () => {
       if (authUser == null) {
@@ -45,7 +45,7 @@ const UserCalendarPage = (): JSX.Element => {
         await storeDateStatusList(dateStatusList, authUser.uid);
       }
     };
-    if (!isLoading) {
+    if (authUser !== undefined) {
       setToDatabase();
     }
   }, [dateStatusList]);

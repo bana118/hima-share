@@ -6,12 +6,12 @@ import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
 
 const CreateGroupPage = (): JSX.Element => {
-  const { authUser, isLoading } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   useEffect(() => {
-    if (!isLoading && authUser == null) {
+    if (authUser === null) {
       Router.push("/login");
     }
-  }, [isLoading]);
+  }, [authUser]);
   return (
     <React.Fragment>
       {authUser && (
