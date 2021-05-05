@@ -27,7 +27,6 @@ const CreateInvitationPage = ({
   if (!invitation || !appUrl) {
     return <ErrorPage />;
   }
-  console.log(process.env);
   const joinUrl = `${appUrl}/join/${invitation.id}`;
   const copyURL = () => {
     const joinUrlElement = document.getElementById(

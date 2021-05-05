@@ -49,7 +49,7 @@ export const CreateInvitationForm = ({ group }: Props): JSX.Element => {
   return (
     <Form onSubmit={handleSubmit(createInvitation)}>
       <p>{group.name}への招待リンクを作成できます</p>
-      <p>招待リンクはグループ参加者が無効にすることができます</p>
+      <p>招待リンクはグループ参加者なら誰でも無効にすることができます</p>
       {errors.empty && (
         <Form.Control.Feedback type="invalid">
           {errors.empty.message}
