@@ -28,5 +28,5 @@ export const loadUser = async (uid: string): Promise<User | null> => {
 };
 
 export const joinGroup = (uid: string, groupId: string): Promise<void> => {
-  return db.ref(`users/${uid}/groups`).set({ [groupId]: true });
+  return db.ref(`users/${uid}/groups`).update({ [groupId]: true });
 };

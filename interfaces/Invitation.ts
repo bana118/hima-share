@@ -1,4 +1,5 @@
 import { db } from "../utils/firebase";
+import { setInvitation } from "./Group";
 
 export interface Invitation {
   groupId: string;
@@ -11,10 +12,16 @@ export interface InvitationWithId {
 }
 
 export const storeInvitation = async (
-  invitation: Invitation
-): Promise<string | null> => {
+  invitation: Invitation,
+  groupId: string
+): Promise<void> => {
   const ref = await db.ref().child("invitations").push(invitation);
-  return ref.key;
+  const invitationId = ref.key;
+  if (invitationId == null) {
+    return Promise.reject("InvitationId is null");
+  } else {
+    return setInvitation(groupId, invitationId);
+  }
 };
 
 export const loadInvitation = async (

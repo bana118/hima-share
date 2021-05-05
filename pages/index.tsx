@@ -86,6 +86,7 @@ const IndexPage = (): JSX.Element => {
   };
 
   // デバッグ用にユーザー情報を表示
+  // TODO ユーザーページにはSSRを使用
   return (
     <Layout title="Hima Share">
       <h1>Hello Hima Share 👋</h1>

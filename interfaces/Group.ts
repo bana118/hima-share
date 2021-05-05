@@ -35,3 +35,10 @@ export const loadGroup = async (
     return null;
   }
 };
+
+export const setInvitation = (
+  groupId: string,
+  invitationId: string
+): Promise<void> => {
+  return db.ref(`groups/${groupId}`).update({ invitationId: invitationId });
+};
