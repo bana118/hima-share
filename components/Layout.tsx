@@ -44,7 +44,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
               </Nav.Link>
             </Nav>
           )}
-          {!authContext.authUser && (
+          {authContext.authUser === null && (
             <Nav>
               <Link href="/login" passHref>
                 <Nav.Link active>Login</Nav.Link>

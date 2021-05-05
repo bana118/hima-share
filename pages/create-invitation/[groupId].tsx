@@ -4,23 +4,33 @@ import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { CreateInvitationForm } from "../../components/CreateInvitationForm";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 type Props = {
-  item?: GroupWithId;
+  group?: GroupWithId;
   errors?: string;
 };
 
-const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
+const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!item) {
+  if (!group) {
     return <ErrorPage />;
+  }
+  const { authUser } = useContext(AuthContext);
+  if (
+    authUser == null ||
+    group.members == null ||
+    !Object.keys(group.members).includes(authUser.uid)
+  ) {
+    return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   return (
     <Layout title="招待を作成">
-      <CreateInvitationForm group={item} />
+      <CreateInvitationForm group={group} />
       <Link href="/">
         <a>戻る</a>
       </Link>
@@ -35,11 +45,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const item = await loadGroup(groupId);
-    if (item == null) {
+    const group = await loadGroup(groupId);
+    if (group == null) {
       return { props: { errors: "Invalid URL" } };
     } else {
-      return { props: { item } };
+      return { props: { group } };
     }
   }
 };
