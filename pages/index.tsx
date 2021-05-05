@@ -12,6 +12,7 @@ const IndexPage = (): JSX.Element => {
     undefined
   );
 
+  // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
@@ -26,12 +27,14 @@ const IndexPage = (): JSX.Element => {
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
           setUser(user);
-          const groupIds = Object.keys(user.groups);
           const groupList: GroupWithId[] = [];
-          for (const groupId of groupIds) {
-            const group = await loadGroup(groupId);
-            if (group != null) {
-              groupList.push(group);
+          if (user.groups != null) {
+            const groupIds = Object.keys(user.groups);
+            for (const groupId of groupIds) {
+              const group = await loadGroup(groupId);
+              if (group != null) {
+                groupList.push(group);
+              }
             }
           }
           if (!unmounted) {
@@ -49,33 +52,48 @@ const IndexPage = (): JSX.Element => {
     return cleanup;
   }, [authUser]);
 
-  const groupListComponent = (
-    groupList: GroupWithId[] | null | undefined
-  ): JSX.Element => {
-    if (groupList == null) {
-      return <React.Fragment />;
-    } else {
-      const component = groupList.map((g) => {
+  const groupListComponent = (groupList: GroupWithId[]): JSX.Element => {
+    const component = groupList.map((g) => {
+      if (g.invitationId == null) {
         return (
           <div key={g.id}>
             <p>{g.name}</p>
+            <Link
+              href="/create-invitation/[id]"
+              as={`/create-invitation/${g.id}`}
+            >
+              <a>招待リンク作成</a>
+            </Link>
           </div>
         );
-      });
-      return (
-        <React.Fragment>
-          <p>groups:</p>
-          {component}
-        </React.Fragment>
-      );
-    }
+      } else {
+        return (
+          <div key={g.id}>
+            <p>{g.name}</p>
+            <Link
+              href="/invitations/[id]"
+              as={`/invitations/${g.invitationId}`}
+            >
+              <a>招待リンク確認</a>
+            </Link>
+          </div>
+        );
+      }
+    });
+    return (
+      <React.Fragment>
+        <p>groups:</p>
+        {component}
+      </React.Fragment>
+    );
   };
 
   // デバッグ用にユーザー情報を表示
+  // TODO ユーザーページにはSSRを使用
   return (
     <Layout title="Hima Share">
       <h1>Hello Hima Share 👋</h1>
-      {user && (
+      {user && groups && (
         <React.Fragment>
           <p>User info</p>
           <p>name: {user.name}</p>

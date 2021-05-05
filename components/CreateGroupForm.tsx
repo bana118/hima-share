@@ -33,9 +33,6 @@ export const CreateGroupForm = (): JSX.Element => {
     if (authUser != null) {
       const group: Group = {
         name: data["name"],
-        members: {
-          [authUser.uid]: true,
-        },
       };
       storeGroup(group, authUser.uid)
         .then(() => {

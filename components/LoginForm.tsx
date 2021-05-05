@@ -1,14 +1,17 @@
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { auth } from "../utils/firebase";
-import Router from "next/router";
 
 type InputsType = {
   email: string;
   password: string;
 };
 
-export const LoginForm = (): JSX.Element => {
+type LoginFormProps = {
+  onLogined?: () => void;
+};
+
+export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -19,7 +22,9 @@ export const LoginForm = (): JSX.Element => {
     auth
       .signInWithEmailAndPassword(data["email"], data["password"])
       .then(() => {
-        Router.push("/");
+        if (onLogined != null) {
+          onLogined();
+        }
       })
       .catch(() => {
         const errorMessage =

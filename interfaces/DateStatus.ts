@@ -41,20 +41,12 @@ export const storeDateStatusList = async (
 export const loadDateStatusList = async (
   uid: string
 ): Promise<DateStatus[] | null> => {
-  const data = db
-    .ref()
-    .child("calendars")
-    .child(uid)
-    .get()
-    .then((snapShot) => {
-      if (snapShot.exists()) {
-        const formatData = snapShot.val() as formatDataType;
-        const dateStatusList = fromFormatData(formatData);
-        return dateStatusList;
-      } else {
-        return null;
-      }
-    });
-
-  return data;
+  const snapShot = await db.ref().child("calendars").child(uid).get();
+  if (snapShot.exists()) {
+    const formatData = snapShot.val() as formatDataType;
+    const dateStatusList = fromFormatData(formatData);
+    return dateStatusList;
+  } else {
+    return null;
+  }
 };

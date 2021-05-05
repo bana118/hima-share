@@ -3,38 +3,36 @@ import { db } from "../utils/firebase";
 export interface User {
   name: string;
   email: string;
-  groups: {
+  groups?: {
     [groupId: string]: true;
   };
 }
 
-// TODO 必要になればUserWithIdを作る
+export interface UserWithId extends User {
+  id: string;
+}
 
 export const storeUser = (user: User, uid: string): Promise<void> => {
   return db.ref(`users/${uid}`).set(user);
 };
 
-export const loadUser = (uid: string): Promise<User | null> => {
-  const user = db
-    .ref()
-    .child("users")
-    .child(uid)
-    .get()
-    .then((snapShot) => {
-      if (snapShot.exists()) {
-        const u = snapShot.val();
-        if (u.groups == null) {
-          u["groups"] = {};
-        }
-        return u as User;
-      } else {
-        return null;
-      }
-    });
-
-  return user;
+export const loadUser = async (uid: string): Promise<UserWithId | null> => {
+  const snapShot = await db.ref().child("users").child(uid).get();
+  if (snapShot.exists()) {
+    const user = snapShot.val() as User;
+    return { ...user, id: uid };
+  } else {
+    return null;
+  }
 };
 
-export const joinGroup = (uid: string, groupId: string): Promise<void> => {
-  return db.ref(`users/${uid}/groups`).set({ [groupId]: true });
+export const joinGroup = async (
+  uid: string,
+  groupId: string
+): Promise<void> => {
+  const updates = {
+    [`/users/${uid}/groups/${groupId}`]: true,
+    [`/groups/${groupId}/members/${uid}`]: true,
+  };
+  return await db.ref().update(updates);
 };

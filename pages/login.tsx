@@ -1,12 +1,13 @@
 import Link from "next/link";
+import Router from "next/router";
 import Layout from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 
-const RegisterPage = (): JSX.Element => {
+const LoginPage = (): JSX.Element => {
   return (
     <Layout title="Login">
       <h1>Login</h1>
-      <LoginForm />
+      <LoginForm onLogined={() => Router.push("/")} />
       <p>
         <Link href="/register">
           <a>登録</a>
@@ -16,4 +17,4 @@ const RegisterPage = (): JSX.Element => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

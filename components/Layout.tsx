@@ -16,8 +16,9 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
   const authContext = useContext(AuthContext);
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
-    await auth.signOut();
-    Router.push("/");
+    auth.signOut().then(() => {
+      Router.push("/");
+    });
   };
   return (
     <div>
@@ -43,7 +44,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
               </Nav.Link>
             </Nav>
           )}
-          {!authContext.authUser && (
+          {authContext.authUser === null && (
             <Nav>
               <Link href="/login" passHref>
                 <Nav.Link active>Login</Nav.Link>
