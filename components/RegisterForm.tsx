@@ -5,7 +5,6 @@ import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import { storeUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
-import Router from "next/router";
 
 type InputsType = {
   email: string;
@@ -13,6 +12,10 @@ type InputsType = {
   name: string;
   userName: string;
   confirmPassword: string;
+};
+
+type RegisterFormProps = {
+  onRegistered?: () => void;
 };
 
 const schema = yup.object().shape({
@@ -56,7 +59,9 @@ const schema = yup.object().shape({
   userName: yup.string().required("名前は必須です"),
 });
 
-export const RegisterForm = (): JSX.Element => {
+export const RegisterForm = ({
+  onRegistered,
+}: RegisterFormProps): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -81,7 +86,9 @@ export const RegisterForm = (): JSX.Element => {
           };
           storeUser(user, uid)
             .then(() => {
-              Router.push("/calendar");
+              if (onRegistered != null) {
+                onRegistered();
+              }
             })
             .catch(() => {
               setUnexpectedError();

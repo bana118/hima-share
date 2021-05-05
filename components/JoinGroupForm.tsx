@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { joinGroup, loadUser, UserWithId } from "../interfaces/User";
 import Layout from "./Layout";
 import Link from "next/link";
+import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
 type Props = {
   group: GroupWithId;
@@ -17,6 +19,8 @@ type InputsType = {
   empty: undefined;
 };
 
+type LoginOrRegister = "login" | "register";
+
 export const JoinGroupForm = ({ group }: Props): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | undefined>(
@@ -24,18 +28,20 @@ export const JoinGroupForm = ({ group }: Props): JSX.Element => {
   );
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
 
+  const [loginOrRegister, setLoginOrRegister] = useState<LoginOrRegister>(
+    "login"
+  );
+
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
     const setFromDatabase = async () => {
-      if (authUser == null) {
-        Router.push("/login");
-      } else {
+      if (authUser != null) {
         // TODO エラー処理
         const user = await loadUser(authUser.uid);
         if (user == null) {
-          Router.push("/login");
+          setUnexpectedError();
         } else if (user != null && !unmounted) {
           if (
             user.groups != null &&
@@ -71,27 +77,55 @@ export const JoinGroupForm = ({ group }: Props): JSX.Element => {
   };
 
   const confirmJoinGroup = async () => {
-    if (authUser == null) {
-      Router.push("/login");
+    if (user == null) {
+      setUnexpectedError();
     } else {
-      if (user == null) {
-        setUnexpectedError();
-      } else {
-        joinGroup(user.id, group.id)
-          .then(() => {
-            Router.push("/");
-          })
-          .catch(() => {
-            setUnexpectedError();
-          });
-      }
+      joinGroup(user.id, group.id)
+        .then(() => {
+          Router.push("/");
+        })
+        .catch(() => {
+          setUnexpectedError();
+        });
     }
   };
 
   // TODO 招待の期限を設定
   return (
     <React.Fragment>
-      {isAlreadyJoined != null && (
+      {authUser === null && (
+        <Layout title={`${group.name}に参加`}>
+          <p>
+            グループ: {group.name}に参加するにはログインまたは登録が必要です
+          </p>
+          <div>
+            <Form.Check
+              type={"radio"}
+              name="loginOrRegister"
+              label="ログイン"
+              onClick={() => {
+                setLoginOrRegister("login");
+              }}
+              checked={loginOrRegister == "login"}
+            />
+            <Form.Check
+              type={"radio"}
+              name="loginOrRegister"
+              label="登録"
+              onClick={() => {
+                setLoginOrRegister("register");
+              }}
+              checked={loginOrRegister == "register"}
+            />
+          </div>
+          {loginOrRegister == "login" && <LoginForm />}
+          {loginOrRegister == "register" && <RegisterForm />}
+          <Link href="/">
+            <a>トップページ</a>
+          </Link>
+        </Layout>
+      )}
+      {authUser != null && isAlreadyJoined != null && (
         <React.Fragment>
           {isAlreadyJoined && (
             <Layout title={`すでに${group.name}に参加しています`}>
@@ -101,9 +135,10 @@ export const JoinGroupForm = ({ group }: Props): JSX.Element => {
               </Link>
             </Layout>
           )}
-          {!isAlreadyJoined && (
+          {!isAlreadyJoined && user && (
             <Layout title={`${group.name}に参加`}>
               <Form onSubmit={handleSubmit(confirmJoinGroup)}>
+                <p>{user.name} としてログイン中</p>
                 <p>グループ: {group.name}に参加しますか？</p>
                 {errors.empty && (
                   <Form.Control.Feedback type="invalid">
