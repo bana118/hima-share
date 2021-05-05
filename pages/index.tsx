@@ -12,6 +12,7 @@ const IndexPage = (): JSX.Element => {
     undefined
   );
 
+  // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
@@ -26,12 +27,14 @@ const IndexPage = (): JSX.Element => {
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
           setUser(user);
-          const groupIds = Object.keys(user.groups);
           const groupList: GroupWithId[] = [];
-          for (const groupId of groupIds) {
-            const group = await loadGroup(groupId);
-            if (group != null) {
-              groupList.push(group);
+          if (user.groups != null) {
+            const groupIds = Object.keys(user.groups);
+            for (const groupId of groupIds) {
+              const group = await loadGroup(groupId);
+              if (group != null) {
+                groupList.push(group);
+              }
             }
           }
           if (!unmounted) {

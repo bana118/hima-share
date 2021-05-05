@@ -10,6 +10,7 @@ type Props = {
   group: GroupWithId;
 };
 
+// 現在入力はないがreact-hook-formを用いるために必要
 type InputsType = {
   empty: undefined;
 };
@@ -30,8 +31,7 @@ export const CreateInvitationForm = ({ group }: Props): JSX.Element => {
 
   const createInvitation = async () => {
     if (authUser == null) {
-      console.log("auth is null");
-      Router.push("/");
+      Router.push("/login");
     } else {
       const invitation: Invitation = {
         groupId: group.id,

@@ -78,7 +78,6 @@ export const RegisterForm = (): JSX.Element => {
           const user: User = {
             name: data["userName"],
             email: data["email"],
-            groups: {},
           };
           storeUser(user, uid)
             .then(() => {

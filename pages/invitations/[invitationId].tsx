@@ -16,7 +16,7 @@ const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
   if (!item) {
     return <ErrorPage />;
   }
-  console.log(item);
+
   const joinUrl = `${document.location.origin}/join/${item.id}`;
   const copyURL = () => {
     const joinUrlElement = document.getElementById(

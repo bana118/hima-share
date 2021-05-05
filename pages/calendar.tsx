@@ -27,6 +27,8 @@ const UserCalendarPage = (): JSX.Element => {
         const data = await loadDateStatusList(authUser.uid);
         if (data != null && !unmounted) {
           setDateStatusList(data);
+        } else if (data == null && !unmounted) {
+          setDateStatusList([]);
         }
       }
     };
