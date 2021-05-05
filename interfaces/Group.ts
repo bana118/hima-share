@@ -35,9 +35,10 @@ export const loadGroup = async (
   }
 };
 
-export const setInvitation = (
+export const setInvitation = async (
   groupId: string,
   invitationId: string
-): Promise<void> => {
-  return db.ref(`groups/${groupId}`).update({ invitationId: invitationId });
+): Promise<string> => {
+  await db.ref(`groups/${groupId}`).update({ invitationId: invitationId });
+  return invitationId;
 };

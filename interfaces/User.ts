@@ -30,6 +30,9 @@ export const joinGroup = async (
   uid: string,
   groupId: string
 ): Promise<void> => {
-  await db.ref(`users/${uid}/groups`).update({ [groupId]: true });
-  return await db.ref(`groups/${groupId}/members`).update({ [uid]: true });
+  const updates = {
+    [`/users/${uid}/groups/${groupId}`]: true,
+    [`/groups/${groupId}/members/${uid}`]: true,
+  };
+  return await db.ref().update(updates);
 };

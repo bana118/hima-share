@@ -2,8 +2,13 @@ import Link from "next/link";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
-import { InvitationWithId, loadInvitation } from "../../interfaces/Invitation";
+import {
+  deleteInvitation,
+  InvitationWithId,
+  loadInvitation,
+} from "../../interfaces/Invitation";
 import React from "react";
+import Router from "next/router";
 
 type Props = {
   invitation?: InvitationWithId;
@@ -33,12 +38,13 @@ const CreateInvitationPage = ({
       document.execCommand("copy");
     }
   };
-  const deleteInvitation = () => {
-    console.log("hoge");
-  };
-
-  const setNewInvitation = () => {
-    console.log("hoge");
+  const invalidateInvitation = async (
+    event: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    deleteInvitation(invitation.id, invitation.groupId).then(() => {
+      Router.push("/");
+    });
   };
 
   return (
@@ -54,13 +60,8 @@ const CreateInvitationPage = ({
       />
       <p>友達にシェアしよう!</p>
       <div>
-        <a href="" onClick={deleteInvitation}>
+        <a href="" onClick={invalidateInvitation}>
           招待URLを無効化
-        </a>
-      </div>
-      <div>
-        <a href="" onClick={setNewInvitation}>
-          招待URLを更新
         </a>
       </div>
 

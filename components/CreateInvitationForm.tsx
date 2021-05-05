@@ -37,8 +37,8 @@ export const CreateInvitationForm = ({ group }: Props): JSX.Element => {
         groupId: group.id,
       };
       storeInvitation(invitation, group.id)
-        .then(() => {
-          Router.push("/");
+        .then((invitationId) => {
+          Router.push(`/invitations/${invitationId}`);
         })
         .catch(() => {
           setUnexpectedError();

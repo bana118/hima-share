@@ -13,7 +13,8 @@ export interface InvitationWithId extends Invitation {
 export const storeInvitation = async (
   invitation: Invitation,
   groupId: string
-): Promise<void> => {
+): Promise<string> => {
+  // TODO setInvitationに失敗したらinvitationsへのpushを取り消す
   const ref = await db.ref().child("invitations").push(invitation);
   const invitationId = ref.key;
   if (invitationId == null) {
@@ -37,4 +38,15 @@ export const loadInvitation = async (
   } else {
     return null;
   }
+};
+
+export const deleteInvitation = async (
+  invitationId: string,
+  groupId: string
+): Promise<void> => {
+  const updates = {
+    [`/invitations/${invitationId}`]: null,
+    [`/groups/${groupId}/invitationId`]: null,
+  };
+  return db.ref().update(updates);
 };

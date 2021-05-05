@@ -16,8 +16,9 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
   const authContext = useContext(AuthContext);
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
-    await auth.signOut();
-    Router.push("/");
+    auth.signOut().then(() => {
+      Router.push("/");
+    });
   };
   return (
     <div>
