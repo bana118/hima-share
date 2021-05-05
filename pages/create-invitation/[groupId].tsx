@@ -31,11 +31,11 @@ const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
 export default CreateInvitationPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.query;
-  if (id == null || Array.isArray(id)) {
+  const { id: groupId } = context.query;
+  if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const item = await loadGroup(id);
+    const item = await loadGroup(groupId);
     if (item == null) {
       return { props: { errors: "Invalid URL" } };
     } else {
