@@ -3,21 +3,27 @@ import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
 import { InvitationWithId, loadInvitation } from "../../interfaces/Invitation";
+import React from "react";
 
 type Props = {
-  item?: InvitationWithId;
+  invitation?: InvitationWithId;
+  appUrl?: string;
   errors?: string;
 };
 
-const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
+const CreateInvitationPage = ({
+  invitation,
+  appUrl,
+  errors,
+}: Props): JSX.Element => {
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!item) {
+  if (!invitation || !appUrl) {
     return <ErrorPage />;
   }
-
-  const joinUrl = `${document.location.origin}/join/${item.id}`;
+  console.log(process.env);
+  const joinUrl = `${appUrl}/join/${invitation.id}`;
   const copyURL = () => {
     const joinUrlElement = document.getElementById(
       "hima-share-join-url"
@@ -27,6 +33,14 @@ const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
       document.execCommand("copy");
     }
   };
+  const deleteInvitation = () => {
+    console.log("hoge");
+  };
+
+  const setNewInvitation = () => {
+    console.log("hoge");
+  };
+
   return (
     <Layout title="招待URL">
       <p>招待URLは以下です(クリックでコピー)</p>
@@ -39,6 +53,17 @@ const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
         readOnly
       />
       <p>友達にシェアしよう!</p>
+      <div>
+        <a href="" onClick={deleteInvitation}>
+          招待URLを無効化
+        </a>
+      </div>
+      <div>
+        <a href="" onClick={setNewInvitation}>
+          招待URLを更新
+        </a>
+      </div>
+
       <Link href="/">
         <a>戻る</a>
       </Link>
@@ -53,11 +78,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (invitationId == null || Array.isArray(invitationId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const item = await loadInvitation(invitationId);
-    if (item == null) {
+    const invitation = await loadInvitation(invitationId);
+    if (invitation == null) {
       return { props: { errors: "Invalid URL" } };
     } else {
-      return { props: { item } };
+      const appUrl = process.env.APP_URL;
+      if (appUrl == null) {
+        return { props: { errors: "Unexpected Error" } };
+      } else {
+        return { props: { invitation, appUrl } };
+      }
     }
   }
 };
