@@ -7,6 +7,7 @@ import { auth } from "../utils/firebase";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/sass/bootstrap-custom.scss";
 import "../styles/sass/calendar.scss";
+import "../styles/sass/navbar.scss";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(

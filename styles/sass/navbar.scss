@@ -1,0 +1,11 @@
+@import "./variables";
+
+.hima-share-navbar {
+  background: linear-gradient(
+    -45deg,
+    $accent-color 0%,
+    $accent-color 50%,
+    $main-color 0%,
+    $main-color 100%
+  );
+}
