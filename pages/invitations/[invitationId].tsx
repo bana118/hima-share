@@ -7,26 +7,43 @@ import {
   InvitationWithId,
   loadInvitation,
 } from "../../interfaces/Invitation";
-import React from "react";
+import React, { useContext } from "react";
 import Router from "next/router";
+import { AuthContext } from "../../context/AuthContext";
+import { GroupWithId, loadGroup } from "../../interfaces/Group";
 
 type Props = {
   invitation?: InvitationWithId;
+  group?: GroupWithId;
   appUrl?: string;
   errors?: string;
 };
 
 const CreateInvitationPage = ({
   invitation,
+  group,
   appUrl,
   errors,
 }: Props): JSX.Element => {
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!invitation || !appUrl) {
+  if (!invitation || !group || !appUrl) {
     return <ErrorPage />;
   }
+  const { authUser } = useContext(AuthContext);
+  if (authUser === undefined) {
+    return <React.Fragment />;
+  }
+
+  if (
+    authUser === null ||
+    group.members == null ||
+    !Object.keys(group.members).includes(authUser.uid)
+  ) {
+    return <ErrorPage errorMessage={"Invalid URL"} />;
+  }
+
   const joinUrl = `${appUrl}/join/${invitation.id}`;
   const copyURL = () => {
     const joinUrlElement = document.getElementById(
@@ -83,10 +100,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return { props: { errors: "Invalid URL" } };
     } else {
       const appUrl = process.env.APP_URL;
+      const group = await loadGroup(invitation.groupId);
       if (appUrl == null) {
         return { props: { errors: "Unexpected Error" } };
       } else {
-        return { props: { invitation, appUrl } };
+        return { props: { invitation, group, appUrl } };
       }
     }
   }
