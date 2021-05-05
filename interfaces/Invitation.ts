@@ -6,9 +6,8 @@ export interface Invitation {
   //   limit: Date; // TODO 招待期限をつける
 }
 
-export interface InvitationWithId {
+export interface InvitationWithId extends Invitation {
   id: string;
-  groupId: string;
 }
 
 export const storeInvitation = async (
@@ -26,7 +25,7 @@ export const storeInvitation = async (
 
 export const loadInvitation = async (
   invitationId: string
-): Promise<Invitation | null> => {
+): Promise<InvitationWithId | null> => {
   const snapShot = await db
     .ref()
     .child("invitations")
@@ -34,7 +33,7 @@ export const loadInvitation = async (
     .get();
   if (snapShot.exists()) {
     const invitation = snapShot.val() as Invitation;
-    return invitation;
+    return { ...invitation, id: invitationId };
   } else {
     return null;
   }

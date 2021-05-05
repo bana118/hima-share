@@ -31,7 +31,7 @@ const CreateInvitationPage = ({ item, errors }: Props): JSX.Element => {
 export default CreateInvitationPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id: groupId } = context.query;
+  const { groupId } = context.query;
   if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
