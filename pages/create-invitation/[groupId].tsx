@@ -6,6 +6,7 @@ import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { CreateInvitationForm } from "../../components/CreateInvitationForm";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import React from "react";
 
 type Props = {
   group?: GroupWithId;
@@ -20,8 +21,11 @@ const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
     return <ErrorPage />;
   }
   const { authUser } = useContext(AuthContext);
+  if (authUser === undefined) {
+    return <React.Fragment />;
+  }
   if (
-    authUser == null ||
+    authUser === null ||
     group.members == null ||
     !Object.keys(group.members).includes(authUser.uid)
   ) {
