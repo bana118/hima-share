@@ -1,11 +1,5 @@
 import Calendar from "react-calendar";
-import { DateStatus } from "../interfaces/DateStatus";
-import firebase from "firebase/app";
-
-type UserDateStatusList = {
-  user: firebase.User;
-  dateStatusList: DateStatus[];
-};
+import { UserDateStatusList } from "../interfaces/DateStatus";
 
 type GroupCalendarProps = {
   groupDateStatusList: UserDateStatusList[];

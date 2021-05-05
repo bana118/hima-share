@@ -1,10 +1,16 @@
 import { db } from "../utils/firebase";
+import { User } from "./User";
 
 export type Status = "calendar-free" | "calendar-busy";
 
 export interface DateStatus {
   date: Date;
   status: Status;
+}
+
+export interface UserDateStatusList {
+  user: User;
+  dateStatusList: DateStatus[];
 }
 
 interface formatDataType {

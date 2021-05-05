@@ -57,25 +57,37 @@ const IndexPage = (): JSX.Element => {
       if (g.invitationId == null) {
         return (
           <div key={g.id}>
-            <p>{g.name}</p>
-            <Link
-              href="/create-invitation/[id]"
-              as={`/create-invitation/${g.id}`}
-            >
-              <a>招待リンク作成</a>
-            </Link>
+            <div>
+              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
+                <a>{g.name}</a>
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/create-invitation/[id]"
+                as={`/create-invitation/${g.id}`}
+              >
+                <a>招待リンク作成</a>
+              </Link>
+            </div>
           </div>
         );
       } else {
         return (
           <div key={g.id}>
-            <p>{g.name}</p>
-            <Link
-              href="/invitations/[id]"
-              as={`/invitations/${g.invitationId}`}
-            >
-              <a>招待リンク確認</a>
-            </Link>
+            <div>
+              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
+                <a>{g.name}</a>
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/invitations/[id]"
+                as={`/invitations/${g.invitationId}`}
+              >
+                <a>招待リンク確認</a>
+              </Link>
+            </div>
           </div>
         );
       }
