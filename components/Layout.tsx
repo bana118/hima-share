@@ -32,7 +32,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
         />
       </Head>
       <header>
-        <Navbar bg="main" variant="dark">
+        <Navbar variant="dark" className="hima-share-navbar">
           <Link href="/" passHref>
             <Navbar.Brand className="mr-auto">Hima Share</Navbar.Brand>
           </Link>
