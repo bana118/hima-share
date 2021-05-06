@@ -6,7 +6,7 @@ import Layout from "../components/Layout";
 import { UserCalendar } from "../components/UserCalendar";
 import { AuthContext } from "../context/AuthContext";
 import {
-  DateStatus,
+  DateStatusList,
   loadDateStatusList,
   storeDateStatusList,
 } from "../interfaces/DateStatus";
@@ -14,7 +14,7 @@ import {
 const UserCalendarPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [dateStatusList, setDateStatusList] = useState<
-    DateStatus[] | undefined
+    DateStatusList | undefined
   >(undefined);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
@@ -28,7 +28,7 @@ const UserCalendarPage = (): JSX.Element => {
         if (data != null && !unmounted) {
           setDateStatusList(data);
         } else if (data == null && !unmounted) {
-          setDateStatusList([]);
+          setDateStatusList({});
         }
       }
     };

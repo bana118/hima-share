@@ -1,52 +1,32 @@
 import { db } from "../utils/firebase";
+import { UserWithId } from "./User";
 
 export type Status = "calendar-free" | "calendar-busy";
 
-export interface DateStatus {
-  date: Date;
-  status: Status;
+// dateTime => Date: new Date(dateTime), Date => dateTime: Date.getTime()
+export interface DateStatusList {
+  [dateTime: number]: Status | undefined;
 }
 
-interface formatDataType {
-  [key: number]: Status;
+export interface UserDateStatusList {
+  user: UserWithId;
+  dateStatusList: DateStatusList;
 }
-
-const toFormatData = (dateStatusList: DateStatus[]) => {
-  const formatData: formatDataType = {};
-  for (const dateStatus of dateStatusList) {
-    const time = dateStatus.date.getTime();
-    formatData[time] = dateStatus.status;
-  }
-  return formatData;
-};
-
-const fromFormatData = (formatData: formatDataType) => {
-  const dataStatusList: DateStatus[] = [];
-  for (const key in formatData) {
-    const date = new Date(Number(key));
-    const status = formatData[key];
-    dataStatusList.push({ date: date, status: status });
-  }
-  return dataStatusList;
-};
 
 export const storeDateStatusList = async (
-  dateStatusList: DateStatus[],
+  dateStatusList: DateStatusList,
   uid: string
 ): Promise<void> => {
-  const data = toFormatData(dateStatusList);
-  return db.ref(`calendars/${uid}`).set(data);
+  return db.ref(`calendars/${uid}`).set(dateStatusList);
 };
 
 export const loadDateStatusList = async (
   uid: string
-): Promise<DateStatus[] | null> => {
+): Promise<DateStatusList> => {
   const snapShot = await db.ref().child("calendars").child(uid).get();
   if (snapShot.exists()) {
-    const formatData = snapShot.val() as formatDataType;
-    const dateStatusList = fromFormatData(formatData);
-    return dateStatusList;
+    return snapShot.val() as DateStatusList;
   } else {
-    return null;
+    return [];
   }
 };
