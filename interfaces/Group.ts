@@ -26,7 +26,7 @@ export const storeGroup = async (group: Group, uid: string): Promise<void> => {
 export const loadGroup = async (
   groupId: string
 ): Promise<GroupWithId | null> => {
-  const snapShot = await db.ref().child("groups").child(groupId).get();
+  const snapShot = await db.ref().child("groups").child(groupId).once("value");
   if (snapShot.exists()) {
     const group = snapShot.val() as Group;
     return { ...group, id: groupId };

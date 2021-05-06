@@ -23,7 +23,7 @@ export const storeDateStatusList = async (
 export const loadDateStatusList = async (
   uid: string
 ): Promise<DateStatusList> => {
-  const snapShot = await db.ref().child("calendars").child(uid).get();
+  const snapShot = await db.ref().child("calendars").child(uid).once("value");
   if (snapShot.exists()) {
     return snapShot.val() as DateStatusList;
   } else {
