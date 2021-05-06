@@ -19,6 +19,17 @@
   background-color: #e6e6e6 !important;
 }
 
+// Set today background color and border
+
+.react-calendar__tile--now {
+  background-color: #ffff76 !important;
+  border: 3px solid #ffff76 !important;
+}
+
+.react-calendar__tile--now:hover {
+  background-color: #ffffa9 !important;
+}
+
 // Set Saturday's text color to blue
 
 .react-calendar__tile:nth-child(7n-1) {
