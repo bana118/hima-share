@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "yarn lint && yarn type-check && bash ./scripts/git_tag_checker.sh"
   },
   "license": "MIT",
   "devDependencies": {
