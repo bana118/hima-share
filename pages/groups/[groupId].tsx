@@ -3,22 +3,32 @@ import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import React from "react";
-import { UserDateStatusList } from "../../interfaces/DateStatus";
+import {
+  loadDateStatusList,
+  UserDateStatusList,
+} from "../../interfaces/DateStatus";
 import { GroupCalendar } from "../../components/GroupCalendar";
+import { loadUser } from "../../interfaces/User";
+import { Button } from "react-bootstrap";
 
 type Props = {
-  initGroup?: GroupWithId;
+  group?: GroupWithId;
+  groupDateStatusList?: UserDateStatusList[];
   errors?: string;
 };
 
-const GroupCalendarPage = ({ initGroup, errors }: Props): JSX.Element => {
+const GroupCalendarPage = ({
+  group,
+  groupDateStatusList,
+  errors,
+}: Props): JSX.Element => {
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!initGroup) {
+  if (!group || !groupDateStatusList) {
     return <ErrorPage />;
   }
   const { authUser } = useContext(AuthContext);
@@ -27,24 +37,25 @@ const GroupCalendarPage = ({ initGroup, errors }: Props): JSX.Element => {
   }
   if (
     authUser === null ||
-    initGroup.members == null ||
-    !Object.keys(initGroup.members).includes(authUser.uid)
+    group.members == null ||
+    !Object.keys(group.members).includes(authUser.uid)
   ) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
-  const userIds = Object.keys(initGroup.members);
-  const [groupDateStatusList, setGroupDateStatusList] = useState<
-    UserDateStatusList[]
-  >([]);
+  // TODO Firebaseのon()メソッドを用いてリアルタイムでカレンダーが変わるようにする
 
   return (
-    <Layout title="招待を作成">
-      <GroupCalendar groupDateStatusList={groupDateStatusList} />
-      <Link href="/">
-        <a>戻る</a>
-      </Link>
-    </Layout>
+    <React.Fragment>
+      {groupDateStatusList && (
+        <Layout title={group.name}>
+          <GroupCalendar groupDateStatusList={groupDateStatusList} />
+          <Link href="/">
+            <a>戻る</a>
+          </Link>
+        </Layout>
+      )}
+    </React.Fragment>
   );
 };
 
@@ -55,11 +66,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const initGroup = await loadGroup(groupId);
-    if (initGroup == null) {
+    const group = await loadGroup(groupId);
+    if (group == null || group.members == null) {
       return { props: { errors: "Invalid URL" } };
     } else {
-      return { props: { initGroup } };
+      const userIds = Object.keys(group.members);
+      const groupDateStatusList: UserDateStatusList[] = [];
+      for (const userId of userIds) {
+        const user = await loadUser(userId);
+        const userDateStatusList = await loadDateStatusList(userId);
+        if (user == null) {
+          return { props: { errors: "Unexpected Error" } };
+        }
+        groupDateStatusList.push({
+          user: user,
+          dateStatusList: userDateStatusList,
+        });
+      }
+      return { props: { group, groupDateStatusList } };
     }
   }
 };

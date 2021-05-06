@@ -16,13 +16,15 @@ export const GroupCalendar = ({
   // TODO "dd日" ではなく "dd" だけ表示する
   const dateToFreeNumList: DateToNum[] = [];
   for (const userDateStatusList of groupDateStatusList) {
-    for (const dateStatus of userDateStatusList.dateStatusList) {
-      if (dateStatus.status == "calendar-free") {
+    const dateTimeList = Object.keys(userDateStatusList.dateStatusList);
+    for (const dateTime of dateTimeList) {
+      const status = userDateStatusList.dateStatusList[Number(dateTime)];
+      if (status == "calendar-free") {
         const index = dateToFreeNumList.findIndex(
-          (e) => e.date.getTime() == dateStatus.date.getTime()
+          (e) => e.date.getTime() == Number(dateTime)
         );
         if (index == -1) {
-          dateToFreeNumList.push({ date: dateStatus.date, num: 1 });
+          dateToFreeNumList.push({ date: new Date(Number(dateTime)), num: 1 });
         } else {
           dateToFreeNumList[index].num += 1;
         }

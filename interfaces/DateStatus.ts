@@ -1,58 +1,55 @@
 import { db } from "../utils/firebase";
-import { User } from "./User";
+import { UserWithId } from "./User";
 
 export type Status = "calendar-free" | "calendar-busy";
 
-export interface DateStatus {
-  date: Date;
-  status: Status;
+// dateTime => Date: new Date(dateTime), Date => dateTime: Date.getTime()
+export interface DateStatusList {
+  [dateTime: number]: Status | undefined;
 }
 
 export interface UserDateStatusList {
-  user: User;
-  dateStatusList: DateStatus[];
+  user: UserWithId;
+  dateStatusList: DateStatusList;
 }
 
-interface formatDataType {
-  [key: number]: Status;
-}
+// interface formatDataType {
+//   [key: number]: Status;
+// }
 
-const toFormatData = (dateStatusList: DateStatus[]) => {
-  const formatData: formatDataType = {};
-  for (const dateStatus of dateStatusList) {
-    const time = dateStatus.date.getTime();
-    formatData[time] = dateStatus.status;
-  }
-  return formatData;
-};
+// const toFormatData = (dateStatusList: DateStatus[]) => {
+//   const formatData: formatDataType = {};
+//   for (const dateStatus of dateStatusList) {
+//     const time = dateStatus.date.getTime();
+//     formatData[time] = dateStatus.status;
+//   }
+//   return formatData;
+// };
 
-const fromFormatData = (formatData: formatDataType) => {
-  const dataStatusList: DateStatus[] = [];
-  for (const key in formatData) {
-    const date = new Date(Number(key));
-    const status = formatData[key];
-    dataStatusList.push({ date: date, status: status });
-  }
-  return dataStatusList;
-};
+// const fromFormatData = (formatData: formatDataType) => {
+//   const dataStatusList: DateStatus[] = [];
+//   for (const key in formatData) {
+//     const date = new Date(Number(key));
+//     const status = formatData[key];
+//     dataStatusList.push({ date: date, status: status });
+//   }
+//   return dataStatusList;
+// };
 
 export const storeDateStatusList = async (
-  dateStatusList: DateStatus[],
+  dateStatusList: DateStatusList,
   uid: string
 ): Promise<void> => {
-  const data = toFormatData(dateStatusList);
-  return db.ref(`calendars/${uid}`).set(data);
+  return db.ref(`calendars/${uid}`).set(dateStatusList);
 };
 
 export const loadDateStatusList = async (
   uid: string
-): Promise<DateStatus[] | null> => {
+): Promise<DateStatusList> => {
   const snapShot = await db.ref().child("calendars").child(uid).get();
   if (snapShot.exists()) {
-    const formatData = snapShot.val() as formatDataType;
-    const dateStatusList = fromFormatData(formatData);
-    return dateStatusList;
+    return snapShot.val() as DateStatusList;
   } else {
-    return null;
+    return [];
   }
 };
