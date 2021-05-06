@@ -13,29 +13,6 @@ export interface UserDateStatusList {
   dateStatusList: DateStatusList;
 }
 
-// interface formatDataType {
-//   [key: number]: Status;
-// }
-
-// const toFormatData = (dateStatusList: DateStatus[]) => {
-//   const formatData: formatDataType = {};
-//   for (const dateStatus of dateStatusList) {
-//     const time = dateStatus.date.getTime();
-//     formatData[time] = dateStatus.status;
-//   }
-//   return formatData;
-// };
-
-// const fromFormatData = (formatData: formatDataType) => {
-//   const dataStatusList: DateStatus[] = [];
-//   for (const key in formatData) {
-//     const date = new Date(Number(key));
-//     const status = formatData[key];
-//     dataStatusList.push({ date: date, status: status });
-//   }
-//   return dataStatusList;
-// };
-
 export const storeDateStatusList = async (
   dateStatusList: DateStatusList,
   uid: string
