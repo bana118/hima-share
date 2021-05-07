@@ -71,6 +71,7 @@ export const GroupCalendar = ({
   };
 
   // TODO 別ファイルに分ける
+  // TODO きれいに表示する
   const tooltipComponent = (date: Date): JSX.Element => {
     const dateTime = date.getTime();
     const statusInfo = dateToStatusInfoList[dateTime];
