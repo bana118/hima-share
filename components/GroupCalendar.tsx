@@ -1,4 +1,3 @@
-import { UserWithId } from "interfaces/User";
 import React, { useRef, useState } from "react";
 import { Overlay, Tooltip } from "react-bootstrap";
 import Calendar from "react-calendar";
