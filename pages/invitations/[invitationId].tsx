@@ -7,10 +7,11 @@ import {
   InvitationWithId,
   loadInvitation,
 } from "../../interfaces/Invitation";
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Router from "next/router";
 import { AuthContext } from "../../context/AuthContext";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
+import { Overlay, Tooltip } from "react-bootstrap";
 
 type Props = {
   invitation?: InvitationWithId;
@@ -25,6 +26,9 @@ const CreateInvitationPage = ({
   appUrl,
   errors,
 }: Props): JSX.Element => {
+  const [showTooltip, setShowTooltop] = useState(false);
+  const invitationUrlInput = useRef(null);
+
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
@@ -52,6 +56,7 @@ const CreateInvitationPage = ({
     if (joinUrlElement != null) {
       joinUrlElement.select();
       document.execCommand("copy");
+      setShowTooltop(true);
     }
   };
   const invalidateInvitation = async (
@@ -67,13 +72,28 @@ const CreateInvitationPage = ({
     <Layout title="招待URL">
       <p>招待URLは以下です(クリックでコピー)</p>
       <input
+        ref={invitationUrlInput}
         type="text"
         id="hima-share-join-url"
         className="form-control"
         onClick={copyURL}
+        onBlur={() => {
+          setShowTooltop(false);
+        }}
         value={joinUrl}
         readOnly
       />
+      <Overlay
+        target={invitationUrlInput.current}
+        show={showTooltip}
+        placement="top"
+      >
+        {(props) => (
+          <Tooltip id="copy-url-tooltip" {...props}>
+            コピーしました！
+          </Tooltip>
+        )}
+      </Overlay>
       <p>友達にシェアしよう!</p>
       <div>
         <a href="" onClick={invalidateInvitation}>
