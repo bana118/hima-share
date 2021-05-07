@@ -125,6 +125,10 @@ export const GroupCalendar = ({
         minDetail="month"
         maxDetail="month"
         defaultView="month"
+        formatDay={(_locale, date) => {
+          const day = date.getDate();
+          return `${day}`;
+        }}
         showNavigation={true}
         prev2Label={null}
         next2Label={null}
