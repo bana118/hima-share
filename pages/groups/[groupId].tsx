@@ -56,16 +56,18 @@ const GroupCalendarPage = ({
       const userIds = Object.keys(newGroup.members);
       const newGroupDateStatusList = [];
 
-      const users = await Promise.all(
-        userIds.map((userId) => loadUser(userId))
-      );
       const usersDateStatusList = await Promise.all(
-        userIds.map((userId) => loadDateStatusList(userId))
+        userIds.map(async (userId) => {
+          return {
+            user: await loadUser(userId),
+            dateStatusList: await loadDateStatusList(userId),
+          };
+        })
       );
 
       for (let i = 0; i < userIds.length; i++) {
-        const user = users[i];
-        const userDateStatusList = usersDateStatusList[i];
+        const user = usersDateStatusList[i].user;
+        const userDateStatusList = usersDateStatusList[i].dateStatusList;
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }
@@ -121,15 +123,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else {
       const userIds = Object.keys(initGroup.members);
       const initGroupDateStatusList: UserDateStatusList[] = [];
-      const users = await Promise.all(
-        userIds.map((userId) => loadUser(userId))
-      );
+
       const usersDateStatusList = await Promise.all(
-        userIds.map((userId) => loadDateStatusList(userId))
+        userIds.map(async (userId) => {
+          return {
+            user: await loadUser(userId),
+            dateStatusList: await loadDateStatusList(userId),
+          };
+        })
       );
       for (let i = 0; i < userIds.length; i++) {
-        const user = users[i];
-        const userDateStatusList = usersDateStatusList[i];
+        const user = usersDateStatusList[i].user;
+        const userDateStatusList = usersDateStatusList[i].dateStatusList;
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }
