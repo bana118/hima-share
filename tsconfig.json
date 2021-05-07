@@ -16,7 +16,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "baseUrl": "./",
+    "paths": {
+      "react-calendar": ["./types/react-calendar"]
+    },
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "exclude": ["node_modules", "_app.tsx"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
