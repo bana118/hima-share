@@ -25,37 +25,49 @@ const GroupCalendarPage = ({
   initGroupDateStatusList,
   errors,
 }: Props): JSX.Element => {
+  const { authUser } = useContext(AuthContext);
+  const [group, setGroup] = useState(initGroup);
+  const [groupDateStatusList, setGroupDateStatusList] = useState(
+    initGroupDateStatusList
+  );
+
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!initGroup || !initGroupDateStatusList) {
+  if (!group || !groupDateStatusList) {
     return <ErrorPage />;
   }
-  const { authUser } = useContext(AuthContext);
   if (authUser === undefined) {
     return <React.Fragment />;
   }
   if (
     authUser === null ||
-    initGroup.members == null ||
-    !Object.keys(initGroup.members).includes(authUser.uid)
+    group.members == null ||
+    !Object.keys(group.members).includes(authUser.uid)
   ) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   // TODO Firebaseのon()メソッドを用いてリアルタイムでカレンダーが変わるようにする
-  const [group, setGroup] = useState(initGroup);
-  const [groupDateStatusList, setGroupDateStatusList] = useState(
-    initGroupDateStatusList
-  );
+
   const reload = async () => {
     const newGroup = await loadGroup(group.id);
     if (newGroup != null && newGroup.members != null) {
       const userIds = Object.keys(newGroup.members);
       const newGroupDateStatusList = [];
-      for (const userId of userIds) {
-        const user = await loadUser(userId);
-        const userDateStatusList = await loadDateStatusList(userId);
+
+      const usersDateStatusList = await Promise.all(
+        userIds.map(async (userId) => {
+          return {
+            user: await loadUser(userId),
+            dateStatusList: await loadDateStatusList(userId),
+          };
+        })
+      );
+
+      for (let i = 0; i < userIds.length; i++) {
+        const user = usersDateStatusList[i].user;
+        const userDateStatusList = usersDateStatusList[i].dateStatusList;
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }
@@ -64,6 +76,18 @@ const GroupCalendarPage = ({
           dateStatusList: userDateStatusList,
         });
       }
+      newGroupDateStatusList.sort((a, b) => {
+        const nameA = a.user.name.toUpperCase();
+        const nameB = b.user.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+
       setGroup(newGroup);
       setGroupDateStatusList(newGroupDateStatusList);
     }
@@ -71,7 +95,7 @@ const GroupCalendarPage = ({
 
   return (
     <React.Fragment>
-      {groupDateStatusList && (
+      {groupDateStatusList && group && (
         <Layout title={group.name}>
           <Button variant="accent" type="button" onClick={reload}>
             更新
@@ -99,9 +123,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else {
       const userIds = Object.keys(initGroup.members);
       const initGroupDateStatusList: UserDateStatusList[] = [];
-      for (const userId of userIds) {
-        const user = await loadUser(userId);
-        const userDateStatusList = await loadDateStatusList(userId);
+
+      const usersDateStatusList = await Promise.all(
+        userIds.map(async (userId) => {
+          return {
+            user: await loadUser(userId),
+            dateStatusList: await loadDateStatusList(userId),
+          };
+        })
+      );
+      for (let i = 0; i < userIds.length; i++) {
+        const user = usersDateStatusList[i].user;
+        const userDateStatusList = usersDateStatusList[i].dateStatusList;
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }

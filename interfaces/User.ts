@@ -17,7 +17,7 @@ export const storeUser = (user: User, uid: string): Promise<void> => {
 };
 
 export const loadUser = async (uid: string): Promise<UserWithId | null> => {
-  const snapShot = await db.ref().child("users").child(uid).get();
+  const snapShot = await db.ref().child("users").child(uid).once("value");
   if (snapShot.exists()) {
     const user = snapShot.val() as User;
     return { ...user, id: uid };

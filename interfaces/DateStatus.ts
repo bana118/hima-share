@@ -1,5 +1,6 @@
 import { db } from "../utils/firebase";
 import { UserWithId } from "./User";
+import firebase from "firebase/app";
 
 export type Status = "calendar-free" | "calendar-busy";
 
@@ -23,10 +24,38 @@ export const storeDateStatusList = async (
 export const loadDateStatusList = async (
   uid: string
 ): Promise<DateStatusList> => {
-  const snapShot = await db.ref().child("calendars").child(uid).get();
+  const snapShot = await db.ref().child("calendars").child(uid).once("value");
   if (snapShot.exists()) {
     return snapShot.val() as DateStatusList;
   } else {
     return [];
   }
+};
+
+export const watchDateStatusList = (
+  uid: string,
+  eventType: firebase.database.EventType,
+  onValueChanged: (
+    key: string | null,
+    value?: DateStatusList | null,
+    childValue?: Status | null
+  ) => void
+): void => {
+  const ref = db.ref(`calendars/${uid}`);
+  ref.on(eventType, (snapShot) => {
+    if (eventType == "value") {
+      const key = snapShot.key;
+      const data = snapShot.val() as DateStatusList | null;
+      onValueChanged(key, data, undefined);
+    } else {
+      const key = snapShot.key;
+      const childData = snapShot.val() as Status | null;
+      onValueChanged(key, undefined, childData);
+    }
+  });
+};
+
+export const unWatchDataStatusList = (uid: string): void => {
+  const ref = db.ref(`calendars/${uid}`);
+  ref.off();
 };

@@ -30,14 +30,27 @@ const IndexPage = (): JSX.Element => {
           const groupList: GroupWithId[] = [];
           if (user.groups != null) {
             const groupIds = Object.keys(user.groups);
-            for (const groupId of groupIds) {
-              const group = await loadGroup(groupId);
+            const groupsfromDatabase = await Promise.all(
+              groupIds.map((groupId) => loadGroup(groupId))
+            );
+            for (const group of groupsfromDatabase) {
               if (group != null) {
                 groupList.push(group);
               }
             }
           }
           if (!unmounted) {
+            groupList.sort((a, b) => {
+              const nameA = a.name.toUpperCase();
+              const nameB = b.name.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+              return 0;
+            });
             setGroups(groupList);
           }
         }

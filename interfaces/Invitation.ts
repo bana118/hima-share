@@ -31,7 +31,7 @@ export const loadInvitation = async (
     .ref()
     .child("invitations")
     .child(invitationId)
-    .get();
+    .once("value");
   if (snapShot.exists()) {
     const invitation = snapShot.val() as Invitation;
     return { ...invitation, id: invitationId };

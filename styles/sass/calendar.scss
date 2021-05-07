@@ -19,10 +19,26 @@
   background-color: #e6e6e6 !important;
 }
 
-// Set Saturday's text color to blue
+// Set today background color and border
+
+.react-calendar__tile--now {
+  background-color: #ffff76 !important;
+  border: 3px solid #ffff76 !important;
+}
+
+.react-calendar__tile--now:hover {
+  background-color: #ffffa9 !important;
+}
+
+// Set Saturday's text color to blue expect disable day
+// Set Sunday's text color to red expect disable day
 
 .react-calendar__tile:nth-child(7n-1) {
   color: #0000ff;
+}
+
+.react-calendar__tile:nth-child(7n) {
+  color: #ff0000;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
