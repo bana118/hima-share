@@ -55,9 +55,17 @@ const GroupCalendarPage = ({
     if (newGroup != null && newGroup.members != null) {
       const userIds = Object.keys(newGroup.members);
       const newGroupDateStatusList = [];
-      for (const userId of userIds) {
-        const user = await loadUser(userId);
-        const userDateStatusList = await loadDateStatusList(userId);
+
+      const users = await Promise.all(
+        userIds.map((userId) => loadUser(userId))
+      );
+      const usersDateStatusList = await Promise.all(
+        userIds.map((userId) => loadDateStatusList(userId))
+      );
+
+      for (let i = 0; i < userIds.length; i++) {
+        const user = users[i];
+        const userDateStatusList = usersDateStatusList[i];
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }
@@ -66,6 +74,18 @@ const GroupCalendarPage = ({
           dateStatusList: userDateStatusList,
         });
       }
+      newGroupDateStatusList.sort((a, b) => {
+        const nameA = a.user.name.toUpperCase();
+        const nameB = b.user.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+
       setGroup(newGroup);
       setGroupDateStatusList(newGroupDateStatusList);
     }
@@ -101,9 +121,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } else {
       const userIds = Object.keys(initGroup.members);
       const initGroupDateStatusList: UserDateStatusList[] = [];
-      for (const userId of userIds) {
-        const user = await loadUser(userId);
-        const userDateStatusList = await loadDateStatusList(userId);
+      const users = await Promise.all(
+        userIds.map((userId) => loadUser(userId))
+      );
+      const usersDateStatusList = await Promise.all(
+        userIds.map((userId) => loadDateStatusList(userId))
+      );
+      for (let i = 0; i < userIds.length; i++) {
+        const user = users[i];
+        const userDateStatusList = usersDateStatusList[i];
         if (user == null) {
           return { props: { errors: "Unexpected Error" } };
         }
