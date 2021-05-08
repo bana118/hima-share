@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
@@ -35,9 +34,6 @@ const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
   return (
     <Layout title="招待を作成">
       <CreateInvitationForm group={group} />
-      <Link href="/">
-        <a>戻る</a>
-      </Link>
     </Layout>
   );
 };

@@ -104,9 +104,6 @@ const GroupCalendarPage = ({
             groupDateStatusList={groupDateStatusList}
             group={group}
           />
-          <Link href="/">
-            <a>戻る</a>
-          </Link>
         </Layout>
       )}
     </React.Fragment>

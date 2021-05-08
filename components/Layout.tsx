@@ -39,6 +39,11 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           </Link>
           {authContext.authUser && (
             <Nav>
+              <Link href="/profile" passHref>
+                <Nav.Link className="mr-3" active>
+                  Profile
+                </Nav.Link>
+              </Link>
               <Nav.Link active onClick={logout}>
                 Logout
               </Nav.Link>

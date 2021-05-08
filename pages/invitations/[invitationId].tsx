@@ -96,14 +96,10 @@ const CreateInvitationPage = ({
       </Overlay>
       <p>友達にシェアしよう!</p>
       <div>
-        <a href="" onClick={invalidateInvitation}>
+        <a href="#" onClick={invalidateInvitation}>
           招待URLを無効化
         </a>
       </div>
-
-      <Link href="/">
-        <a>戻る</a>
-      </Link>
     </Layout>
   );
 };

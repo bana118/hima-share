@@ -17,7 +17,7 @@ const RegisterPage = (): JSX.Element => {
       {authUser === null && (
         <Layout title="Register">
           <h1>Register</h1>
-          <RegisterForm onRegistered={() => Router.push("/calendar")} />
+          <RegisterForm onRegistered={() => Router.push("/")} />
           <p>
             <Link href="/login">
               <a>ログイン</a>
