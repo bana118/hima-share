@@ -3,16 +3,21 @@ import { UserWithId } from "interfaces/User";
 import React from "react";
 
 interface UserInfoOfDayProps {
-  date: Date;
+  date: Date | null;
   users: UserWithId[];
   dateToStatusInfoList: DateTimeToStatusInfoList;
+  close: () => void;
 }
 
 export const UserInfoOfDay = ({
   date,
   users,
   dateToStatusInfoList,
+  close,
 }: UserInfoOfDayProps): JSX.Element => {
+  if (date == null) {
+    return <React.Fragment />;
+  }
   const dateTime = date.getTime();
   const statusInfo = dateToStatusInfoList[dateTime];
   const userStatusComponents = users.map((user) => {
@@ -32,23 +37,46 @@ export const UserInfoOfDay = ({
       }
     }
   });
+  const dayFormat = (day: number) => {
+    switch (day) {
+      case 0:
+        return "日";
+      case 1:
+        return "月";
+      case 2:
+        return "火";
+      case 3:
+        return "水";
+      case 4:
+        return "木";
+      case 5:
+        return "金";
+      case 6:
+        return "土";
+      default:
+        return "Unexpected Error";
+    }
+  };
+  const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}(${dayFormat(
+    date.getDay()
+  )})`;
   if (statusInfo == null) {
     return (
-      <React.Fragment>
-        <p>{date.toString()}</p>
+      <div onClick={close}>
+        <p>{dateString}</p>
         <p>暇な人: {0}</p>
         <p>忙しい人: {0}</p>
         {userStatusComponents}
-      </React.Fragment>
+      </div>
     );
   } else {
     return (
-      <React.Fragment>
-        <p>{date.toString()}</p>
+      <div onClick={close}>
+        <p>{dateString}</p>
         <p>暇な人: {statusInfo.free}</p>
         <p>忙しい人: {statusInfo.busy}</p>
         {userStatusComponents}
-      </React.Fragment>
+      </div>
     );
   }
 };

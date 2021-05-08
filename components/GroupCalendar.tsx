@@ -60,20 +60,15 @@ export const GroupCalendar = ({
 
   return (
     <React.Fragment>
-      <div
-        onClick={() => {
+      <UserInfoOfDay
+        date={focusedDate}
+        users={users}
+        dateToStatusInfoList={dateToStatusInfoList}
+        close={() => {
           setShowUserInfo(false);
           setFocusedDate(null);
         }}
-      >
-        {focusedDate && (
-          <UserInfoOfDay
-            date={focusedDate}
-            users={users}
-            dateToStatusInfoList={dateToStatusInfoList}
-          />
-        )}
-      </div>
+      />
       <Calendar
         className={showUserInfo ? "calendar-hidden" : ""}
         onClickDay={(date) => {
