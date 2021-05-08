@@ -18,7 +18,6 @@ export const GroupCalendar = ({
   );
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
-  // TODO "dd日" ではなく "dd" だけ表示する
   const dateToStatusInfoList: DateTimeToStatusInfoList = {};
 
   for (const userDateStatusList of groupDateStatusList) {
