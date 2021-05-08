@@ -4,7 +4,8 @@ export interface User {
   name: string;
   email: string;
   groups?: {
-    [groupId: string]: true;
+    // Chat Id (eg. Slack, Discor, Twitter...)
+    [groupId: string]: string;
   };
 }
 
@@ -28,11 +29,12 @@ export const loadUser = async (uid: string): Promise<UserWithId | null> => {
 
 export const joinGroup = async (
   uid: string,
-  groupId: string
+  groupId: string,
+  chatId: string
 ): Promise<void> => {
   const updates = {
-    [`/users/${uid}/groups/${groupId}`]: true,
-    [`/groups/${groupId}/members/${uid}`]: true,
+    [`/users/${uid}/groups/${groupId}`]: chatId,
+    [`/groups/${groupId}/members/${uid}`]: chatId,
   };
   return await db.ref().update(updates);
 };

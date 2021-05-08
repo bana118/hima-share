@@ -118,11 +118,7 @@ export const RegisterForm = ({
       </Form.Group>
       <Form.Group>
         <Form.Label>user name</Form.Label>
-        <Form.Control
-          type="userName"
-          isInvalid={!!errors.userName}
-          {...register("userName")}
-        />
+        <Form.Control isInvalid={!!errors.userName} {...register("userName")} />
         {errors.userName && (
           <Form.Control.Feedback type="invalid">
             {errors.userName.message}

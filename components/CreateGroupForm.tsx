@@ -9,10 +9,12 @@ import { Group, storeGroup } from "../interfaces/Group";
 
 type InputsType = {
   name: string;
+  chatId: string;
 };
 
 const schema = yup.object().shape({
   name: yup.string().required("名前は必須です"),
+  chatId: yup.string(),
 });
 
 export const CreateGroupForm = (): JSX.Element => {
@@ -34,7 +36,7 @@ export const CreateGroupForm = (): JSX.Element => {
       const group: Group = {
         name: data["name"],
       };
-      storeGroup(group, authUser.uid)
+      storeGroup(group, authUser.uid, data["chatId"])
         .then(() => {
           Router.push("/");
         })
@@ -49,14 +51,20 @@ export const CreateGroupForm = (): JSX.Element => {
     <Form onSubmit={handleSubmit(createGroup)}>
       <Form.Group>
         <Form.Label>Group Name</Form.Label>
-        <Form.Control
-          type="name"
-          isInvalid={!!errors.name}
-          {...register("name")}
-        />
+        <Form.Control isInvalid={!!errors.name} {...register("name")} />
         {errors.name && (
           <Form.Control.Feedback type="invalid">
             {errors.name.message}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Chat ID</Form.Label>
+        <Form.Control isInvalid={!!errors.chatId} {...register("chatId")} />
+        {errors.chatId && (
+          <Form.Control.Feedback type="invalid">
+            {errors.chatId.message}
           </Form.Control.Feedback>
         )}
       </Form.Group>
