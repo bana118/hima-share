@@ -83,16 +83,15 @@ export const UserInfoOfDay = ({
   return (
     <Card>
       <Card.Header as="h4">
-        {dateString}
         <Button
-          className="float-right"
+          className="float-left mr-3"
           onClick={close}
           size="sm"
           variant="main"
-          aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">戻る</span>
         </Button>
+        {dateString}
       </Card.Header>
       <Card.Body>
         {cardTitleComponent}
