@@ -7,6 +7,7 @@ export interface User {
     // Chat Id (eg. Slack, Discor, Twitter...)
     [groupId: string]: string;
   };
+  description: string;
 }
 
 export interface UserWithId extends User {
