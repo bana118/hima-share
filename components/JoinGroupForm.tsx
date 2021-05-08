@@ -9,19 +9,24 @@ import Layout from "./Layout";
 import Link from "next/link";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-type Props = {
+interface JoinGroupFormProps {
   group: GroupWithId;
-};
+}
 
-// 現在入力はないがreact-hook-formを用いるために必要
-type InputsType = {
-  empty: undefined;
-};
+interface InputsType {
+  chatId: string;
+}
+
+const schema = yup.object().shape({
+  chatId: yup.string(),
+});
 
 type LoginOrRegister = "login" | "register";
 
-export const JoinGroupForm = ({ group }: Props): JSX.Element => {
+export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | undefined>(
     undefined
@@ -65,22 +70,23 @@ export const JoinGroupForm = ({ group }: Props): JSX.Element => {
   }, [authUser]);
 
   const {
+    register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<InputsType>();
+  } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const setUnexpectedError = () => {
-    setError("empty", {
+    setError("chatId", {
       type: "manual",
       message: "予期せぬエラーが発生しました！ もう一度お試しください",
     });
   };
 
-  const confirmJoinGroup = async () => {
+  const confirmJoinGroup = async (data: InputsType) => {
     if (user == null) {
       setUnexpectedError();
     } else {
-      joinGroup(user.id, group.id)
+      joinGroup(user.id, group.id, data["chatId"])
         .then(() => {
           Router.push("/");
         })
@@ -140,11 +146,19 @@ export const JoinGroupForm = ({ group }: Props): JSX.Element => {
               <Form onSubmit={handleSubmit(confirmJoinGroup)}>
                 <p>{user.name} としてログイン中</p>
                 <p>グループ: {group.name}に参加しますか？</p>
-                {errors.empty && (
-                  <Form.Control.Feedback type="invalid">
-                    {errors.empty.message}
-                  </Form.Control.Feedback>
-                )}
+                <p>グループの説明: {group.description}</p>
+                <Form.Group>
+                  <Form.Label>Chat ID</Form.Label>
+                  <Form.Control
+                    isInvalid={!!errors.chatId}
+                    {...register("chatId")}
+                  />
+                  {errors.chatId && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.chatId.message}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
                 <Button variant="accent" type="submit">
                   参加
                 </Button>

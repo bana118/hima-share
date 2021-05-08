@@ -1,35 +1,26 @@
-import React, { useRef, useState } from "react";
-import { Overlay, Tooltip } from "react-bootstrap";
+import { GroupWithId } from "interfaces/Group";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
-import { Status, UserDateStatusList } from "../interfaces/DateStatus";
+import {
+  DateTimeToStatusInfoList,
+  UserDateStatusList,
+} from "../interfaces/DateStatus";
+import { UserInfoOfDay } from "./UserInfoOfDay";
 
 interface GroupCalendarProps {
   groupDateStatusList: UserDateStatusList[];
-}
-
-interface UsersStatus {
-  [uid: string]: Status | undefined;
-}
-
-interface StatusInfo {
-  free: number;
-  busy: number;
-  usersStatus: UsersStatus;
-}
-interface DateTimeToStatusInfoList {
-  [dateTime: number]: StatusInfo | undefined;
+  group: GroupWithId;
 }
 
 export const GroupCalendar = ({
-  groupDateStatusList: groupDateStatusList,
+  groupDateStatusList,
+  group,
 }: GroupCalendarProps): JSX.Element => {
   const users = groupDateStatusList.map(
     (groupDateStatus) => groupDateStatus.user
   );
-  const calendarRef = useRef(null);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [focusedDate, setFocusedDate] = useState<Date | undefined>(undefined);
-  // TODO "dd日" ではなく "dd" だけ表示する
+  const [showUserInfo, setShowUserInfo] = useState(false);
+  const [focusedDate, setFocusedDate] = useState<Date | null>(null);
   const dateToStatusInfoList: DateTimeToStatusInfoList = {};
 
   for (const userDateStatusList of groupDateStatusList) {
@@ -69,56 +60,23 @@ export const GroupCalendar = ({
     }
   };
 
-  // TODO 別ファイルに分ける
-  // TODO きれいに表示する
-  const tooltipComponent = (date: Date): JSX.Element => {
-    const dateTime = date.getTime();
-    const statusInfo = dateToStatusInfoList[dateTime];
-    const userStatusComponents = users.map((user) => {
-      if (statusInfo == null) {
-        return <div key={user.id}>{user.name}: 未入力</div>;
-      } else {
-        const status = statusInfo.usersStatus[user.id];
-        if (status == null) {
-          return <div key={user.id}>{user.name}: 未入力</div>;
-        } else {
-          const statusText = status == "calendar-free" ? "〇" : "×";
-          return (
-            <div key={user.id}>
-              {user.name}: {statusText}
-            </div>
-          );
-        }
-      }
-    });
-    if (statusInfo == null) {
-      return (
-        <React.Fragment>
-          <p>{date.toString()}</p>
-          <p>暇な人: {0}</p>
-          <p>忙しい人: {0}</p>
-          {userStatusComponents}
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <p>{date.toString()}</p>
-          <p>暇な人: {statusInfo.free}</p>
-          <p>忙しい人: {statusInfo.busy}</p>
-          {userStatusComponents}
-        </React.Fragment>
-      );
-    }
-  };
   return (
     <React.Fragment>
-      <div></div>
+      <UserInfoOfDay
+        date={focusedDate}
+        groupId={group.id}
+        users={users}
+        dateToStatusInfoList={dateToStatusInfoList}
+        close={() => {
+          setShowUserInfo(false);
+          setFocusedDate(null);
+        }}
+      />
       <Calendar
-        inputRef={calendarRef}
+        className={showUserInfo ? "calendar-hidden" : ""}
         onClickDay={(date) => {
           setFocusedDate(date);
-          setShowTooltip(true);
+          setShowUserInfo(true);
         }}
         locale="ja-JP"
         minDate={new Date()}
@@ -149,23 +107,6 @@ export const GroupCalendar = ({
           }
         }}
       />
-      <Overlay
-        target={calendarRef.current}
-        show={showTooltip}
-        placement="right"
-      >
-        {(props) => (
-          <Tooltip
-            onClick={() => {
-              setShowTooltip(false);
-            }}
-            id="overlay-example"
-            {...props}
-          >
-            {focusedDate && tooltipComponent(focusedDate)}
-          </Tooltip>
-        )}
-      </Overlay>
     </React.Fragment>
   );
 };

@@ -5,28 +5,34 @@ import firebase from "firebase/app";
 export interface Group {
   name: string;
   members?: {
-    [uid: string]: true;
+    // Chat Id (eg. Slack, Discor, Twitter...)
+    [uid: string]: string;
   };
   invitationId?: string;
+  description: string;
 }
 
 type GroupChild =
   | string
   | {
-      [uid: string]: true;
+      [uid: string]: string;
     };
 
 export interface GroupWithId extends Group {
   id: string;
 }
 
-export const storeGroup = async (group: Group, uid: string): Promise<void> => {
+export const storeGroup = async (
+  group: Group,
+  uid: string,
+  chatId: string
+): Promise<void> => {
   const ref = await db.ref().child("groups").push(group);
   const groupId = ref.key;
   if (groupId == null) {
     return Promise.reject("GroupId is null");
   } else {
-    return joinGroup(uid, groupId);
+    return joinGroup(uid, groupId, chatId);
   }
 };
 

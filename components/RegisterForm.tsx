@@ -6,17 +6,17 @@ import { auth } from "../utils/firebase";
 import { storeUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
 
-type InputsType = {
+interface RegisterFormProps {
+  onRegistered?: () => void;
+}
+
+interface InputsType {
   email: string;
   password: string;
   name: string;
   userName: string;
   confirmPassword: string;
-};
-
-type RegisterFormProps = {
-  onRegistered?: () => void;
-};
+}
 
 const schema = yup.object().shape({
   email: yup
@@ -118,11 +118,7 @@ export const RegisterForm = ({
       </Form.Group>
       <Form.Group>
         <Form.Label>user name</Form.Label>
-        <Form.Control
-          type="userName"
-          isInvalid={!!errors.userName}
-          {...register("userName")}
-        />
+        <Form.Control isInvalid={!!errors.userName} {...register("userName")} />
         {errors.userName && (
           <Form.Control.Feedback type="invalid">
             {errors.userName.message}
