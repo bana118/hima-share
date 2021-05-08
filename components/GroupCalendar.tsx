@@ -1,3 +1,4 @@
+import { GroupWithId } from "interfaces/Group";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import {
@@ -8,10 +9,12 @@ import { UserInfoOfDay } from "./UserInfoOfDay";
 
 interface GroupCalendarProps {
   groupDateStatusList: UserDateStatusList[];
+  group: GroupWithId;
 }
 
 export const GroupCalendar = ({
-  groupDateStatusList: groupDateStatusList,
+  groupDateStatusList,
+  group,
 }: GroupCalendarProps): JSX.Element => {
   const users = groupDateStatusList.map(
     (groupDateStatus) => groupDateStatus.user
@@ -61,6 +64,7 @@ export const GroupCalendar = ({
     <React.Fragment>
       <UserInfoOfDay
         date={focusedDate}
+        groupId={group.id}
         users={users}
         dateToStatusInfoList={dateToStatusInfoList}
         close={() => {

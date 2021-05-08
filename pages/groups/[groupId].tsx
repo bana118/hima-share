@@ -100,7 +100,10 @@ const GroupCalendarPage = ({
           <Button variant="accent" type="button" onClick={reload}>
             更新
           </Button>
-          <GroupCalendar groupDateStatusList={groupDateStatusList} />
+          <GroupCalendar
+            groupDateStatusList={groupDateStatusList}
+            group={group}
+          />
           <Link href="/">
             <a>戻る</a>
           </Link>

@@ -5,6 +5,7 @@ import { Button, Card, Table } from "react-bootstrap";
 
 interface UserInfoOfDayProps {
   date: Date | null;
+  groupId: string;
   users: UserWithId[];
   dateToStatusInfoList: DateTimeToStatusInfoList;
   close: () => void;
@@ -12,6 +13,7 @@ interface UserInfoOfDayProps {
 
 export const UserInfoOfDay = ({
   date,
+  groupId,
   users,
   dateToStatusInfoList,
   close,
@@ -35,10 +37,12 @@ export const UserInfoOfDay = ({
         return busyText;
       }
     };
+    const chatId = user.groups == null ? "" : user.groups[groupId];
     return (
       <tr key={user.id}>
         <td>{user.name}</td>
         <td>{statusText()}</td>
+        <td>{chatId}</td>
       </tr>
     );
   });
@@ -94,6 +98,13 @@ export const UserInfoOfDay = ({
         {cardTitleComponent}
 
         <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ユーザー名</th>
+              <th>予定</th>
+              <th>チャットID</th>
+            </tr>
+          </thead>
           <tbody>{userStatusComponents}</tbody>
         </Table>
       </Card.Body>
