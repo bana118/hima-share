@@ -9,6 +9,7 @@ export interface Group {
     [uid: string]: string;
   };
   invitationId?: string;
+  description: string;
 }
 
 type GroupChild =

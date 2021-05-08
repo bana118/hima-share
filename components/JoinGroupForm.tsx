@@ -146,6 +146,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
               <Form onSubmit={handleSubmit(confirmJoinGroup)}>
                 <p>{user.name} としてログイン中</p>
                 <p>グループ: {group.name}に参加しますか？</p>
+                <p>グループの説明: {group.description}</p>
                 <Form.Group>
                   <Form.Label>Chat ID</Form.Label>
                   <Form.Control

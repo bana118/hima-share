@@ -9,11 +9,13 @@ import { Group, storeGroup } from "../interfaces/Group";
 
 interface InputsType {
   name: string;
+  description: string;
   chatId: string;
 }
 
 const schema = yup.object().shape({
   name: yup.string().required("名前は必須です"),
+  description: yup.string(),
   chatId: yup.string(),
 });
 
@@ -35,6 +37,7 @@ export const CreateGroupForm = (): JSX.Element => {
     if (authUser != null) {
       const group: Group = {
         name: data["name"],
+        description: data["description"],
       };
       storeGroup(group, authUser.uid, data["chatId"])
         .then(() => {
@@ -55,6 +58,19 @@ export const CreateGroupForm = (): JSX.Element => {
         {errors.name && (
           <Form.Control.Feedback type="invalid">
             {errors.name.message}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>グループの概要</Form.Label>
+        <Form.Control
+          isInvalid={!!errors.description}
+          {...register("description")}
+        />
+        {errors.description && (
+          <Form.Control.Feedback type="invalid">
+            {errors.description.message}
           </Form.Control.Feedback>
         )}
       </Form.Group>
