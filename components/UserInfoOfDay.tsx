@@ -1,6 +1,7 @@
 import { DateTimeToStatusInfoList } from "interfaces/DateStatus";
 import { UserWithId } from "interfaces/User";
 import React from "react";
+import { Button, Card, Table } from "react-bootstrap";
 
 interface UserInfoOfDayProps {
   date: Date | null;
@@ -20,22 +21,26 @@ export const UserInfoOfDay = ({
   }
   const dateTime = date.getTime();
   const statusInfo = dateToStatusInfoList[dateTime];
+  const unEnteredText = "未入力";
+  const freeText = "〇";
+  const busyText = "×";
+
   const userStatusComponents = users.map((user) => {
-    if (statusInfo == null) {
-      return <div key={user.id}>{user.name}: 未入力</div>;
-    } else {
+    const statusText = () => {
+      if (statusInfo == null) return unEnteredText;
       const status = statusInfo.usersStatus[user.id];
-      if (status == null) {
-        return <div key={user.id}>{user.name}: 未入力</div>;
+      if (status == "calendar-free") {
+        return freeText;
       } else {
-        const statusText = status == "calendar-free" ? "〇" : "×";
-        return (
-          <div key={user.id}>
-            {user.name}: {statusText}
-          </div>
-        );
+        return busyText;
       }
-    }
+    };
+    return (
+      <tr key={user.id}>
+        <td>{user.name}</td>
+        <td>{statusText()}</td>
+      </tr>
+    );
   });
   const dayFormat = (day: number) => {
     switch (day) {
@@ -60,23 +65,38 @@ export const UserInfoOfDay = ({
   const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}(${dayFormat(
     date.getDay()
   )})`;
-  if (statusInfo == null) {
-    return (
-      <div onClick={close}>
-        <p>{dateString}</p>
-        <p>暇な人: {0}</p>
-        <p>忙しい人: {0}</p>
-        {userStatusComponents}
-      </div>
+
+  const cardTitleComponent =
+    statusInfo == null ? (
+      <Card.Title>
+        暇な人: {0} 忙しい人: {0}
+      </Card.Title>
+    ) : (
+      <Card.Title>
+        暇な人: {statusInfo.free} 忙しい人: {statusInfo.busy}
+      </Card.Title>
     );
-  } else {
-    return (
-      <div onClick={close}>
-        <p>{dateString}</p>
-        <p>暇な人: {statusInfo.free}</p>
-        <p>忙しい人: {statusInfo.busy}</p>
-        {userStatusComponents}
-      </div>
-    );
-  }
+  return (
+    <Card>
+      <Card.Header as="h4">
+        {dateString}
+        <Button
+          className="float-right"
+          onClick={close}
+          size="sm"
+          variant="main"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </Button>
+      </Card.Header>
+      <Card.Body>
+        {cardTitleComponent}
+
+        <Table striped bordered hover>
+          <tbody>{userStatusComponents}</tbody>
+        </Table>
+      </Card.Body>
+    </Card>
+  );
 };
