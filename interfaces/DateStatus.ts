@@ -14,6 +14,19 @@ export interface UserDateStatusList {
   dateStatusList: DateStatusList;
 }
 
+export interface UsersStatus {
+  [uid: string]: Status | undefined;
+}
+
+export interface StatusInfo {
+  free: number;
+  busy: number;
+  usersStatus: UsersStatus;
+}
+export interface DateTimeToStatusInfoList {
+  [dateTime: number]: StatusInfo | undefined;
+}
+
 export const storeDateStatusList = async (
   dateStatusList: DateStatusList,
   uid: string

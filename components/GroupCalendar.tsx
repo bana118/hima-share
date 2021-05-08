@@ -1,22 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
-import { Status, UserDateStatusList } from "../interfaces/DateStatus";
+import {
+  DateTimeToStatusInfoList,
+  UserDateStatusList,
+} from "../interfaces/DateStatus";
+import { UserInfoOfDay } from "./UserInfoOfDay";
 
 interface GroupCalendarProps {
   groupDateStatusList: UserDateStatusList[];
-}
-
-interface UsersStatus {
-  [uid: string]: Status | undefined;
-}
-
-interface StatusInfo {
-  free: number;
-  busy: number;
-  usersStatus: UsersStatus;
-}
-interface DateTimeToStatusInfoList {
-  [dateTime: number]: StatusInfo | undefined;
 }
 
 export const GroupCalendar = ({
@@ -67,48 +58,6 @@ export const GroupCalendar = ({
     }
   };
 
-  // TODO 別ファイルに分ける
-  // TODO きれいに表示する
-  const userInfoComponent = (date: Date): JSX.Element => {
-    const dateTime = date.getTime();
-    const statusInfo = dateToStatusInfoList[dateTime];
-    const userStatusComponents = users.map((user) => {
-      if (statusInfo == null) {
-        return <div key={user.id}>{user.name}: 未入力</div>;
-      } else {
-        const status = statusInfo.usersStatus[user.id];
-        if (status == null) {
-          return <div key={user.id}>{user.name}: 未入力</div>;
-        } else {
-          const statusText = status == "calendar-free" ? "〇" : "×";
-          return (
-            <div key={user.id}>
-              {user.name}: {statusText}
-            </div>
-          );
-        }
-      }
-    });
-    if (statusInfo == null) {
-      return (
-        <React.Fragment>
-          <p>{date.toString()}</p>
-          <p>暇な人: {0}</p>
-          <p>忙しい人: {0}</p>
-          {userStatusComponents}
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <p>{date.toString()}</p>
-          <p>暇な人: {statusInfo.free}</p>
-          <p>忙しい人: {statusInfo.busy}</p>
-          {userStatusComponents}
-        </React.Fragment>
-      );
-    }
-  };
   return (
     <React.Fragment>
       <div
@@ -117,7 +66,13 @@ export const GroupCalendar = ({
           setFocusedDate(null);
         }}
       >
-        {focusedDate && userInfoComponent(focusedDate)}
+        {focusedDate && (
+          <UserInfoOfDay
+            date={focusedDate}
+            users={users}
+            dateToStatusInfoList={dateToStatusInfoList}
+          />
+        )}
       </div>
       <Calendar
         className={showUserInfo ? "calendar-hidden" : ""}
