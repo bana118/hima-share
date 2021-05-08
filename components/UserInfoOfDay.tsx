@@ -48,6 +48,7 @@ export const UserInfoOfDay = ({
       <tr key={user.id}>
         <td>{user.name}</td>
         <td>{statusText()}</td>
+        <td>{user.description}</td>
         <td>{chatId}</td>
       </tr>
     );
@@ -127,6 +128,7 @@ export const UserInfoOfDay = ({
             <tr>
               <th>ユーザー名</th>
               <th>予定</th>
+              <th>プロフィール</th>
               <th>チャットID</th>
             </tr>
           </thead>
