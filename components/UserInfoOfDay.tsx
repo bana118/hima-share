@@ -53,6 +53,30 @@ export const UserInfoOfDay = ({
     );
   });
 
+  const freeUsers = users.filter((user) => {
+    if (statusInfo == null) return false;
+    const status = statusInfo.usersStatus[user.id];
+    return status == "calendar-free";
+  });
+  const freeChatIds = freeUsers
+    .map((freeUser) => {
+      return freeUser.groups == null ? null : freeUser.groups[groupId];
+    })
+    .filter<string>((chatId): chatId is string => chatId != null);
+
+  const unEnteredUsers = users.filter((user) => {
+    if (statusInfo == null) return false;
+    const status = statusInfo.usersStatus[user.id];
+    return status == null;
+  });
+  const unEnteredChatIds = unEnteredUsers
+    .map((unEnteredUser) => {
+      return unEnteredUser.groups == null
+        ? null
+        : unEnteredUser.groups[groupId];
+    })
+    .filter<string>((chatId): chatId is string => chatId != null);
+
   const dayFormat = (day: number) => {
     switch (day) {
       case 0:
@@ -110,7 +134,11 @@ export const UserInfoOfDay = ({
         </Table>
       </Card.Body>
       <Card.Footer>
-        <EventMessage users={users} />
+        <EventMessage
+          dateText={dateText}
+          freeChatIds={freeChatIds}
+          unEnteredChatIds={unEnteredChatIds}
+        />
       </Card.Footer>
     </Card>
   );
