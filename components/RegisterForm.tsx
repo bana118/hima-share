@@ -12,9 +12,9 @@ interface RegisterFormProps {
 
 interface InputsType {
   email: string;
-  password: string;
   name: string;
-  userName: string;
+  description: string;
+  password: string;
   confirmPassword: string;
 }
 
@@ -45,6 +45,8 @@ const schema = yup.object().shape({
         }
       }
     ),
+  name: yup.string().required("名前は必須です"),
+  description: yup.string(),
   password: yup
     .string()
     .min(8, "パスワードは8文字以上に設定してください")
@@ -56,7 +58,6 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "パスワードが一致しません")
     .required("パスワードは必須です"),
-  userName: yup.string().required("名前は必須です"),
 });
 
 export const RegisterForm = ({
@@ -81,8 +82,9 @@ export const RegisterForm = ({
         const uid = userCredential.user?.uid;
         if (uid != null) {
           const user: User = {
-            name: data["userName"],
+            name: data["name"],
             email: data["email"],
+            description: data["description"],
           };
           storeUser(user, uid)
             .then(() => {
@@ -104,7 +106,7 @@ export const RegisterForm = ({
   return (
     <Form onSubmit={handleSubmit(registerUser)}>
       <Form.Group>
-        <Form.Label>Email address</Form.Label>
+        <Form.Label>メールアドレス</Form.Label>
         <Form.Control
           type="email"
           isInvalid={!!errors.email}
@@ -117,16 +119,28 @@ export const RegisterForm = ({
         )}
       </Form.Group>
       <Form.Group>
-        <Form.Label>user name</Form.Label>
-        <Form.Control isInvalid={!!errors.userName} {...register("userName")} />
-        {errors.userName && (
+        <Form.Label>プロフィール</Form.Label>
+        <Form.Control
+          isInvalid={!!errors.description}
+          {...register("description")}
+        />
+        {errors.description && (
           <Form.Control.Feedback type="invalid">
-            {errors.userName.message}
+            {errors.description.message}
           </Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group>
-        <Form.Label>Password</Form.Label>
+        <Form.Label>ユーザー名</Form.Label>
+        <Form.Control isInvalid={!!errors.name} {...register("name")} />
+        {errors.name && (
+          <Form.Control.Feedback type="invalid">
+            {errors.name.message}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>パスワード</Form.Label>
         <Form.Control
           type="password"
           isInvalid={!!errors.password}
@@ -144,7 +158,7 @@ export const RegisterForm = ({
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>Confirm password</Form.Label>
+        <Form.Label>パスワード確認</Form.Label>
         <Form.Control
           type="password"
           isInvalid={!!errors.confirmPassword}
