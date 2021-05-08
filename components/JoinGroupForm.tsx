@@ -12,13 +12,13 @@ import { RegisterForm } from "./RegisterForm";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-type Props = {
+interface JoinGroupFormProps {
   group: GroupWithId;
-};
+}
 
-type InputsType = {
+interface InputsType {
   chatId: string;
-};
+}
 
 const schema = yup.object().shape({
   chatId: yup.string(),
@@ -26,7 +26,7 @@ const schema = yup.object().shape({
 
 type LoginOrRegister = "login" | "register";
 
-export const JoinGroupForm = ({ group }: Props): JSX.Element => {
+export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | undefined>(
     undefined

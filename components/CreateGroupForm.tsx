@@ -7,10 +7,10 @@ import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Group, storeGroup } from "../interfaces/Group";
 
-type InputsType = {
+interface InputsType {
   name: string;
   chatId: string;
-};
+}
 
 const schema = yup.object().shape({
   name: yup.string().required("名前は必須です"),
