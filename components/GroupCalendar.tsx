@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Overlay, Tooltip } from "react-bootstrap";
 import Calendar from "react-calendar";
 import { Status, UserDateStatusList } from "../interfaces/DateStatus";
 
@@ -26,9 +25,8 @@ export const GroupCalendar = ({
   const users = groupDateStatusList.map(
     (groupDateStatus) => groupDateStatus.user
   );
-  const calendarRef = useRef(null);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [focusedDate, setFocusedDate] = useState<Date | undefined>(undefined);
+  const [showUserInfo, setShowUserInfo] = useState(false);
+  const [focusedDate, setFocusedDate] = useState<Date | null>(null);
   // TODO "dd日" ではなく "dd" だけ表示する
   const dateToStatusInfoList: DateTimeToStatusInfoList = {};
 
@@ -71,7 +69,7 @@ export const GroupCalendar = ({
 
   // TODO 別ファイルに分ける
   // TODO きれいに表示する
-  const tooltipComponent = (date: Date): JSX.Element => {
+  const userInfoComponent = (date: Date): JSX.Element => {
     const dateTime = date.getTime();
     const statusInfo = dateToStatusInfoList[dateTime];
     const userStatusComponents = users.map((user) => {
@@ -113,12 +111,19 @@ export const GroupCalendar = ({
   };
   return (
     <React.Fragment>
-      <div></div>
+      <div
+        onClick={() => {
+          setShowUserInfo(false);
+          setFocusedDate(null);
+        }}
+      >
+        {focusedDate && userInfoComponent(focusedDate)}
+      </div>
       <Calendar
-        inputRef={calendarRef}
+        className={showUserInfo ? "calendar-hidden" : ""}
         onClickDay={(date) => {
           setFocusedDate(date);
-          setShowTooltip(true);
+          setShowUserInfo(true);
         }}
         locale="ja-JP"
         minDate={new Date()}
@@ -149,23 +154,6 @@ export const GroupCalendar = ({
           }
         }}
       />
-      <Overlay
-        target={calendarRef.current}
-        show={showTooltip}
-        placement="right"
-      >
-        {(props) => (
-          <Tooltip
-            onClick={() => {
-              setShowTooltip(false);
-            }}
-            id="overlay-example"
-            {...props}
-          >
-            {focusedDate && tooltipComponent(focusedDate)}
-          </Tooltip>
-        )}
-      </Overlay>
     </React.Fragment>
   );
 };
