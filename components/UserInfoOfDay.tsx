@@ -26,15 +26,20 @@ export const UserInfoOfDay = ({
   const unEnteredText = "未入力";
   const freeText = "〇";
   const busyText = "×";
+  const errorText = "エラー！";
 
   const userStatusComponents = users.map((user) => {
     const statusText = () => {
       if (statusInfo == null) return unEnteredText;
       const status = statusInfo.usersStatus[user.id];
-      if (status == "calendar-free") {
+      if (status == null) {
+        return unEnteredText;
+      } else if (status == "calendar-free") {
         return freeText;
-      } else {
+      } else if (status == "calendar-busy") {
         return busyText;
+      } else {
+        return errorText;
       }
     };
     const chatId = user.groups == null ? "" : user.groups[groupId];
@@ -95,7 +100,6 @@ export const UserInfoOfDay = ({
       </Card.Header>
       <Card.Body>
         {cardTitleComponent}
-
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -107,6 +111,9 @@ export const UserInfoOfDay = ({
           <tbody>{userStatusComponents}</tbody>
         </Table>
       </Card.Body>
+      <Card.Footer>
+        <p>募集メッセージ</p>
+      </Card.Footer>
     </Card>
   );
 };
