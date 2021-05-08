@@ -2,6 +2,7 @@ import { DateTimeToStatusInfoList } from "interfaces/DateStatus";
 import { UserWithId } from "interfaces/User";
 import React from "react";
 import { Button, Card, Table } from "react-bootstrap";
+import { EventMessage } from "./EventMessage";
 
 interface UserInfoOfDayProps {
   date: Date | null;
@@ -51,6 +52,7 @@ export const UserInfoOfDay = ({
       </tr>
     );
   });
+
   const dayFormat = (day: number) => {
     switch (day) {
       case 0:
@@ -71,20 +73,16 @@ export const UserInfoOfDay = ({
         return "Unexpected Error";
     }
   };
-  const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}(${dayFormat(
+
+  const dateText = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}(${dayFormat(
     date.getDay()
   )})`;
 
-  const cardTitleComponent =
-    statusInfo == null ? (
-      <Card.Title>
-        暇な人: {0} 忙しい人: {0}
-      </Card.Title>
-    ) : (
-      <Card.Title>
-        暇な人: {statusInfo.free} 忙しい人: {statusInfo.busy}
-      </Card.Title>
-    );
+  const cardTitleText =
+    statusInfo == null
+      ? `暇な人: 0 忙しい人: 0`
+      : `暇な人: ${statusInfo.free} 忙しい人: ${statusInfo.busy}`;
+
   return (
     <Card>
       <Card.Header as="h4">
@@ -96,10 +94,10 @@ export const UserInfoOfDay = ({
         >
           <span aria-hidden="true">戻る</span>
         </Button>
-        {dateString}
+        {dateText}
       </Card.Header>
       <Card.Body>
-        {cardTitleComponent}
+        <Card.Title>{cardTitleText}</Card.Title>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -112,7 +110,7 @@ export const UserInfoOfDay = ({
         </Table>
       </Card.Body>
       <Card.Footer>
-        <p>募集メッセージ</p>
+        <EventMessage users={users} />
       </Card.Footer>
     </Card>
   );
