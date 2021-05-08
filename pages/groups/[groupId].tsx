@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
