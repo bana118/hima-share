@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
@@ -104,9 +103,6 @@ const GroupCalendarPage = ({
             groupDateStatusList={groupDateStatusList}
             group={group}
           />
-          <Link href="/">
-            <a>戻る</a>
-          </Link>
         </Layout>
       )}
     </React.Fragment>
