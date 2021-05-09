@@ -1,10 +1,9 @@
 import { UpdateEmailForm } from "components/UpdateEmailForm";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { UpdateUserForm } from "components/UpdateUserForm";
-import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useContext, useState } from "react";
-import { Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
@@ -65,54 +64,6 @@ const ProfilePage = (): JSX.Element => {
     return cleanup;
   }, [authUser]);
 
-  const groupListComponent = (groupList: GroupWithId[]): JSX.Element => {
-    const component = groupList.map((g) => {
-      if (g.invitationId == null) {
-        return (
-          <div key={g.id}>
-            <div>
-              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
-                <a>{g.name}</a>
-              </Link>
-            </div>
-            <div>
-              <Link
-                href="/create-invitation/[id]"
-                as={`/create-invitation/${g.id}`}
-              >
-                <a>招待リンク作成</a>
-              </Link>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div key={g.id}>
-            <div>
-              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
-                <a>{g.name}</a>
-              </Link>
-            </div>
-            <div>
-              <Link
-                href="/invitations/[id]"
-                as={`/invitations/${g.invitationId}`}
-              >
-                <a>招待リンク確認</a>
-              </Link>
-            </div>
-          </div>
-        );
-      }
-    });
-    return (
-      <React.Fragment>
-        <p>groups:</p>
-        {component}
-      </React.Fragment>
-    );
-  };
-
   return (
     <React.Fragment>
       {user && groups && (
@@ -121,30 +72,43 @@ const ProfilePage = (): JSX.Element => {
             <h2>ユーザー情報</h2>
           </Row>
           <Row className="justify-content-center">
-            <UpdateUserForm
-              user={user}
-              defaultValues={{ name: user.name, description: user.description }}
-            />
+            <Col md={6}>
+              <UpdateUserForm
+                user={user}
+                defaultValues={{
+                  name: user.name,
+                  description: user.description,
+                }}
+              />
+            </Col>
           </Row>
-          <Row className="justify-content-center">
+          <Row className="justify-content-center mt-3">
             <h2>メールアドレス</h2>
           </Row>
           <Row className="justify-content-center">
-            <UpdateEmailForm />
+            <p>更新するには再度ログインする必要があります</p>
           </Row>
           <Row className="justify-content-center">
+            <Col md={6}>
+              <Form.Control value={user.email} readOnly />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Button variant="accent" type="button">
+              更新
+            </Button>
+          </Row>
+          <Row className="justify-content-center mt-3">
             <h2>パスワード</h2>
           </Row>
           <Row className="justify-content-center">
-            <UpdatePasswordForm />
+            <p>更新するには再度ログインする必要があります</p>
           </Row>
-          <div>
-            <h1>User info</h1>
-            <p>name: {user.name}</p>
-            <p>email: {user.email}</p>
-            <p>description: {user.description}</p>
-            {groupListComponent(groups)}
-          </div>
+          <Row className="justify-content-center">
+            <Button variant="accent" type="button">
+              更新
+            </Button>
+          </Row>
         </Layout>
       )}
     </React.Fragment>
