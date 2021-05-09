@@ -99,28 +99,32 @@ const ProfilePage = (): JSX.Element => {
       )}
       {readyUpdateEmail && user && (
         <Layout title="メールアドレス更新">
-          <UpdateEmailForm
-            user={user}
-            onUpdated={(newEmail) => {
-              setReadyUpdateEmail(false);
-              const newUser: UserWithId = {
-                ...user,
-                email: newEmail,
-              };
-              setUser(newUser);
-              setUpdated("updateEmail");
-            }}
-          />
+          <Row className="justify-content-center">
+            <UpdateEmailForm
+              user={user}
+              onUpdated={(newEmail) => {
+                setReadyUpdateEmail(false);
+                const newUser: UserWithId = {
+                  ...user,
+                  email: newEmail,
+                };
+                setUser(newUser);
+                setUpdated("updateEmail");
+              }}
+            />
+          </Row>
         </Layout>
       )}
       {readyUpdatePassword && user && (
         <Layout title="パスワード更新">
-          <UpdatePasswordForm
-            onUpdated={() => {
-              setReadyUpdatePassword(false);
-              setUpdated("updatePassword");
-            }}
-          />
+          <Row className="justify-content-center">
+            <UpdatePasswordForm
+              onUpdated={() => {
+                setReadyUpdatePassword(false);
+                setUpdated("updatePassword");
+              }}
+            />
+          </Row>
         </Layout>
       )}
       {onLoginedAction != null &&
@@ -128,15 +132,17 @@ const ProfilePage = (): JSX.Element => {
         !readyUpdatePassword &&
         !updated && (
           <Layout title="ログイン">
-            <LoginForm
-              onLogined={() => {
-                if (onLoginedAction == "updateEmail") {
-                  setReadyUpdateEmail(true);
-                } else {
-                  setReadyUpdatePassword(true);
-                }
-              }}
-            />
+            <Row className="justify-content-center">
+              <LoginForm
+                onLogined={() => {
+                  if (onLoginedAction == "updateEmail") {
+                    setReadyUpdateEmail(true);
+                  } else {
+                    setReadyUpdatePassword(true);
+                  }
+                }}
+              />
+            </Row>
           </Layout>
         )}
       {user && groups && onLoginedAction == null && (
