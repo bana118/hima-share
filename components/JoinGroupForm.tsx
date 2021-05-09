@@ -1,4 +1,4 @@
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row } from "react-bootstrap";
 import Router from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -97,52 +97,58 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   };
 
   // TODO 招待の期限を設定
+  // TODO コンポーネントにRowを含めないようにしたい
   return (
     <React.Fragment>
       {authUser === null && (
-        <Layout title={`${group.name}に参加`}>
-          <p>
-            グループ: {group.name}に参加するにはログインまたは登録が必要です
-          </p>
-          <div>
-            <Form.Check
-              type={"radio"}
-              name="loginOrRegister"
-              label="ログイン"
-              onClick={() => {
-                setLoginOrRegister("login");
-              }}
-              checked={loginOrRegister == "login"}
-            />
-            <Form.Check
-              type={"radio"}
-              name="loginOrRegister"
-              label="登録"
-              onClick={() => {
-                setLoginOrRegister("register");
-              }}
-              checked={loginOrRegister == "register"}
-            />
-          </div>
-          {loginOrRegister == "login" && <LoginForm />}
-          {loginOrRegister == "register" && <RegisterForm />}
-          <Link href="/">
-            <a>トップページ</a>
-          </Link>
-        </Layout>
+        <React.Fragment>
+          <Row className="justify-content-center">
+            <Form>
+              <p>
+                グループ: {group.name}に参加するにはログインまたは登録が必要です
+              </p>
+              <Form.Check
+                type={"radio"}
+                name="loginOrRegister"
+                label="ログイン"
+                onClick={() => {
+                  setLoginOrRegister("login");
+                }}
+                checked={loginOrRegister == "login"}
+              />
+              <Form.Check
+                type={"radio"}
+                name="loginOrRegister"
+                label="登録"
+                onClick={() => {
+                  setLoginOrRegister("register");
+                }}
+                checked={loginOrRegister == "register"}
+              />
+            </Form>
+          </Row>
+
+          {loginOrRegister == "login" && (
+            <Row className="justify-content-center">
+              <LoginForm />
+            </Row>
+          )}
+          {loginOrRegister == "register" && (
+            <Row className="justify-content-center">
+              <RegisterForm />
+            </Row>
+          )}
+        </React.Fragment>
       )}
       {authUser != null && isAlreadyJoined != null && (
         <React.Fragment>
           {isAlreadyJoined && (
-            <Layout title={`すでに${group.name}に参加しています`}>
+            <Row className="justify-content-center">
               <p>{`すでに${group.name}に参加しています!`}</p>
-              <Link href="/">
-                <a>トップページ</a>
-              </Link>
-            </Layout>
+            </Row>
           )}
           {!isAlreadyJoined && user && (
-            <Layout title={`${group.name}に参加`}>
+            <Row className="justify-content-center">
               <Form onSubmit={handleSubmit(confirmJoinGroup)}>
                 <p>{user.name} としてログイン中</p>
                 <p>グループ: {group.name}に参加しますか？</p>
@@ -163,10 +169,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
                   参加
                 </Button>
               </Form>
-              <Link href="/">
-                <a>トップページ</a>
-              </Link>
-            </Layout>
+            </Row>
           )}
         </React.Fragment>
       )}

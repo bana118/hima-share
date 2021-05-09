@@ -10,7 +10,7 @@ import React, { useContext, useRef, useState } from "react";
 import Router from "next/router";
 import { AuthContext } from "../../context/AuthContext";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
-import { Overlay, Tooltip } from "react-bootstrap";
+import { Overlay, Row, Tooltip } from "react-bootstrap";
 
 type Props = {
   invitation?: InvitationWithId;
@@ -63,42 +63,48 @@ const CreateInvitationPage = ({
   ) => {
     event.preventDefault();
     deleteInvitation(invitation.id, invitation.groupId).then(() => {
-      Router.push("/");
+      Router.push(`/groups/${group.id}`);
     });
   };
 
   return (
     <Layout title="招待URL">
-      <p>招待URLは以下です(クリックでコピー)</p>
-      <input
-        ref={invitationUrlInput}
-        type="text"
-        id="hima-share-join-url"
-        className="form-control"
-        onClick={copyURL}
-        onBlur={() => {
-          setShowTooltop(false);
-        }}
-        value={joinUrl}
-        readOnly
-      />
-      <Overlay
-        target={invitationUrlInput.current}
-        show={showTooltip}
-        placement="top"
-      >
-        {(props) => (
-          <Tooltip id="copy-url-tooltip" {...props}>
-            コピーしました！
-          </Tooltip>
-        )}
-      </Overlay>
-      <p>友達にシェアしよう!</p>
-      <div>
+      <Row className="justify-content-center">
+        <p>招待URLは以下です(クリックでコピー)</p>
+      </Row>
+      <Row className="justify-content-center">
+        <input
+          ref={invitationUrlInput}
+          type="text"
+          id="hima-share-join-url"
+          className="form-control"
+          onClick={copyURL}
+          onBlur={() => {
+            setShowTooltop(false);
+          }}
+          value={joinUrl}
+          readOnly
+        />
+        <Overlay
+          target={invitationUrlInput.current}
+          show={showTooltip}
+          placement="top"
+        >
+          {(props) => (
+            <Tooltip id="copy-url-tooltip" {...props}>
+              コピーしました！
+            </Tooltip>
+          )}
+        </Overlay>
+      </Row>
+      <Row className="justify-content-center">
+        <p>友達にシェアしよう!</p>
+      </Row>
+      <Row className="justify-content-center">
         <a href="#" onClick={invalidateInvitation}>
           招待URLを無効化
         </a>
-      </div>
+      </Row>
     </Layout>
   );
 };
