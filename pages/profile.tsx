@@ -1,6 +1,10 @@
+import { UpdateEmailForm } from "components/UpdateEmailForm";
+import { UpdatePasswordForm } from "components/UpdatePasswordForm";
+import { UpdateUserForm } from "components/UpdateUserForm";
 import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useContext, useState } from "react";
+import { Row } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
@@ -113,6 +117,24 @@ const ProfilePage = (): JSX.Element => {
     <React.Fragment>
       {user && groups && (
         <Layout title={`${user.name}のプロフィール`}>
+          <Row className="justify-content-center">
+            <h2>ユーザー情報</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <UpdateUserForm />
+          </Row>
+          <Row className="justify-content-center">
+            <h2>メールアドレス</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <UpdateEmailForm />
+          </Row>
+          <Row className="justify-content-center">
+            <h2>パスワード</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <UpdatePasswordForm />
+          </Row>
           <div>
             <h1>User info</h1>
             <p>name: {user.name}</p>
