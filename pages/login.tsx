@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 const LoginPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   useEffect(() => {
-    if (authUser !== null) {
+    if (authUser != null) {
       Router.push("/");
     }
   }, [authUser]);

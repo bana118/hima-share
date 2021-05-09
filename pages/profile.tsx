@@ -16,9 +16,9 @@ const ProfilePage = (): JSX.Element => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
     const setFromDatabase = async () => {
-      if (authUser == null) {
+      if (authUser === null) {
         Router.push("/login");
-      } else {
+      } else if (authUser != null) {
         // TODO エラー処理
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
