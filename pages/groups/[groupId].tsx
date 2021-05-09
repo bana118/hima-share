@@ -11,7 +11,7 @@ import {
 } from "../../interfaces/DateStatus";
 import { GroupCalendar } from "../../components/GroupCalendar";
 import { loadUser } from "../../interfaces/User";
-import { Button } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
 
 type Props = {
   initGroup?: GroupWithId;
@@ -95,21 +95,26 @@ const GroupCalendarPage = ({
   return (
     <React.Fragment>
       {groupDateStatusList && group && (
-        <Layout title={group.name}>
-          <div>
+        <Layout title={`${group.name}のカレンダー`}>
+          <Row className="justify-content-center">
+            <h2>{group.name}のカレンダー</h2>
+          </Row>
+          <Row className="justify-content-center">
             <Button
-              className="justify-content-center"
+              className="m-2"
               variant="accent"
               type="button"
               onClick={reload}
             >
               更新
             </Button>
+          </Row>
+          <Row className="justify-content-center">
             <GroupCalendar
               groupDateStatusList={groupDateStatusList}
               group={group}
             />
-          </div>
+          </Row>
         </Layout>
       )}
     </React.Fragment>

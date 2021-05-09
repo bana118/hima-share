@@ -66,7 +66,7 @@ export const UserInfoOfDay = ({
     .filter<string>((chatId): chatId is string => chatId != null);
 
   const unEnteredUsers = users.filter((user) => {
-    if (statusInfo == null) return false;
+    if (statusInfo == null) return true;
     const status = statusInfo.usersStatus[user.id];
     return status == null;
   });

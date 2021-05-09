@@ -112,7 +112,7 @@ const ProfilePage = (): JSX.Element => {
   return (
     <React.Fragment>
       {user && groups && (
-        <Layout title="プロフィール">
+        <Layout title={`${user.name}のプロフィール`}>
           <div>
             <h1>User info</h1>
             <p>name: {user.name}</p>
