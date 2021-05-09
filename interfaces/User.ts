@@ -39,3 +39,16 @@ export const joinGroup = async (
   };
   return await db.ref().update(updates);
 };
+
+export const updateUser = async (user: User, uid: string): Promise<void> => {
+  const newUser: User = {
+    name: user.name,
+    email: user.email,
+    groups: user.groups,
+    description: user.description,
+  };
+  const updates = {
+    [`/users/${uid}`]: newUser,
+  };
+  return await db.ref().update(updates);
+};
