@@ -15,7 +15,10 @@ export const EventMessage = ({
   const eventMessageInputRef = useRef(null);
   // TODO グループ設定で変更可能にする
   const eventMessage = `${dateText}に一緒に〇〇しませんか？`;
-  const initFullMessage = `${freeChatIds.join(" ")} ${eventMessage}`;
+  const initFullMessage =
+    freeChatIds.length == 0
+      ? `${eventMessage}`
+      : `${freeChatIds.join(" ")} ${eventMessage}`;
 
   const [fullMessage, setFullMessage] = useState(initFullMessage);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -33,11 +36,18 @@ export const EventMessage = ({
   const onChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
     if (checked) {
-      setFullMessage(
-        `${freeChatIds.join(" ")} ${unEnteredChatIds.join(" ")} ${eventMessage}`
-      );
+      const freeChatIdsMessage =
+        freeChatIds.length == 0 ? "" : `${freeChatIds.join(" ")} `;
+      const unEnteredChatIdsMessage =
+        unEnteredChatIds.length == 0 ? "" : `${unEnteredChatIds.join(" ")} `;
+      const message = `${freeChatIdsMessage}${unEnteredChatIdsMessage}${eventMessage}`;
+      setFullMessage(message);
     } else {
-      setFullMessage(`${freeChatIds.join(" ")} ${eventMessage}`);
+      const message =
+        freeChatIds.length == 0
+          ? `${eventMessage}`
+          : `${freeChatIds.join(" ")} ${eventMessage}`;
+      setFullMessage(message);
     }
   };
 

@@ -119,6 +119,15 @@ export const RegisterForm = ({
         )}
       </Form.Group>
       <Form.Group>
+        <Form.Label>ユーザー名</Form.Label>
+        <Form.Control isInvalid={!!errors.name} {...register("name")} />
+        {errors.name && (
+          <Form.Control.Feedback type="invalid">
+            {errors.name.message}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group>
         <Form.Label>プロフィール</Form.Label>
         <Form.Control
           isInvalid={!!errors.description}
@@ -129,15 +138,9 @@ export const RegisterForm = ({
             {errors.description.message}
           </Form.Control.Feedback>
         )}
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>ユーザー名</Form.Label>
-        <Form.Control isInvalid={!!errors.name} {...register("name")} />
-        {errors.name && (
-          <Form.Control.Feedback type="invalid">
-            {errors.name.message}
-          </Form.Control.Feedback>
-        )}
+        <Form.Text className="text-muted">
+          簡単な自己紹介，空いている時間帯など
+        </Form.Text>
       </Form.Group>
       <Form.Group>
         <Form.Label>パスワード</Form.Label>

@@ -4,13 +4,14 @@ import { loadInvitation } from "../../interfaces/Invitation";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import React from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
+import Layout from "components/Layout";
 
 type Props = {
   group?: GroupWithId;
   errors?: string;
 };
 
-const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
+const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
@@ -18,10 +19,14 @@ const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
     return <ErrorPage />;
   }
 
-  return <JoinGroupForm group={group} />;
+  return (
+    <Layout title={`${group.name}に参加`}>
+      <JoinGroupForm group={group} />
+    </Layout>
+  );
 };
 
-export default CreateInvitationPage;
+export default JoinGroupPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { invitationId } = context.query;

@@ -1,24 +1,36 @@
-import Link from "next/link";
+import { LoginForm } from "components/LoginForm";
+import { UpdateEmailForm } from "components/UpdateEmailForm";
+import { UpdatePasswordForm } from "components/UpdatePasswordForm";
+import { UpdateUserForm } from "components/UpdateUserForm";
 import Router from "next/router";
 import React, { useEffect, useContext, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
-import { loadUser, User } from "../interfaces/User";
+import { loadUser, UserWithId } from "../interfaces/User";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<UserWithId | undefined>(undefined);
   const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
+  const [onLoginedAction, setOnLoginedAction] = useState<
+    "updateEmail" | "updatePassword" | undefined
+  >(undefined);
+  const [readyUpdateEmail, setReadyUpdateEmail] = useState(false);
+  const [readyUpdatePassword, setReadyUpdatePassword] = useState(false);
+  const [updated, setUpdated] = useState<
+    "updateEmail" | "updatePassword" | undefined
+  >(undefined);
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
     const setFromDatabase = async () => {
-      if (authUser == null) {
+      if (authUser === null) {
         Router.push("/login");
-      } else {
+      } else if (authUser != null) {
         // TODO エラー処理
         const user = await loadUser(authUser.uid);
         if (user != null && !unmounted) {
@@ -61,68 +73,129 @@ const ProfilePage = (): JSX.Element => {
     return cleanup;
   }, [authUser]);
 
-  const groupListComponent = (groupList: GroupWithId[]): JSX.Element => {
-    const component = groupList.map((g) => {
-      if (g.invitationId == null) {
-        return (
-          <div key={g.id}>
-            <div>
-              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
-                <a>{g.name}</a>
-              </Link>
-            </div>
-            <div>
-              <Link
-                href="/create-invitation/[id]"
-                as={`/create-invitation/${g.id}`}
-              >
-                <a>招待リンク作成</a>
-              </Link>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div key={g.id}>
-            <div>
-              <Link href="/groups/[id]" as={`/groups/${g.id}`}>
-                <a>{g.name}</a>
-              </Link>
-            </div>
-            <div>
-              <Link
-                href="/invitations/[id]"
-                as={`/invitations/${g.invitationId}`}
-              >
-                <a>招待リンク確認</a>
-              </Link>
-            </div>
-          </div>
-        );
-      }
-    });
-    return (
-      <React.Fragment>
-        <p>groups:</p>
-        {component}
-      </React.Fragment>
-    );
-  };
-
   return (
     <React.Fragment>
-      {user && groups && (
-        <Layout title="プロフィール">
-          <h1>User info</h1>
-          <p>name: {user.name}</p>
-          <p>email: {user.email}</p>
-          <p>description: {user.description}</p>
-          {groupListComponent(groups)}
-          <p>
-            <Link href="/create-group">
-              <a>グループ作成</a>
-            </Link>
-          </p>
+      {updated && (
+        <Layout title="更新完了">
+          <Row className="justify-content-center">
+            <h2>
+              {updated == "updateEmail" && "メールアドレスを更新しました"}
+              {updated == "updatePassword" && "パスワードを更新しました"}
+            </h2>
+          </Row>
+          <Row className="justify-content-center">
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => {
+                setUpdated(undefined);
+                setOnLoginedAction(undefined);
+              }}
+            >
+              戻る
+            </Button>
+          </Row>
+        </Layout>
+      )}
+      {readyUpdateEmail && user && (
+        <Layout title="メールアドレス更新">
+          <Row className="justify-content-center">
+            <UpdateEmailForm
+              user={user}
+              onUpdated={(newEmail) => {
+                setReadyUpdateEmail(false);
+                const newUser: UserWithId = {
+                  ...user,
+                  email: newEmail,
+                };
+                setUser(newUser);
+                setUpdated("updateEmail");
+              }}
+            />
+          </Row>
+        </Layout>
+      )}
+      {readyUpdatePassword && user && (
+        <Layout title="パスワード更新">
+          <Row className="justify-content-center">
+            <UpdatePasswordForm
+              onUpdated={() => {
+                setReadyUpdatePassword(false);
+                setUpdated("updatePassword");
+              }}
+            />
+          </Row>
+        </Layout>
+      )}
+      {onLoginedAction != null &&
+        !readyUpdateEmail &&
+        !readyUpdatePassword &&
+        !updated && (
+          <Layout title="ログイン">
+            <Row className="justify-content-center">
+              <LoginForm
+                onLogined={() => {
+                  if (onLoginedAction == "updateEmail") {
+                    setReadyUpdateEmail(true);
+                  } else {
+                    setReadyUpdatePassword(true);
+                  }
+                }}
+              />
+            </Row>
+          </Layout>
+        )}
+      {user && groups && onLoginedAction == null && (
+        <Layout title={`${user.name}のプロフィール`}>
+          <Row className="justify-content-center">
+            <h2>ユーザー情報</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <Col md={6}>
+              <UpdateUserForm
+                user={user}
+                defaultValues={{
+                  name: user.name,
+                  description: user.description,
+                }}
+              />
+            </Col>
+          </Row>
+          <Row className="justify-content-center mt-3">
+            <h2>メールアドレス</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <p>更新するには再度ログインする必要があります</p>
+          </Row>
+          <Row className="justify-content-center">
+            <Col md={6}>
+              <Form.Control value={user.email} readOnly />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => setOnLoginedAction("updateEmail")}
+            >
+              ログイン画面へ
+            </Button>
+          </Row>
+          <Row className="justify-content-center mt-3">
+            <h2>パスワード</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <p>更新するには再度ログインする必要があります</p>
+          </Row>
+          <Row className="justify-content-center">
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => setOnLoginedAction("updatePassword")}
+            >
+              ログイン画面へ
+            </Button>
+          </Row>
         </Layout>
       )}
     </React.Fragment>
