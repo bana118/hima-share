@@ -1,9 +1,13 @@
 import { useForm } from "react-hook-form";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { updateUser, User, UserWithId } from "interfaces/User";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "context/AuthContext";
 interface UpdateUserFormProps {
-  onUpdated?: () => void;
+  user: UserWithId;
+  defaultValues: InputsType;
 }
 
 interface InputsType {
@@ -17,23 +21,51 @@ const schema = yup.object().shape({
 });
 
 export const UpdateUserForm = ({
-  onUpdated,
+  user,
+  defaultValues,
 }: UpdateUserFormProps): JSX.Element => {
+  const { authUser } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<InputsType>({ resolver: yupResolver(schema) });
+  } = useForm<InputsType>({
+    resolver: yupResolver(schema),
+    defaultValues: defaultValues,
+  });
   const setUnexpectedError = () => {
     setError("name", {
       type: "manual",
       message: "予期せぬエラーが発生しました！ もう一度お試しください",
     });
   };
-  const updateUser = async (data: InputsType) => {};
+
+  const updateButtonRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const onSubmit = async (data: InputsType) => {
+    if (authUser == null) {
+      setUnexpectedError();
+    } else {
+      const newUser: User = {
+        name: data["name"],
+        email: user.email,
+        groups: user.groups,
+        description: data["description"],
+      };
+      updateUser(newUser, user.id)
+        .then(() => {
+          setShowTooltip(true);
+        })
+        .catch(() => {
+          setUnexpectedError();
+        });
+    }
+  };
   return (
-    <Form onSubmit={handleSubmit(updateUser)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
         <Form.Label>ユーザー名</Form.Label>
         <Form.Control isInvalid={!!errors.name} {...register("name")} />
@@ -59,9 +91,27 @@ export const UpdateUserForm = ({
         </Form.Text>
       </Form.Group>
 
-      <Button variant="accent" type="submit">
+      <Button
+        ref={updateButtonRef}
+        variant="accent"
+        type="submit"
+        onBlur={() => {
+          setShowTooltip(false);
+        }}
+      >
         更新
       </Button>
+      <Overlay
+        target={updateButtonRef.current}
+        show={showTooltip}
+        placement="right"
+      >
+        {(props) => (
+          <Tooltip id="update-user-tooltip" {...props}>
+            更新しました！
+          </Tooltip>
+        )}
+      </Overlay>
     </Form>
   );
 };

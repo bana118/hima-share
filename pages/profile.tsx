@@ -8,11 +8,11 @@ import { Row } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
-import { loadUser, User } from "../interfaces/User";
+import { loadUser, UserWithId } from "../interfaces/User";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<UserWithId | undefined>(undefined);
   const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
 
   // TODO よく使う処理なのでカスタムフックにする
@@ -121,7 +121,10 @@ const ProfilePage = (): JSX.Element => {
             <h2>ユーザー情報</h2>
           </Row>
           <Row className="justify-content-center">
-            <UpdateUserForm />
+            <UpdateUserForm
+              user={user}
+              defaultValues={{ name: user.name, description: user.description }}
+            />
           </Row>
           <Row className="justify-content-center">
             <h2>メールアドレス</h2>
