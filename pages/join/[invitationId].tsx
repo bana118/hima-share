@@ -5,7 +5,6 @@ import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import React from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
 import Layout from "components/Layout";
-import { Row } from "react-bootstrap";
 
 type Props = {
   group?: GroupWithId;

@@ -5,8 +5,6 @@ import { AuthContext } from "../context/AuthContext";
 import { GroupWithId } from "../interfaces/Group";
 import { useForm } from "react-hook-form";
 import { joinGroup, loadUser, UserWithId } from "../interfaces/User";
-import Layout from "./Layout";
-import Link from "next/link";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import * as yup from "yup";
