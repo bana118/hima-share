@@ -119,11 +119,6 @@ const ProfilePage = (): JSX.Element => {
             <p>email: {user.email}</p>
             <p>description: {user.description}</p>
             {groupListComponent(groups)}
-            <p>
-              <Link href="/create-group">
-                <a>グループ作成</a>
-              </Link>
-            </p>
           </div>
         </Layout>
       )}
