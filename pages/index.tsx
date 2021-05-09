@@ -1,6 +1,8 @@
+import { loadUser, UserWithId } from "interfaces/User";
 import Link from "next/link";
 import React from "react";
 import { useContext, useEffect, useState } from "react";
+import { Row } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { UserCalendar } from "../components/UserCalendar";
 import { AuthContext } from "../context/AuthContext";
@@ -15,6 +17,7 @@ const IndexPage = (): JSX.Element => {
   const [dateStatusList, setDateStatusList] = useState<
     DateStatusList | undefined | null
   >(undefined);
+  const [user, setUser] = useState<UserWithId | undefined | null>(undefined);
   useEffect(() => {
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
@@ -22,14 +25,23 @@ const IndexPage = (): JSX.Element => {
       if (authUser == null) {
         if (!unmounted) {
           setDateStatusList(null);
+          setUser(null);
         }
       } else {
         // TODO エラー処理
-        const data = await loadDateStatusList(authUser.uid);
-        if (data != null && !unmounted) {
-          setDateStatusList(data);
-        } else if (data == null && !unmounted) {
-          setDateStatusList({});
+        const [user, data] = await Promise.all([
+          loadUser(authUser.uid),
+          loadDateStatusList(authUser.uid),
+        ]);
+        if (!unmounted) {
+          if (data != null) {
+            setDateStatusList(data);
+          } else {
+            setDateStatusList({});
+          }
+          if (user != null) {
+            setUser(user);
+          }
         }
       }
     };
@@ -55,7 +67,7 @@ const IndexPage = (): JSX.Element => {
   }, [dateStatusList]);
   return (
     <React.Fragment>
-      {dateStatusList === null && (
+      {(dateStatusList === null || user === null) && (
         <Layout title="Hima Share">
           <h1>Hello Hima Share 👋</h1>
           <h2>トップページ制作中...</h2>
@@ -71,14 +83,20 @@ const IndexPage = (): JSX.Element => {
           </p>
         </Layout>
       )}
-      {dateStatusList && (
+      {dateStatusList && user && (
         <Layout title="ユーザーカレンダー">
-          <h1>ユーザーカレンダー</h1>
-          <p>あなたの予定</p>
-          <UserCalendar
-            dateStatusList={dateStatusList}
-            setDateStatusList={(list) => setDateStatusList(list)}
-          />
+          <Row className="justify-content-center">
+            <h2>{user.name}のカレンダー</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <p>あなたの予定を入力しましょう</p>
+          </Row>
+          <Row className="justify-content-center">
+            <UserCalendar
+              dateStatusList={dateStatusList}
+              setDateStatusList={(list) => setDateStatusList(list)}
+            />
+          </Row>
         </Layout>
       )}
     </React.Fragment>

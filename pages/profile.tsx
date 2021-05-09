@@ -113,16 +113,18 @@ const ProfilePage = (): JSX.Element => {
     <React.Fragment>
       {user && groups && (
         <Layout title="プロフィール">
-          <h1>User info</h1>
-          <p>name: {user.name}</p>
-          <p>email: {user.email}</p>
-          <p>description: {user.description}</p>
-          {groupListComponent(groups)}
-          <p>
-            <Link href="/create-group">
-              <a>グループ作成</a>
-            </Link>
-          </p>
+          <div>
+            <h1>User info</h1>
+            <p>name: {user.name}</p>
+            <p>email: {user.email}</p>
+            <p>description: {user.description}</p>
+            {groupListComponent(groups)}
+            <p>
+              <Link href="/create-group">
+                <a>グループ作成</a>
+              </Link>
+            </p>
+          </div>
         </Layout>
       )}
     </React.Fragment>

@@ -4,7 +4,7 @@ import Head from "next/head";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { auth } from "../utils/firebase";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import Router from "next/router";
 
 type Props = {
@@ -58,7 +58,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           )}
         </Navbar>
       </header>
-      {children}
+      <Container>{children}</Container>
       <footer>
         <hr />
         <span>I&#39;m here to stay (Footer)</span>

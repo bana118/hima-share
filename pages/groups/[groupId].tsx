@@ -96,13 +96,20 @@ const GroupCalendarPage = ({
     <React.Fragment>
       {groupDateStatusList && group && (
         <Layout title={group.name}>
-          <Button variant="accent" type="button" onClick={reload}>
-            更新
-          </Button>
-          <GroupCalendar
-            groupDateStatusList={groupDateStatusList}
-            group={group}
-          />
+          <div>
+            <Button
+              className="justify-content-center"
+              variant="accent"
+              type="button"
+              onClick={reload}
+            >
+              更新
+            </Button>
+            <GroupCalendar
+              groupDateStatusList={groupDateStatusList}
+              group={group}
+            />
+          </div>
         </Layout>
       )}
     </React.Fragment>
