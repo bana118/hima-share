@@ -1,3 +1,4 @@
+import { LoginForm } from "components/LoginForm";
 import { UpdateEmailForm } from "components/UpdateEmailForm";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { UpdateUserForm } from "components/UpdateUserForm";
@@ -13,6 +14,14 @@ const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
   const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
+  const [onLoginedAction, setOnLoginedAction] = useState<
+    "updateEmail" | "updatePassword" | undefined
+  >(undefined);
+  const [readyUpdateEmail, setReadyUpdateEmail] = useState(false);
+  const [readyUpdatePassword, setReadyUpdatePassword] = useState(false);
+  const [updated, setUpdated] = useState<
+    "updateEmail" | "updatePassword" | undefined
+  >(undefined);
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
@@ -66,7 +75,71 @@ const ProfilePage = (): JSX.Element => {
 
   return (
     <React.Fragment>
-      {user && groups && (
+      {updated && (
+        <Layout title="更新完了">
+          <Row className="justify-content-center">
+            <h2>
+              {updated == "updateEmail" && "メールアドレスを更新しました"}
+              {updated == "updatePassword" && "パスワードを更新しました"}
+            </h2>
+          </Row>
+          <Row className="justify-content-center">
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => {
+                setUpdated(undefined);
+                setOnLoginedAction(undefined);
+              }}
+            >
+              戻る
+            </Button>
+          </Row>
+        </Layout>
+      )}
+      {readyUpdateEmail && user && (
+        <Layout title="メールアドレス更新">
+          <UpdateEmailForm
+            user={user}
+            onUpdated={(newEmail) => {
+              setReadyUpdateEmail(false);
+              const newUser: UserWithId = {
+                ...user,
+                email: newEmail,
+              };
+              setUser(newUser);
+              setUpdated("updateEmail");
+            }}
+          />
+        </Layout>
+      )}
+      {readyUpdatePassword && user && (
+        <Layout title="パスワード更新">
+          <UpdatePasswordForm
+            onUpdated={() => {
+              setReadyUpdatePassword(false);
+              setUpdated("updatePassword");
+            }}
+          />
+        </Layout>
+      )}
+      {onLoginedAction != null &&
+        !readyUpdateEmail &&
+        !readyUpdatePassword &&
+        !updated && (
+          <Layout title="ログイン">
+            <LoginForm
+              onLogined={() => {
+                if (onLoginedAction == "updateEmail") {
+                  setReadyUpdateEmail(true);
+                } else {
+                  setReadyUpdatePassword(true);
+                }
+              }}
+            />
+          </Layout>
+        )}
+      {user && groups && onLoginedAction == null && (
         <Layout title={`${user.name}のプロフィール`}>
           <Row className="justify-content-center">
             <h2>ユーザー情報</h2>
@@ -94,8 +167,12 @@ const ProfilePage = (): JSX.Element => {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Button variant="accent" type="button">
-              更新
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => setOnLoginedAction("updateEmail")}
+            >
+              ログイン画面へ
             </Button>
           </Row>
           <Row className="justify-content-center mt-3">
@@ -105,8 +182,12 @@ const ProfilePage = (): JSX.Element => {
             <p>更新するには再度ログインする必要があります</p>
           </Row>
           <Row className="justify-content-center">
-            <Button variant="accent" type="button">
-              更新
+            <Button
+              variant="accent"
+              type="button"
+              onClick={() => setOnLoginedAction("updatePassword")}
+            >
+              ログイン画面へ
             </Button>
           </Row>
         </Layout>

@@ -1,16 +1,16 @@
 import { useForm } from "react-hook-form";
-import { Form, Button, Tooltip, Overlay } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import firebase from "firebase/app";
-import { UserWithId } from "interfaces/User";
-import React, { useContext, useRef, useState } from "react";
+import { updateUser, User, UserWithId } from "interfaces/User";
+import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
 
 interface UpdateEmailFormProps {
   user: UserWithId;
-  email: string;
+  onUpdated?: (newEmail: string) => void;
 }
 
 interface InputsType {
@@ -48,7 +48,7 @@ const schema = yup.object().shape({
 
 export const UpdateEmailForm = ({
   user,
-  email,
+  onUpdated,
 }: UpdateEmailFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const {
@@ -56,10 +56,7 @@ export const UpdateEmailForm = ({
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<InputsType>({
-    resolver: yupResolver(schema),
-    defaultValues: { email: email },
-  });
+  } = useForm<InputsType>({ resolver: yupResolver(schema) });
   const setUnexpectedError = () => {
     setError("email", {
       type: "manual",
@@ -67,25 +64,33 @@ export const UpdateEmailForm = ({
     });
   };
 
-  const updateButtonRef = useRef(null);
-  const [showTooltip, setShowTooltip] = useState(false);
-
   const updateEmail = async (data: InputsType) => {
     if (authUser == null) {
       setUnexpectedError();
     } else {
       const newUser: User = {
-        name: user.name,
+        ...user,
         email: data["email"],
-        groups: user.groups,
-        description: user.description,
       };
+      Promise.all([
+        authUser.updateEmail(data["email"]),
+        updateUser(newUser, user.id),
+      ])
+        .then(() => {
+          if (onUpdated != null) {
+            onUpdated(data["email"]);
+          }
+        })
+        .catch(() => {
+          setUnexpectedError();
+        });
     }
   };
+  // TODO エラーメッセージがなぜかでない？
   return (
     <Form onSubmit={handleSubmit(updateEmail)}>
       <Form.Group>
-        <Form.Label>メールアドレス</Form.Label>
+        <Form.Label>新しいメールアドレス</Form.Label>
         <Form.Control
           type="email"
           isInvalid={!!errors.email}
@@ -97,26 +102,9 @@ export const UpdateEmailForm = ({
           </Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button
-        variant="accent"
-        type="submit"
-        onBlur={() => {
-          setShowTooltip(false);
-        }}
-      >
+      <Button variant="accent" type="submit">
         更新
       </Button>
-      <Overlay
-        target={updateButtonRef.current}
-        show={showTooltip}
-        placement="right"
-      >
-        {(props) => (
-          <Tooltip id="update-email-tooltip" {...props}>
-            更新しました！
-          </Tooltip>
-        )}
-      </Overlay>
     </Form>
   );
 };

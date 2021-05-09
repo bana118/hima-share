@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useContext } from "react";
+import { AuthContext } from "context/AuthContext";
 
 interface UpdatePasswordFormProps {
   onUpdated?: () => void;
@@ -29,6 +31,7 @@ const schema = yup.object().shape({
 export const UpdatePasswordForm = ({
   onUpdated,
 }: UpdatePasswordFormProps): JSX.Element => {
+  const { authUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -41,11 +44,24 @@ export const UpdatePasswordForm = ({
       message: "予期せぬエラーが発生しました！ もう一度お試しください",
     });
   };
-  const updatePassword = async (data: InputsType) => {};
+  const updatePassword = async (data: InputsType) => {
+    if (authUser == null) {
+      setUnexpectedError();
+    } else {
+      authUser
+        .updatePassword(data["password"])
+        .then(() => {
+          if (onUpdated != null) {
+            onUpdated();
+          }
+        })
+        .catch(() => setUnexpectedError());
+    }
+  };
   return (
     <Form onSubmit={handleSubmit(updatePassword)}>
       <Form.Group>
-        <Form.Label>パスワード</Form.Label>
+        <Form.Label>新しいパスワード</Form.Label>
         <Form.Control
           type="password"
           isInvalid={!!errors.password}
@@ -63,7 +79,7 @@ export const UpdatePasswordForm = ({
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>パスワード確認</Form.Label>
+        <Form.Label>新しいパスワードの確認</Form.Label>
         <Form.Control
           type="password"
           isInvalid={!!errors.confirmPassword}
