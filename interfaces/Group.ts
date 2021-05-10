@@ -48,6 +48,10 @@ export const loadGroup = async (
   }
 };
 
+export const deleteGroup = async (groupId: string): Promise<void> => {
+  await db.ref(`/groups/${groupId}`).remove();
+};
+
 export const setInvitation = async (
   groupId: string,
   invitationId: string

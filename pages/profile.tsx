@@ -166,7 +166,11 @@ const ProfilePage = (): JSX.Element => {
             <h2>グループ一覧</h2>
           </Row>
           <Row>
-            <GroupListForm user={user} groups={groups} />
+            <GroupListForm
+              user={user}
+              groups={groups}
+              setGroups={(g: GroupWithId[]) => setGroups(g)}
+            />
           </Row>
           <Row className="justify-content-center mt-3">
             <h2>メールアドレス</h2>

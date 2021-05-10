@@ -1,14 +1,16 @@
 import { AuthContext } from "context/AuthContext";
 import { GroupWithId } from "interfaces/Group";
-import { updateUser, UserWithId, User } from "interfaces/User";
+import { UserWithId, updateGroupChatId, leaveGroup } from "interfaces/User";
 import Link from "next/link";
 import { useState, useRef, useContext } from "react";
 import { Table, Button, Overlay, Tooltip, Form, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { ConfirmModal } from "./ConfirmModal";
 
 interface GroupListFormProps {
   user: UserWithId;
   groups: GroupWithId[];
+  setGroups: (groups: GroupWithId[]) => void;
 }
 
 interface InputsType {
@@ -18,6 +20,7 @@ interface InputsType {
 export const GroupListForm = ({
   user,
   groups,
+  setGroups,
 }: GroupListFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
 
@@ -25,6 +28,7 @@ export const GroupListForm = ({
     const initChatId = user.groups == null ? "" : user.groups[group.id];
     const updateButtonRef = useRef(null);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const {
       register,
       handleSubmit,
@@ -44,18 +48,29 @@ export const GroupListForm = ({
       if (authUser == null) {
         setUnexpectedError();
       } else {
-        const newChatId = data["chatId"];
-        const newUser: User = {
-          ...user,
-          groups: { ...user.groups, [group.id]: newChatId },
-        };
-        updateUser(newUser, user.id)
+        updateGroupChatId(user.id, group.id, data["chatId"])
           .then(() => {
             setShowTooltip(true);
           })
           .catch(() => {
             setUnexpectedError();
           });
+      }
+    };
+
+    const onClickLeaveButton = async () => {
+      if (authUser == null) {
+        setShowModal(false);
+      } else {
+        setShowModal(false);
+        await leaveGroup(user.id, group).then(() => {
+          const index = groups.findIndex((g) => g.id == group.id);
+          console.log(index);
+          if (index != -1) {
+            const newGroups = [...groups];
+            setGroups([...newGroups]);
+          }
+        });
       }
     };
     return (
@@ -106,7 +121,17 @@ export const GroupListForm = ({
           </Form>
         </td>
         <td>
-          <Button variant="main">退会</Button>
+          <Button variant="main" onClick={() => setShowModal(true)}>
+            退会
+          </Button>
+          <ConfirmModal
+            show={showModal}
+            setShow={(show: boolean) => setShowModal(show)}
+            headerText={`本当に${group.name}から退会しますか？`}
+            bodyText={"この操作は取り消せません"}
+            confirmButtonText={"退会"}
+            onClickConfirmButton={() => onClickLeaveButton()}
+          />
         </td>
       </tr>
     );
