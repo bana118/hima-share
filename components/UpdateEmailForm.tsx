@@ -70,7 +70,7 @@ export const UpdateEmailForm = ({
     } else {
       Promise.all([
         authUser.updateEmail(data["email"]),
-        updateUser(user.id, undefined, data["email"]),
+        updateUser(user, undefined, data["email"], undefined),
       ])
         .then(() => {
           if (onUpdated != null) {
