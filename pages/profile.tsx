@@ -1,3 +1,4 @@
+import { GroupListForm } from "components/GroupListForm";
 import { LoginForm } from "components/LoginForm";
 import { UpdateEmailForm } from "components/UpdateEmailForm";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
@@ -160,6 +161,16 @@ const ProfilePage = (): JSX.Element => {
                 }}
               />
             </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <h2>グループ一覧</h2>
+          </Row>
+          <Row>
+            <GroupListForm
+              user={user}
+              groups={groups}
+              setGroups={(g: GroupWithId[]) => setGroups(g)}
+            />
           </Row>
           <Row className="justify-content-center mt-3">
             <h2>メールアドレス</h2>

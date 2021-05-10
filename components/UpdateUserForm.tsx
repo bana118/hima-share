@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { updateUser, User, UserWithId } from "interfaces/User";
+import { updateUser, UserWithId } from "interfaces/User";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "context/AuthContext";
 interface UpdateUserFormProps {
@@ -49,13 +49,7 @@ export const UpdateUserForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      const newUser: User = {
-        name: data["name"],
-        email: user.email,
-        groups: user.groups,
-        description: data["description"],
-      };
-      updateUser(newUser, user.id)
+      updateUser(user, data["name"], undefined, data["description"])
         .then(() => {
           setShowTooltip(true);
         })

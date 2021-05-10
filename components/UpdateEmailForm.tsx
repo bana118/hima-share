@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import firebase from "firebase/app";
-import { updateUser, User, UserWithId } from "interfaces/User";
+import { updateUser, UserWithId } from "interfaces/User";
 import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
 
@@ -68,13 +68,9 @@ export const UpdateEmailForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      const newUser: User = {
-        ...user,
-        email: data["email"],
-      };
       Promise.all([
         authUser.updateEmail(data["email"]),
-        updateUser(newUser, user.id),
+        updateUser(user, undefined, data["email"], undefined),
       ])
         .then(() => {
           if (onUpdated != null) {

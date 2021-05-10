@@ -82,7 +82,7 @@ export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
-        <Form.Label>Email address</Form.Label>
+        <Form.Label>メールアドレス</Form.Label>
         <Form.Control
           type="email"
           isInvalid={!!errors.email}
@@ -96,7 +96,7 @@ export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>Password</Form.Label>
+        <Form.Label>パスワード</Form.Label>
         <Form.Control
           type="password"
           isInvalid={!!errors.password}

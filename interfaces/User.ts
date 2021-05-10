@@ -1,11 +1,12 @@
 import { db } from "../utils/firebase";
+import { deleteGroup, GroupWithId } from "./Group";
 
 export interface User {
   name: string;
   email: string;
   groups?: {
     // Chat Id (eg. Slack, Discor, Twitter...)
-    [groupId: string]: string;
+    [groupId: string]: string | undefined;
   };
   description: string;
 }
@@ -40,15 +41,52 @@ export const joinGroup = async (
   return await db.ref().update(updates);
 };
 
-export const updateUser = async (newUser: User, uid: string): Promise<void> => {
-  const user: User = {
-    name: newUser.name,
-    email: newUser.email,
-    groups: newUser.groups,
-    description: newUser.description,
+export const updateUser = async (
+  user: UserWithId,
+  name?: string,
+  email?: string,
+  description?: string
+): Promise<void> => {
+  const updateUser = {
+    name: name ? name : user.name,
+    email: email ? email : user.email,
+    description: description ? description : user.description,
   };
   const updates = {
-    [`/users/${uid}`]: user,
+    [`/users/${user.id}`]: updateUser,
   };
   return await db.ref().update(updates);
+};
+
+export const updateGroupChatId = async (
+  uid: string,
+  groupId: string,
+  chatId: string
+): Promise<void> => {
+  const updates = {
+    [`/users/${uid}/groups/${groupId}`]: chatId,
+    [`/groups/${groupId}/members/${uid}`]: chatId,
+  };
+  return await db.ref().update(updates);
+};
+
+export const leaveGroup = async (
+  uid: string,
+  group: GroupWithId
+): Promise<void | void[]> => {
+  const updates = {
+    [`/users/${uid}/groups/${group.id}`]: null,
+    [`/groups/${group.id}/members/${uid}`]: null,
+  };
+  if (group.members != null) {
+    const membersLength = Object.keys(group.members).length;
+    if (membersLength == 1) {
+      return await Promise.all([
+        db.ref().update(updates),
+        deleteGroup(group.id),
+      ]);
+    } else {
+      return await db.ref().update(updates);
+    }
+  }
 };
