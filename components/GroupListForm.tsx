@@ -128,7 +128,7 @@ export const GroupListForm = ({
             show={showModal}
             setShow={(show: boolean) => setShowModal(show)}
             headerText={`本当に${group.name}から退会しますか？`}
-            bodyText={"この操作は取り消せません"}
+            bodyText={"※この操作は取り消せません！"}
             confirmButtonText={"退会"}
             onClickConfirmButton={() => onClickLeaveButton()}
           />

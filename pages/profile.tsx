@@ -1,3 +1,4 @@
+import { DeleteUserButton } from "components/DeleteUserButton";
 import { GroupListForm } from "components/GroupListForm";
 import { LoginForm } from "components/LoginForm";
 import { UpdateEmailForm } from "components/UpdateEmailForm";
@@ -16,10 +17,11 @@ const ProfilePage = (): JSX.Element => {
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
   const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
   const [onLoginedAction, setOnLoginedAction] = useState<
-    "updateEmail" | "updatePassword" | undefined
+    "updateEmail" | "updatePassword" | "deleteUser" | undefined
   >(undefined);
   const [readyUpdateEmail, setReadyUpdateEmail] = useState(false);
   const [readyUpdatePassword, setReadyUpdatePassword] = useState(false);
+  const [readyDeleteUser, setReadyDeleteUser] = useState(false);
   const [updated, setUpdated] = useState<
     "updateEmail" | "updatePassword" | undefined
   >(undefined);
@@ -128,9 +130,25 @@ const ProfilePage = (): JSX.Element => {
           </Row>
         </Layout>
       )}
+      {readyDeleteUser && user && (
+        <Layout title="ユーザー削除">
+          <Row className="justify-content-center">
+            <h2>本当に{user.name}を削除しますか？</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <DeleteUserButton
+              user={user}
+              onDeleted={() => {
+                Router.push("/");
+              }}
+            />
+          </Row>
+        </Layout>
+      )}
       {onLoginedAction != null &&
         !readyUpdateEmail &&
         !readyUpdatePassword &&
+        !readyDeleteUser &&
         !updated && (
           <Layout title="ログイン">
             <Row className="justify-content-center">
@@ -138,8 +156,10 @@ const ProfilePage = (): JSX.Element => {
                 onLogined={() => {
                   if (onLoginedAction == "updateEmail") {
                     setReadyUpdateEmail(true);
-                  } else {
+                  } else if (onLoginedAction == "updatePassword") {
                     setReadyUpdatePassword(true);
+                  } else {
+                    setReadyDeleteUser(true);
                   }
                 }}
               />
@@ -203,6 +223,21 @@ const ProfilePage = (): JSX.Element => {
               variant="accent"
               type="button"
               onClick={() => setOnLoginedAction("updatePassword")}
+            >
+              ログイン画面へ
+            </Button>
+          </Row>
+          <Row className="justify-content-center mt-3">
+            <h2>アカウント削除</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <p>アカウントを削除するには再度ログインする必要があります</p>
+          </Row>
+          <Row className="justify-content-center">
+            <Button
+              variant="main"
+              type="button"
+              onClick={() => setOnLoginedAction("deleteUser")}
             >
               ログイン画面へ
             </Button>
