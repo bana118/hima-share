@@ -17,8 +17,12 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
     // auth.signOut().then(() => { Router.puth("/") }) とやると他ページの/loginへのリダイレクトが先に働いてしまう
-    auth.signOut();
-    Router.push("/");
+    try {
+      await auth.signOut();
+      Router.push("/");
+    } catch {
+      console.error("Unexpected Error");
+    }
   };
   return (
     <div>

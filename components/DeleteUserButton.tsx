@@ -25,8 +25,8 @@ export const DeleteUserButton = ({
             onDeleted();
           }
         })
-        .catch((error) => {
-          console.error(error);
+        .catch(() => {
+          console.error("Unexpected Error");
         });
     }
   };

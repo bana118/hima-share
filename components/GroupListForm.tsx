@@ -63,14 +63,17 @@ export const GroupListForm = ({
         setShowModal(false);
       } else {
         setShowModal(false);
-        await leaveGroup(user.id, group).then(() => {
-          const index = groups.findIndex((g) => g.id == group.id);
-          console.log(index);
-          if (index != -1) {
-            const newGroups = [...groups];
-            setGroups([...newGroups]);
-          }
-        });
+        leaveGroup(user.id, group)
+          .then(() => {
+            const index = groups.findIndex((g) => g.id == group.id);
+            if (index != -1) {
+              const newGroups = [...groups];
+              setGroups([...newGroups]);
+            }
+          })
+          .catch(() => {
+            console.error("Unexpected Error");
+          });
       }
     };
     return (

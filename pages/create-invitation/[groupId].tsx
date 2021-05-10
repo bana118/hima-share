@@ -48,11 +48,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const group = await loadGroup(groupId);
-    if (group == null) {
-      return { props: { errors: "Invalid URL" } };
-    } else {
-      return { props: { group } };
+    try {
+      const group = await loadGroup(groupId);
+      if (group == null) {
+        return { props: { errors: "Invalid URL" } };
+      } else {
+        return { props: { group } };
+      }
+    } catch {
+      console.error("Unexpected Error");
+      return { props: { errors: "Unexpected Error" } };
     }
   }
 };

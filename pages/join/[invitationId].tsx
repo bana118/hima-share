@@ -33,16 +33,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (invitationId == null || Array.isArray(invitationId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const invitation = await loadInvitation(invitationId);
-    if (invitation == null) {
-      return { props: { errors: "Invalid URL" } };
-    } else {
-      const group = await loadGroup(invitation.groupId);
-      if (group == null) {
-        return { props: { errors: "Unexpected Error" } };
+    try {
+      const invitation = await loadInvitation(invitationId);
+      if (invitation == null) {
+        return { props: { errors: "Invalid URL" } };
       } else {
-        return { props: { group } };
+        const group = await loadGroup(invitation.groupId);
+        if (group == null) {
+          return { props: { errors: "Unexpected Error" } };
+        } else {
+          return { props: { group } };
+        }
       }
+    } catch {
+      console.error("Unexpected Error");
+      return { props: { errors: "Unexpected Error" } };
     }
   }
 };

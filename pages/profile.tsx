@@ -34,36 +34,39 @@ const ProfilePage = (): JSX.Element => {
       if (authUser === null) {
         Router.push("/login");
       } else if (authUser != null) {
-        // TODO エラー処理
-        const user = await loadUser(authUser.uid);
-        if (user != null && !unmounted) {
-          setUser(user);
-          const groupList: GroupWithId[] = [];
-          if (user.groups != null) {
-            const groupIds = Object.keys(user.groups);
-            const groupsfromDatabase = await Promise.all(
-              groupIds.map((groupId) => loadGroup(groupId))
-            );
-            for (const group of groupsfromDatabase) {
-              if (group != null) {
-                groupList.push(group);
+        try {
+          const user = await loadUser(authUser.uid);
+          if (user != null && !unmounted) {
+            setUser(user);
+            const groupList: GroupWithId[] = [];
+            if (user.groups != null) {
+              const groupIds = Object.keys(user.groups);
+              const groupsfromDatabase = await Promise.all(
+                groupIds.map((groupId) => loadGroup(groupId))
+              );
+              for (const group of groupsfromDatabase) {
+                if (group != null) {
+                  groupList.push(group);
+                }
               }
             }
+            if (!unmounted) {
+              groupList.sort((a, b) => {
+                const nameA = a.name.toUpperCase();
+                const nameB = b.name.toUpperCase();
+                if (nameA < nameB) {
+                  return -1;
+                }
+                if (nameA > nameB) {
+                  return 1;
+                }
+                return 0;
+              });
+              setGroups(groupList);
+            }
           }
-          if (!unmounted) {
-            groupList.sort((a, b) => {
-              const nameA = a.name.toUpperCase();
-              const nameB = b.name.toUpperCase();
-              if (nameA < nameB) {
-                return -1;
-              }
-              if (nameA > nameB) {
-                return 1;
-              }
-              return 0;
-            });
-            setGroups(groupList);
-          }
+        } catch {
+          console.error("Unexpected Error");
         }
       }
     };

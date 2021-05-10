@@ -62,9 +62,13 @@ const CreateInvitationPage = ({
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
     event.preventDefault();
-    deleteInvitation(invitation.id, invitation.groupId).then(() => {
-      Router.push(`/groups/${group.id}`);
-    });
+    deleteInvitation(invitation.id, invitation.groupId)
+      .then(() => {
+        Router.push(`/groups/${group.id}`);
+      })
+      .catch(() => {
+        console.error("Unexpected Error");
+      });
   };
 
   return (
@@ -116,17 +120,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (invitationId == null || Array.isArray(invitationId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const invitation = await loadInvitation(invitationId);
-    if (invitation == null) {
-      return { props: { errors: "Invalid URL" } };
-    } else {
-      const appUrl = process.env.APP_URL;
-      const group = await loadGroup(invitation.groupId);
-      if (appUrl == null) {
-        return { props: { errors: "Unexpected Error" } };
+    try {
+      const invitation = await loadInvitation(invitationId);
+      if (invitation == null) {
+        return { props: { errors: "Invalid URL" } };
       } else {
-        return { props: { invitation, group, appUrl } };
+        const appUrl = process.env.APP_URL;
+        const group = await loadGroup(invitation.groupId);
+        if (appUrl == null) {
+          return { props: { errors: "Unexpected Error" } };
+        } else {
+          return { props: { invitation, group, appUrl } };
+        }
       }
+    } catch {
+      console.error("Unexpected Error");
+      return { props: { errors: "Unexpected Error" } };
     }
   }
 };

@@ -41,20 +41,23 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
     let unmounted = false;
     const setFromDatabase = async () => {
       if (authUser != null) {
-        // TODO エラー処理
-        const user = await loadUser(authUser.uid);
-        if (user == null) {
-          setUnexpectedError();
-        } else if (user != null && !unmounted) {
-          if (
-            user.groups != null &&
-            Object.keys(user.groups).includes(group.id)
-          ) {
-            setIsAlreadyJoined(true);
-          } else {
-            setIsAlreadyJoined(false);
-            setUser(user);
+        try {
+          const user = await loadUser(authUser.uid);
+          if (user == null) {
+            setUnexpectedError();
+          } else if (user != null && !unmounted) {
+            if (
+              user.groups != null &&
+              Object.keys(user.groups).includes(group.id)
+            ) {
+              setIsAlreadyJoined(true);
+            } else {
+              setIsAlreadyJoined(false);
+              setUser(user);
+            }
           }
+        } catch {
+          console.error("Unexpected Error");
         }
       }
     };
