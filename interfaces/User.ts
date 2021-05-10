@@ -81,10 +81,7 @@ export const leaveGroup = async (
   if (group.members != null) {
     const membersLength = Object.keys(group.members).length;
     if (membersLength == 1) {
-      return await Promise.all([
-        db.ref().update(updates),
-        deleteGroup(group.id),
-      ]);
+      return await Promise.all([db.ref().update(updates), deleteGroup(group)]);
     } else {
       return await db.ref().update(updates);
     }
