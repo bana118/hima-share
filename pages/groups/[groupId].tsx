@@ -48,47 +48,50 @@ const GroupCalendarPage = ({
   }
 
   // TODO Firebaseのon()メソッドを用いてリアルタイムでカレンダーが変わるようにする
-
   const reload = async () => {
-    const newGroup = await loadGroup(group.id);
-    if (newGroup != null && newGroup.members != null) {
-      const userIds = Object.keys(newGroup.members);
-      const newGroupDateStatusList = [];
+    try {
+      const newGroup = await loadGroup(group.id);
+      if (newGroup != null && newGroup.members != null) {
+        const userIds = Object.keys(newGroup.members);
+        const newGroupDateStatusList = [];
 
-      const usersDateStatusList = await Promise.all(
-        userIds.map(async (userId) => {
-          return {
-            user: await loadUser(userId),
-            dateStatusList: await loadDateStatusList(userId),
-          };
-        })
-      );
+        const usersDateStatusList = await Promise.all(
+          userIds.map(async (userId) => {
+            return {
+              user: await loadUser(userId),
+              dateStatusList: await loadDateStatusList(userId),
+            };
+          })
+        );
 
-      for (let i = 0; i < userIds.length; i++) {
-        const user = usersDateStatusList[i].user;
-        const userDateStatusList = usersDateStatusList[i].dateStatusList;
-        if (user == null) {
-          return { props: { errors: "Unexpected Error" } };
+        for (let i = 0; i < userIds.length; i++) {
+          const user = usersDateStatusList[i].user;
+          const userDateStatusList = usersDateStatusList[i].dateStatusList;
+          if (user == null) {
+            return { props: { errors: "Unexpected Error" } };
+          }
+          newGroupDateStatusList.push({
+            user: user,
+            dateStatusList: userDateStatusList,
+          });
         }
-        newGroupDateStatusList.push({
-          user: user,
-          dateStatusList: userDateStatusList,
+        newGroupDateStatusList.sort((a, b) => {
+          const nameA = a.user.name.toUpperCase();
+          const nameB = b.user.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
         });
-      }
-      newGroupDateStatusList.sort((a, b) => {
-        const nameA = a.user.name.toUpperCase();
-        const nameB = b.user.name.toUpperCase();
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
-      });
 
-      setGroup(newGroup);
-      setGroupDateStatusList(newGroupDateStatusList);
+        setGroup(newGroup);
+        setGroupDateStatusList(newGroupDateStatusList);
+      }
+    } catch {
+      console.error("Unexpected Error");
     }
   };
 
@@ -128,33 +131,38 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (groupId == null || Array.isArray(groupId)) {
     return { props: { errors: "Invalid URL" } };
   } else {
-    const initGroup = await loadGroup(groupId);
-    if (initGroup == null || initGroup.members == null) {
-      return { props: { errors: "Invalid URL" } };
-    } else {
-      const userIds = Object.keys(initGroup.members);
-      const initGroupDateStatusList: UserDateStatusList[] = [];
+    try {
+      const initGroup = await loadGroup(groupId);
+      if (initGroup == null || initGroup.members == null) {
+        return { props: { errors: "Invalid URL" } };
+      } else {
+        const userIds = Object.keys(initGroup.members);
+        const initGroupDateStatusList: UserDateStatusList[] = [];
 
-      const usersDateStatusList = await Promise.all(
-        userIds.map(async (userId) => {
-          return {
-            user: await loadUser(userId),
-            dateStatusList: await loadDateStatusList(userId),
-          };
-        })
-      );
-      for (let i = 0; i < userIds.length; i++) {
-        const user = usersDateStatusList[i].user;
-        const userDateStatusList = usersDateStatusList[i].dateStatusList;
-        if (user == null) {
-          return { props: { errors: "Unexpected Error" } };
+        const usersDateStatusList = await Promise.all(
+          userIds.map(async (userId) => {
+            return {
+              user: await loadUser(userId),
+              dateStatusList: await loadDateStatusList(userId),
+            };
+          })
+        );
+        for (let i = 0; i < userIds.length; i++) {
+          const user = usersDateStatusList[i].user;
+          const userDateStatusList = usersDateStatusList[i].dateStatusList;
+          if (user == null) {
+            return { props: { errors: "Unexpected Error" } };
+          }
+          initGroupDateStatusList.push({
+            user: user,
+            dateStatusList: userDateStatusList,
+          });
         }
-        initGroupDateStatusList.push({
-          user: user,
-          dateStatusList: userDateStatusList,
-        });
+        return { props: { initGroup, initGroupDateStatusList } };
       }
-      return { props: { initGroup, initGroupDateStatusList } };
+    } catch {
+      console.error("Unexpected Error");
+      return { props: { errors: "Unexpected Error" } };
     }
   }
 };

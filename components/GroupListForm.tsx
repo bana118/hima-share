@@ -63,14 +63,17 @@ export const GroupListForm = ({
         setShowModal(false);
       } else {
         setShowModal(false);
-        await leaveGroup(user.id, group).then(() => {
-          const index = groups.findIndex((g) => g.id == group.id);
-          console.log(index);
-          if (index != -1) {
-            const newGroups = [...groups];
-            setGroups([...newGroups]);
-          }
-        });
+        leaveGroup(user.id, group)
+          .then(() => {
+            const index = groups.findIndex((g) => g.id == group.id);
+            if (index != -1) {
+              const newGroups = [...groups];
+              setGroups([...newGroups]);
+            }
+          })
+          .catch(() => {
+            console.error("Unexpected Error");
+          });
       }
     };
     return (
@@ -128,7 +131,7 @@ export const GroupListForm = ({
             show={showModal}
             setShow={(show: boolean) => setShowModal(show)}
             headerText={`本当に${group.name}から退会しますか？`}
-            bodyText={"この操作は取り消せません"}
+            bodyText={"※この操作は取り消せません！"}
             confirmButtonText={"退会"}
             onClickConfirmButton={() => onClickLeaveButton()}
           />

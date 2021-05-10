@@ -74,9 +74,17 @@ export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
 
   const onSubmit = async (data: InputsType) => {
     if (authUser === null) {
-      await login(data);
+      try {
+        await login(data);
+      } catch {
+        console.error("Unexpected Error");
+      }
     } else if (authUser != null) {
-      await updateCredential(data);
+      try {
+        await updateCredential(data);
+      } catch {
+        console.error("Unexpected Error");
+      }
     }
   };
   return (

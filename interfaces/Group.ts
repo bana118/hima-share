@@ -48,8 +48,18 @@ export const loadGroup = async (
   }
 };
 
-export const deleteGroup = async (groupId: string): Promise<void> => {
-  await db.ref(`/groups/${groupId}`).remove();
+export const deleteGroup = async (
+  group: GroupWithId
+): Promise<void | void[]> => {
+  const invitationId = group.invitationId;
+  if (invitationId == null) {
+    await db.ref(`/groups/${group.id}`).remove();
+  } else {
+    await Promise.all([
+      db.ref(`/groups/${group.id}`).remove(),
+      db.ref(`/invitations/${invitationId}`).remove(),
+    ]);
+  }
 };
 
 export const setInvitation = async (

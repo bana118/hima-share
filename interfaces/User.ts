@@ -1,5 +1,5 @@
 import { db } from "../utils/firebase";
-import { deleteGroup, GroupWithId } from "./Group";
+import { deleteGroup, GroupWithId, loadGroup } from "./Group";
 
 export interface User {
   name: string;
@@ -81,12 +81,29 @@ export const leaveGroup = async (
   if (group.members != null) {
     const membersLength = Object.keys(group.members).length;
     if (membersLength == 1) {
-      return await Promise.all([
-        db.ref().update(updates),
-        deleteGroup(group.id),
-      ]);
+      return await Promise.all([db.ref().update(updates), deleteGroup(group)]);
     } else {
       return await db.ref().update(updates);
     }
   }
+};
+
+export const deleteUser = async (
+  user: UserWithId
+): Promise<(void | void[])[]> => {
+  const groupList: GroupWithId[] = [];
+  if (user.groups != null) {
+    const groupIds = Object.keys(user.groups);
+    const groups = await Promise.all(
+      groupIds.map((groupId) => loadGroup(groupId))
+    );
+    for (const group of groups) {
+      if (group != null) {
+        groupList.push(group);
+      }
+    }
+  }
+  const PromiseList = groupList.map((group) => leaveGroup(user.id, group));
+  PromiseList.push(db.ref(`/users/${user.id}`).remove());
+  return await Promise.all(PromiseList);
 };

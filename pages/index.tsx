@@ -34,46 +34,49 @@ const IndexPage = (): JSX.Element => {
           setGroups(null);
         }
       } else {
-        // TODO エラー処理
-        const [userData, data] = await Promise.all([
-          loadUser(authUser.uid),
-          loadDateStatusList(authUser.uid),
-        ]);
-        if (!unmounted) {
-          if (data != null) {
-            setDateStatusList(data);
-          } else {
-            setDateStatusList({});
-          }
-          if (userData != null) {
-            setUser(userData);
-            const groupList: GroupWithId[] = [];
-            if (userData.groups != null) {
-              const groupIds = Object.keys(userData.groups);
-              const groupsData = await Promise.all(
-                groupIds.map((groupId) => loadGroup(groupId))
-              );
-              for (const groupData of groupsData) {
-                if (groupData != null) {
-                  groupList.push(groupData);
+        try {
+          const [userData, data] = await Promise.all([
+            loadUser(authUser.uid),
+            loadDateStatusList(authUser.uid),
+          ]);
+          if (!unmounted) {
+            if (data != null) {
+              setDateStatusList(data);
+            } else {
+              setDateStatusList({});
+            }
+            if (userData != null) {
+              setUser(userData);
+              const groupList: GroupWithId[] = [];
+              if (userData.groups != null) {
+                const groupIds = Object.keys(userData.groups);
+                const groupsData = await Promise.all(
+                  groupIds.map((groupId) => loadGroup(groupId))
+                );
+                for (const groupData of groupsData) {
+                  if (groupData != null) {
+                    groupList.push(groupData);
+                  }
                 }
               }
-            }
-            if (!unmounted) {
-              groupList.sort((a, b) => {
-                const nameA = a.name.toUpperCase();
-                const nameB = b.name.toUpperCase();
-                if (nameA < nameB) {
-                  return -1;
-                }
-                if (nameA > nameB) {
-                  return 1;
-                }
-                return 0;
-              });
-              setGroups(groupList);
+              if (!unmounted) {
+                groupList.sort((a, b) => {
+                  const nameA = a.name.toUpperCase();
+                  const nameB = b.name.toUpperCase();
+                  if (nameA < nameB) {
+                    return -1;
+                  }
+                  if (nameA > nameB) {
+                    return 1;
+                  }
+                  return 0;
+                });
+                setGroups(groupList);
+              }
             }
           }
+        } catch {
+          console.error("Unexpected Error");
         }
       }
     };
@@ -89,9 +92,12 @@ const IndexPage = (): JSX.Element => {
   useEffect(() => {
     const setToDatabase = async () => {
       if (authUser != null && dateStatusList != null) {
-        // TODO エラー処理
         // TODO 失敗したらカレンダーの色は変えない
-        await storeDateStatusList(dateStatusList, authUser.uid);
+        try {
+          await storeDateStatusList(dateStatusList, authUser.uid);
+        } catch {
+          console.error("Unexpected Error");
+        }
       }
     };
     if (authUser !== undefined) {

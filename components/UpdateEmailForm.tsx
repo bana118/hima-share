@@ -29,17 +29,22 @@ const schema = yup.object().shape({
         if (value == null) {
           return true;
         } else {
-          const providers = await auth.fetchSignInMethodsForEmail(value);
-          const isAlreadyUsed =
-            providers.findIndex(
-              (p) =>
-                p ===
-                firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD
-            ) !== -1;
-          if (isAlreadyUsed) {
+          try {
+            const providers = await auth.fetchSignInMethodsForEmail(value);
+            const isAlreadyUsed =
+              providers.findIndex(
+                (p) =>
+                  p ===
+                  firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD
+              ) !== -1;
+            if (isAlreadyUsed) {
+              return false;
+            } else {
+              return true;
+            }
+          } catch {
+            console.error("Unexpected Error");
             return false;
-          } else {
-            return true;
           }
         }
       }
