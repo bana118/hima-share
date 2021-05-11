@@ -49,7 +49,7 @@ export const UpdateUserForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      updateUser(user, data["name"], undefined, data["description"])
+      updateUser(user, data["name"], data["description"])
         .then(() => {
           setShowTooltip(true);
         })

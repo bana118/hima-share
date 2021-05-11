@@ -94,7 +94,6 @@ export const RegisterForm = ({
       Promise.all([]);
       const user: User = {
         name: data["name"],
-        email: data["email"],
         description: data["description"],
       };
       await Promise.all([

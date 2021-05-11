@@ -111,14 +111,8 @@ const ProfilePage = (): JSX.Element => {
         <Layout title="メールアドレス更新">
           <Row className="justify-content-center">
             <UpdateEmailForm
-              user={user}
-              onUpdated={(newEmail) => {
+              onUpdated={() => {
                 setReadyUpdateEmail(false);
-                const newUser: UserWithId = {
-                  ...user,
-                  email: newEmail,
-                };
-                setUser(newUser);
                 setUpdated("updateEmail");
               }}
             />
@@ -207,7 +201,14 @@ const ProfilePage = (): JSX.Element => {
           </Row>
           <Row className="justify-content-center">
             <Col md={6}>
-              <Form.Control value={user.email} readOnly />
+              <Form.Control
+                value={
+                  authUser != null && authUser.email != null
+                    ? authUser.email
+                    : ""
+                }
+                readOnly
+              />
             </Col>
           </Row>
           {authUser != null && !authUser.emailVerified && (
