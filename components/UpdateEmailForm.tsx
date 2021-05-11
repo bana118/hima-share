@@ -73,18 +73,20 @@ export const UpdateEmailForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      Promise.all([
-        authUser.updateEmail(data["email"]),
-        updateUser(user, undefined, data["email"], undefined),
-      ])
-        .then(() => {
-          if (onUpdated != null) {
-            onUpdated(data["email"]);
-          }
-        })
-        .catch(() => {
-          setUnexpectedError();
+      try {
+        await Promise.all([
+          authUser.updateEmail(data["email"]),
+          updateUser(user, undefined, data["email"], undefined),
+        ]);
+        await authUser.sendEmailVerification({
+          url: `${document.location.origin}`,
         });
+        if (onUpdated != null) {
+          onUpdated(data["email"]);
+        }
+      } catch {
+        setUnexpectedError();
+      }
     }
   };
   // TODO エラーメッセージがなぜかでない？
