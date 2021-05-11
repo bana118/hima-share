@@ -21,7 +21,7 @@ const RegisterPage = (): JSX.Element => {
             <h1>アカウント作成</h1>
           </Row>
           <Row className="justify-content-center">
-            <RegisterForm onRegistered={() => Router.push("/")} />
+            <RegisterForm onRegistered={() => Router.push("/email-verify")} />
           </Row>
           <Row className="justify-content-center">
             <p>アカウントをお持ちですか？</p>

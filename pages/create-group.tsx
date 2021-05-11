@@ -10,11 +10,13 @@ const CreateGroupPage = (): JSX.Element => {
   useEffect(() => {
     if (authUser === null) {
       Router.push("/login");
+    } else if (authUser != null && !authUser.emailVerified) {
+      Router.push("/email-verify");
     }
   }, [authUser]);
   return (
     <React.Fragment>
-      {authUser && (
+      {authUser && !(authUser != null && !authUser.emailVerified) && (
         <Layout title="Create Group">
           <h1>Create Group</h1>
           <CreateGroupForm />
