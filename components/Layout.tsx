@@ -41,7 +41,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           <Link href="/" passHref>
             <Navbar.Brand className="mr-auto">Hima Share</Navbar.Brand>
           </Link>
-          {authUser && authUser.emailVerified && (
+          {authUser && (
             <Nav>
               <Link href="/profile" passHref>
                 <Nav.Link className="mr-3" active>

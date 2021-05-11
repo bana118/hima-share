@@ -5,6 +5,7 @@ import { UpdateEmailForm } from "components/UpdateEmailForm";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { UpdateUserForm } from "components/UpdateUserForm";
 import Router from "next/router";
+import Link from "next/link";
 import React, { useEffect, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import Layout from "../components/Layout";
@@ -209,6 +210,17 @@ const ProfilePage = (): JSX.Element => {
               <Form.Control value={user.email} readOnly />
             </Col>
           </Row>
+          {authUser != null && !authUser.emailVerified && (
+            <Row className="justify-content-center">
+              <Form.Text>
+                メールアドレスが未確認です！
+                <Link href="/email-verify">
+                  <a>確認</a>
+                </Link>
+                して下さい！
+              </Form.Text>
+            </Row>
+          )}
           <Row className="justify-content-center">
             <Button
               variant="accent"
