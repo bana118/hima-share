@@ -85,10 +85,12 @@ const ProfilePage = (): JSX.Element => {
         <Layout title="更新完了">
           <Row className="justify-content-center">
             <h2>
-              {updated == "updateEmail" &&
-                "メールアドレスを更新しました(確認メール内のリンクをクリックしてください)"}
+              {updated == "updateEmail" && "メールアドレスを更新しました"}
               {updated == "updatePassword" && "パスワードを更新しました"}
             </h2>
+            {updated == "updateEmail" && (
+              <h3>確認メール内のリンクをクリックして下さい</h3>
+            )}
           </Row>
           <Row className="justify-content-center">
             <Button
