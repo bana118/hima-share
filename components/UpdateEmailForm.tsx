@@ -4,12 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import firebase from "firebase/app";
-import { updateUser, UserWithId } from "interfaces/User";
 import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
 
 interface UpdateEmailFormProps {
-  user: UserWithId;
   onUpdated?: (newEmail: string) => void;
 }
 
@@ -52,7 +50,6 @@ const schema = yup.object().shape({
 });
 
 export const UpdateEmailForm = ({
-  user,
   onUpdated,
 }: UpdateEmailFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -73,18 +70,17 @@ export const UpdateEmailForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      Promise.all([
-        authUser.updateEmail(data["email"]),
-        updateUser(user, undefined, data["email"], undefined),
-      ])
-        .then(() => {
-          if (onUpdated != null) {
-            onUpdated(data["email"]);
-          }
-        })
-        .catch(() => {
-          setUnexpectedError();
+      try {
+        await Promise.all([authUser.updateEmail(data["email"])]);
+        await authUser.sendEmailVerification({
+          url: `${document.location.origin}`,
         });
+        if (onUpdated != null) {
+          onUpdated(data["email"]);
+        }
+      } catch {
+        setUnexpectedError();
+      }
     }
   };
   // TODO エラーメッセージがなぜかでない？

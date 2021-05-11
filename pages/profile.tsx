@@ -5,6 +5,7 @@ import { UpdateEmailForm } from "components/UpdateEmailForm";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { UpdateUserForm } from "components/UpdateUserForm";
 import Router from "next/router";
+import Link from "next/link";
 import React, { useEffect, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import Layout from "../components/Layout";
@@ -88,6 +89,9 @@ const ProfilePage = (): JSX.Element => {
               {updated == "updateEmail" && "メールアドレスを更新しました"}
               {updated == "updatePassword" && "パスワードを更新しました"}
             </h2>
+            {updated == "updateEmail" && (
+              <h3>確認メール内のリンクをクリックして下さい</h3>
+            )}
           </Row>
           <Row className="justify-content-center">
             <Button
@@ -107,14 +111,8 @@ const ProfilePage = (): JSX.Element => {
         <Layout title="メールアドレス更新">
           <Row className="justify-content-center">
             <UpdateEmailForm
-              user={user}
-              onUpdated={(newEmail) => {
+              onUpdated={() => {
                 setReadyUpdateEmail(false);
-                const newUser: UserWithId = {
-                  ...user,
-                  email: newEmail,
-                };
-                setUser(newUser);
                 setUpdated("updateEmail");
               }}
             />
@@ -203,9 +201,27 @@ const ProfilePage = (): JSX.Element => {
           </Row>
           <Row className="justify-content-center">
             <Col md={6}>
-              <Form.Control value={user.email} readOnly />
+              <Form.Control
+                value={
+                  authUser != null && authUser.email != null
+                    ? authUser.email
+                    : ""
+                }
+                readOnly
+              />
             </Col>
           </Row>
+          {authUser != null && !authUser.emailVerified && (
+            <Row className="justify-content-center">
+              <Form.Text>
+                メールアドレスが未確認です！
+                <Link href="/email-verify">
+                  <a>確認</a>
+                </Link>
+                して下さい！
+              </Form.Text>
+            </Row>
+          )}
           <Row className="justify-content-center">
             <Button
               variant="accent"

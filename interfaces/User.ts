@@ -3,7 +3,6 @@ import { deleteGroup, GroupWithId, loadGroup } from "./Group";
 
 export interface User {
   name: string;
-  email: string;
   groups?: {
     // Chat Id (eg. Slack, Discor, Twitter...)
     [groupId: string]: string | undefined;
@@ -44,12 +43,10 @@ export const joinGroup = async (
 export const updateUser = async (
   user: UserWithId,
   name?: string,
-  email?: string,
   description?: string
 ): Promise<void> => {
   const updateUser = {
     name: name ? name : user.name,
-    email: email ? email : user.email,
     description: description ? description : user.description,
   };
   const updates = {

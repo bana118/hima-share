@@ -81,32 +81,36 @@ export const RegisterForm = ({
     });
   };
   const registerUser = async (data: InputsType) => {
-    auth
-      .createUserWithEmailAndPassword(data["email"], data["password"])
-      .then(async (userCredential) => {
-        const uid = userCredential.user?.uid;
-        if (uid != null) {
-          const user: User = {
-            name: data["name"],
-            email: data["email"],
-            description: data["description"],
-          };
-          storeUser(user, uid)
-            .then(() => {
-              if (onRegistered != null) {
-                onRegistered();
-              }
-            })
-            .catch(() => {
-              setUnexpectedError();
-            });
-        } else {
-          setUnexpectedError();
-        }
-      })
-      .catch(() => {
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        data["email"],
+        data["password"]
+      );
+      const authUser = userCredential.user;
+      if (authUser == null) {
         setUnexpectedError();
-      });
+        return;
+      }
+      Promise.all([]);
+      const user: User = {
+        name: data["name"],
+        description: data["description"],
+      };
+      await Promise.all([
+        storeUser(user, authUser.uid),
+        authUser.updateProfile({
+          displayName: data["name"],
+        }),
+        authUser.sendEmailVerification({
+          url: `${document.location.origin}`,
+        }),
+      ]);
+      if (onRegistered != null) {
+        onRegistered();
+      }
+    } catch {
+      setUnexpectedError();
+    }
   };
   return (
     <Form onSubmit={handleSubmit(registerUser)}>

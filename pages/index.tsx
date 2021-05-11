@@ -2,6 +2,7 @@ import { GroupList } from "components/GroupList";
 import { GroupWithId, loadGroup } from "interfaces/Group";
 import { loadUser, UserWithId } from "interfaces/User";
 import Link from "next/link";
+import Router from "next/router";
 import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
@@ -24,6 +25,9 @@ const IndexPage = (): JSX.Element => {
     undefined
   );
   useEffect(() => {
+    if (authUser != null && !authUser.emailVerified) {
+      Router.push("/email-verify");
+    }
     // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
     let unmounted = false;
     const setFromDatabase = async () => {
@@ -123,7 +127,7 @@ const IndexPage = (): JSX.Element => {
           </p>
         </Layout>
       )}
-      {dateStatusList && user && groups && (
+      {dateStatusList && user && groups && authUser?.emailVerified && (
         <Layout title="ユーザーカレンダー">
           <Row className="justify-content-center">
             <h1>{user.name}のカレンダー</h1>

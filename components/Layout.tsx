@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
-  const authContext = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
     // auth.signOut().then(() => { Router.puth("/") }) とやると他ページの/loginへのリダイレクトが先に働いてしまう
@@ -41,7 +41,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
           <Link href="/" passHref>
             <Navbar.Brand className="mr-auto">Hima Share</Navbar.Brand>
           </Link>
-          {authContext.authUser && (
+          {authUser && (
             <Nav>
               <Link href="/profile" passHref>
                 <Nav.Link className="mr-3" active>
@@ -53,7 +53,7 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
               </Nav.Link>
             </Nav>
           )}
-          {authContext.authUser === null && (
+          {authUser === null && (
             <Nav>
               <Link href="/login" passHref>
                 <Nav.Link active>Login</Nav.Link>
