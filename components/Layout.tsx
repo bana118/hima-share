@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { auth } from "../utils/firebase";
 import { Navbar, Nav, Container, Row, ListGroup } from "react-bootstrap";
 import Router from "next/router";
+import Image from "next/image";
 
 type Props = {
   children?: ReactNode;
@@ -66,6 +67,18 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
       <footer className="footer mt-auto py-3">
         <hr />
         <Container>
+          <Row className="justify-content-center">
+            <Link href="/">
+              <a>
+                <Image
+                  src="/logo.png"
+                  alt="Logo of Hima Share"
+                  width={200}
+                  height={25}
+                />
+              </a>
+            </Link>
+          </Row>
           <Row className="justify-content-center">
             <ListGroup horizontal={"md"}>
               <ListGroup.Item className="border-0">
