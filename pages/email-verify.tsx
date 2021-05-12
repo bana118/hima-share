@@ -2,11 +2,13 @@ import Layout from "components/Layout";
 import { AuthContext } from "context/AuthContext";
 import Link from "next/link";
 import Router from "next/router";
-import React, { useContext, useEffect } from "react";
-import { Button, Row } from "react-bootstrap";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
 
 const EmailVerifyPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+  const buttonRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   useEffect(() => {
     if (authUser === null) {
       Router.push("/login");
@@ -14,12 +16,13 @@ const EmailVerifyPage = (): JSX.Element => {
       Router.push("/");
     }
   }, [authUser]);
-  const sendVerifyMail = () => {
+  const sendVerifyMail = async () => {
     if (authUser != null) {
       try {
-        authUser.sendEmailVerification({
+        await authUser.sendEmailVerification({
           url: `${document.location.origin}`,
         });
+        setShowTooltip(true);
       } catch {
         console.error("Unexpected Error");
       }
@@ -36,7 +39,26 @@ const EmailVerifyPage = (): JSX.Element => {
             <h3>確認メール内のリンクをクリックして下さい</h3>
           </Row>
           <Row className="justify-content-center">
-            <Button onClick={sendVerifyMail}>確認メールを再送する</Button>
+            <Button
+              ref={buttonRef}
+              onClick={sendVerifyMail}
+              onBlur={() => {
+                setShowTooltip(false);
+              }}
+            >
+              確認メールを再送する
+            </Button>
+            <Overlay
+              target={buttonRef.current}
+              show={showTooltip}
+              placement="top"
+            >
+              {(props) => (
+                <Tooltip id="mail-sent-tooltip" {...props}>
+                  メールを送信しました！
+                </Tooltip>
+              )}
+            </Overlay>
           </Row>
           <Row className="justify-content-center">
             <Link href="/profile">
