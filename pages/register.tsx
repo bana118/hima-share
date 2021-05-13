@@ -2,7 +2,7 @@ import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useContext } from "react";
 import { Row } from "react-bootstrap";
-import Layout from "../components/Layout";
+import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
 

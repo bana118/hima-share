@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { updateUser, UserWithId } from "interfaces/User";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "context/AuthContext";
+
 interface UpdateUserFormProps {
   user: UserWithId;
   defaultValues: InputsType;
@@ -77,6 +78,8 @@ export const UpdateUserForm = ({
       <Form.Group>
         <Form.Label>プロフィール</Form.Label>
         <Form.Control
+          as="textarea"
+          rows={5}
           isInvalid={!!errors.description}
           {...register("description")}
         />

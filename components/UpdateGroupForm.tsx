@@ -1,59 +1,68 @@
 import { useForm } from "react-hook-form";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Router from "next/router";
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { Group, storeGroup } from "../interfaces/Group";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "context/AuthContext";
+import { GroupWithId, updateGroup } from "interfaces/Group";
+
+interface UpdateGroupFormProps {
+  group: GroupWithId;
+  defaultValues: InputsType;
+}
 
 interface InputsType {
   name: string;
   description: string;
-  chatId: string;
 }
 
 const schema = yup.object().shape({
   name: yup.string().required("名前は必須です"),
   description: yup.string(),
-  chatId: yup.string(),
 });
 
-export const CreateGroupForm = (): JSX.Element => {
+export const UpdateGroupForm = ({
+  group,
+  defaultValues,
+}: UpdateGroupFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<InputsType>({ resolver: yupResolver(schema) });
+  } = useForm<InputsType>({
+    resolver: yupResolver(schema),
+    defaultValues: defaultValues,
+  });
   const setUnexpectedError = () => {
     setError("name", {
       type: "manual",
       message: "予期せぬエラーが発生しました！ もう一度お試しください",
     });
   };
-  const createGroup = async (data: InputsType) => {
-    if (authUser != null) {
-      const group: Group = {
-        name: data["name"],
-        description: data["description"],
-      };
-      storeGroup(group, authUser.uid, data["chatId"])
+
+  const updateButtonRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const onSubmit = async (data: InputsType) => {
+    if (authUser == null) {
+      setUnexpectedError();
+    } else {
+      updateGroup(group, data["name"], data["description"])
         .then(() => {
-          Router.push("/");
+          setShowTooltip(true);
         })
         .catch(() => {
           setUnexpectedError();
         });
-    } else {
-      setUnexpectedError();
     }
   };
   return (
-    <Form onSubmit={handleSubmit(createGroup)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
-        <Form.Label>Group Name</Form.Label>
+        <Form.Label>グループ名</Form.Label>
         <Form.Control isInvalid={!!errors.name} {...register("name")} />
         {errors.name && (
           <Form.Control.Feedback type="invalid">
@@ -61,10 +70,11 @@ export const CreateGroupForm = (): JSX.Element => {
           </Form.Control.Feedback>
         )}
       </Form.Group>
-
       <Form.Group>
         <Form.Label>グループの説明</Form.Label>
         <Form.Control
+          as="textarea"
+          rows={5}
           isInvalid={!!errors.description}
           {...register("description")}
         />
@@ -78,19 +88,27 @@ export const CreateGroupForm = (): JSX.Element => {
         </Form.Text>
       </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Chat ID</Form.Label>
-        <Form.Control isInvalid={!!errors.chatId} {...register("chatId")} />
-        {errors.chatId && (
-          <Form.Control.Feedback type="invalid">
-            {errors.chatId.message}
-          </Form.Control.Feedback>
-        )}
-      </Form.Group>
-
-      <Button variant="accent" type="submit">
-        作成
+      <Button
+        ref={updateButtonRef}
+        variant="accent"
+        type="submit"
+        onBlur={() => {
+          setShowTooltip(false);
+        }}
+      >
+        更新
       </Button>
+      <Overlay
+        target={updateButtonRef.current}
+        show={showTooltip}
+        placement="right"
+      >
+        {(props) => (
+          <Tooltip id="update-group-tooltip" {...props}>
+            更新しました！
+          </Tooltip>
+        )}
+      </Overlay>
     </Form>
   );
 };
