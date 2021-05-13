@@ -74,7 +74,7 @@ export const SendResetPasswordMailForm = (): JSX.Element => {
       </Button>
       <Overlay target={buttonRef.current} show={showTooltip} placement="top">
         {(props) => (
-          <Tooltip id="event-message-tooltip" {...props}>
+          <Tooltip id="send-mail-tooltip" {...props}>
             送信しました！
           </Tooltip>
         )}
