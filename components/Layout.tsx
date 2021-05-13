@@ -4,8 +4,9 @@ import Head from "next/head";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { auth } from "../utils/firebase";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, Row, ListGroup } from "react-bootstrap";
 import Router from "next/router";
+import Image from "next/image";
 
 type Props = {
   children?: ReactNode;
@@ -63,9 +64,44 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
         </Navbar>
       </header>
       <Container>{children}</Container>
-      <footer>
+      <footer className="footer mt-auto py-3">
         <hr />
-        <span>I&#39;m here to stay (Footer)</span>
+        <Container>
+          <Row className="justify-content-center">
+            <Link href="/">
+              <a>
+                <Image
+                  src="/logo.png"
+                  alt="Logo of Hima Share"
+                  width={200}
+                  height={25}
+                />
+              </a>
+            </Link>
+          </Row>
+          <Row className="justify-content-center">
+            <ListGroup horizontal={"md"}>
+              <ListGroup.Item className="border-0">
+                <Link href="/">
+                  <a className="text-muted">トップページ</a>
+                </Link>
+              </ListGroup.Item>
+              <ListGroup.Item className="border-0">
+                <Link href="/privacy-policy">
+                  <a className="text-muted">プライバシーポリシー</a>
+                </Link>
+              </ListGroup.Item>
+              <ListGroup.Item className="border-0">
+                <a
+                  className="text-muted"
+                  href="https://github.com/bana118/hima-share"
+                >
+                  Github
+                </a>
+              </ListGroup.Item>
+            </ListGroup>
+          </Row>
+        </Container>
       </footer>
     </div>
   );
