@@ -2,12 +2,12 @@ import { useForm } from "react-hook-form";
 import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { updateUser, UserWithId } from "interfaces/User";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "context/AuthContext";
+import { GroupWithId, updateGroup } from "interfaces/Group";
 
-interface UpdateUserFormProps {
-  user: UserWithId;
+interface UpdateGroupFormProps {
+  group: GroupWithId;
   defaultValues: InputsType;
 }
 
@@ -21,10 +21,10 @@ const schema = yup.object().shape({
   description: yup.string(),
 });
 
-export const UpdateUserForm = ({
-  user,
+export const UpdateGroupForm = ({
+  group,
   defaultValues,
-}: UpdateUserFormProps): JSX.Element => {
+}: UpdateGroupFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
 
   const {
@@ -50,12 +50,7 @@ export const UpdateUserForm = ({
     if (authUser == null) {
       setUnexpectedError();
     } else {
-      Promise.all([
-        authUser.updateProfile({
-          displayName: data["name"],
-        }),
-        updateUser(user, data["name"], data["description"]),
-      ])
+      updateGroup(group, data["name"], data["description"])
         .then(() => {
           setShowTooltip(true);
         })
@@ -67,7 +62,7 @@ export const UpdateUserForm = ({
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
-        <Form.Label>ユーザー名</Form.Label>
+        <Form.Label>グループ名</Form.Label>
         <Form.Control isInvalid={!!errors.name} {...register("name")} />
         {errors.name && (
           <Form.Control.Feedback type="invalid">
@@ -76,7 +71,7 @@ export const UpdateUserForm = ({
         )}
       </Form.Group>
       <Form.Group>
-        <Form.Label>プロフィール</Form.Label>
+        <Form.Label>グループの説明</Form.Label>
         <Form.Control
           isInvalid={!!errors.description}
           {...register("description")}
@@ -87,7 +82,7 @@ export const UpdateUserForm = ({
           </Form.Control.Feedback>
         )}
         <Form.Text className="text-muted">
-          簡単な自己紹介，空いている時間帯など
+          グループの概要，使用するチャットツールなど
         </Form.Text>
       </Form.Group>
 
@@ -107,7 +102,7 @@ export const UpdateUserForm = ({
         placement="right"
       >
         {(props) => (
-          <Tooltip id="update-user-tooltip" {...props}>
+          <Tooltip id="update-group-tooltip" {...props}>
             更新しました！
           </Tooltip>
         )}

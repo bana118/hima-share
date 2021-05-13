@@ -2,18 +2,12 @@ import { GetServerSideProps } from "next";
 import { Layout } from "../../../components/Layout";
 import { ErrorPage } from "../../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../../interfaces/Group";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
-import {
-  loadDateStatusList,
-  UserDateStatusList,
-} from "../../../interfaces/DateStatus";
-import { GroupCalendar } from "../../../components/GroupCalendar";
-import { loadUser } from "../../../interfaces/User";
-import { Button, Row } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Link from "next/link";
-import { groupCollapsed } from "node:console";
+import { UpdateGroupForm } from "components/UpdateGroupForm";
 
 type GroupSettingsPageProps = {
   group?: GroupWithId;
@@ -46,9 +40,23 @@ const GroupSettingsPage = ({
   return (
     <React.Fragment>
       {group && (
-        <Layout title={`${group.name}の設定`}>
+        <Layout title={`グループの設定`}>
           <Row className="justify-content-center">
-            <h2>{group.name}の設定</h2>
+            <h2>グループの設定</h2>
+          </Row>
+          <Row className="justify-content-center">
+            <Col md={6}>
+              <UpdateGroupForm
+                group={group}
+                defaultValues={{
+                  name: group.name,
+                  description: group.description,
+                }}
+              />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <h2>グループへの招待</h2>
           </Row>
           <Row className="justify-content-center">
             {group.invitationId && (

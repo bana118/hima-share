@@ -63,7 +63,7 @@ export const CreateGroupForm = (): JSX.Element => {
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>グループの概要</Form.Label>
+        <Form.Label>グループの説明</Form.Label>
         <Form.Control
           isInvalid={!!errors.description}
           {...register("description")}
@@ -73,6 +73,9 @@ export const CreateGroupForm = (): JSX.Element => {
             {errors.description.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">
+          グループの概要，使用するチャットツールなど
+        </Form.Text>
       </Form.Group>
 
       <Form.Group>

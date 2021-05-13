@@ -48,6 +48,23 @@ export const loadGroup = async (
   }
 };
 
+export const updateGroup = async (
+  group: GroupWithId,
+  name?: string,
+  description?: string
+): Promise<void> => {
+  const newGroup = {
+    name: name ? name : group.name,
+    members: group.members ? group.members : null,
+    invitationId: group.invitationId ? group.invitationId : null,
+    description: description ? description : group.description,
+  };
+  const updates = {
+    [`/groups/${group.id}`]: newGroup,
+  };
+  return await db.ref().update(updates);
+};
+
 export const deleteGroup = async (
   group: GroupWithId
 ): Promise<void | void[]> => {

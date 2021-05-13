@@ -45,12 +45,12 @@ export const updateUser = async (
   name?: string,
   description?: string
 ): Promise<void> => {
-  const updateUser = {
+  const newUser = {
     name: name ? name : user.name,
     description: description ? description : user.description,
   };
   const updates = {
-    [`/users/${user.id}`]: updateUser,
+    [`/users/${user.id}`]: newUser,
   };
   return await db.ref().update(updates);
 };
