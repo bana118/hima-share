@@ -71,7 +71,7 @@ export const UpdateEmailForm = ({
       setUnexpectedError();
     } else {
       try {
-        await Promise.all([authUser.updateEmail(data["email"])]);
+        await authUser.updateEmail(data["email"]);
         await authUser.sendEmailVerification({
           url: `${document.location.origin}`,
         });
