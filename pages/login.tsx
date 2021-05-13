@@ -3,7 +3,6 @@ import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useContext, useState } from "react";
 import { Row } from "react-bootstrap";
-import { auth } from "utils/firebase";
 import Layout from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
