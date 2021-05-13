@@ -1,19 +1,20 @@
 import { GetServerSideProps } from "next";
-import Layout from "../../components/Layout";
-import { ErrorPage } from "../../components/ErrorPage";
-import { GroupWithId, loadGroup } from "../../interfaces/Group";
+import Layout from "../../../components/Layout";
+import { ErrorPage } from "../../../components/ErrorPage";
+import { GroupWithId, loadGroup } from "../../../interfaces/Group";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
 import {
   loadDateStatusList,
   UserDateStatusList,
-} from "../../interfaces/DateStatus";
-import { GroupCalendar } from "../../components/GroupCalendar";
-import { loadUser } from "../../interfaces/User";
+} from "../../../interfaces/DateStatus";
+import { GroupCalendar } from "../../../components/GroupCalendar";
+import { loadUser } from "../../../interfaces/User";
 import { Button, Row } from "react-bootstrap";
+import Link from "next/link";
 
-type Props = {
+type GroupCalendarPageProps = {
   initGroup?: GroupWithId;
   initGroupDateStatusList?: UserDateStatusList[];
   errors?: string;
@@ -23,7 +24,7 @@ const GroupCalendarPage = ({
   initGroup,
   initGroupDateStatusList,
   errors,
-}: Props): JSX.Element => {
+}: GroupCalendarPageProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [group, setGroup] = useState(initGroup);
   const [groupDateStatusList, setGroupDateStatusList] = useState(
@@ -117,6 +118,16 @@ const GroupCalendarPage = ({
               groupDateStatusList={groupDateStatusList}
               group={group}
             />
+          </Row>
+          <Row className="justify-content-center">
+            <Link href="/">
+              <a>自分のカレンダー</a>
+            </Link>
+          </Row>
+          <Row className="justify-content-center mt-3">
+            <Link href={`/groups/${group.id}/settings`}>
+              <a>グループの設定</a>
+            </Link>
           </Row>
         </Layout>
       )}
