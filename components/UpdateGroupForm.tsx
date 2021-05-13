@@ -73,6 +73,8 @@ export const UpdateGroupForm = ({
       <Form.Group>
         <Form.Label>グループの説明</Form.Label>
         <Form.Control
+          as="textarea"
+          rows={5}
           isInvalid={!!errors.description}
           {...register("description")}
         />
