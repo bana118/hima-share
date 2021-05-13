@@ -144,6 +144,17 @@ const ProfilePage = (): JSX.Element => {
               }}
             />
           </Row>
+          <Row className="justify-content-center mt-3">
+            <a
+              href="#"
+              onClick={() => {
+                setOnLoginedAction(undefined);
+                setReadyDeleteUser(false);
+              }}
+            >
+              戻る
+            </a>
+          </Row>
         </Layout>
       )}
       {onLoginedAction != null &&
@@ -164,6 +175,16 @@ const ProfilePage = (): JSX.Element => {
                   }
                 }}
               />
+            </Row>
+            <Row className="justify-content-center">
+              <a
+                href="#"
+                onClick={() => {
+                  setOnLoginedAction(undefined);
+                }}
+              >
+                戻る
+              </a>
             </Row>
           </Layout>
         )}
