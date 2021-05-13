@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import Layout from "../../../components/Layout";
+import { Layout } from "../../../components/Layout";
 import { ErrorPage } from "../../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../../interfaces/Group";
 import { useContext, useState } from "react";

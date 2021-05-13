@@ -6,7 +6,7 @@ import Router from "next/router";
 import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
-import Layout from "../components/Layout";
+import { Layout } from "../components/Layout";
 import { UserCalendar } from "../components/UserCalendar";
 import { AuthContext } from "../context/AuthContext";
 import {

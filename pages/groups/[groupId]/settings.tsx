@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import Layout from "../../../components/Layout";
+import { Layout } from "../../../components/Layout";
 import { ErrorPage } from "../../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../../interfaces/Group";
 import { useContext, useState } from "react";
@@ -49,6 +49,24 @@ const GroupSettingsPage = ({
         <Layout title={`${group.name}の設定`}>
           <Row className="justify-content-center">
             <h2>{group.name}の設定</h2>
+          </Row>
+          <Row className="justify-content-center">
+            {group.invitationId && (
+              <Link
+                href="/invitations/[invitationId]"
+                as={`/invitations/${group.invitationId}`}
+              >
+                <a>招待リンク確認</a>
+              </Link>
+            )}
+            {!group.invitationId && (
+              <Link
+                href="/groups/[groupId]/create-invitation"
+                as={`/groups/${group.id}/create-invitation`}
+              >
+                <a>招待リンク作成</a>
+              </Link>
+            )}
           </Row>
         </Layout>
       )}

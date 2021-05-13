@@ -8,7 +8,7 @@ import Router from "next/router";
 import Link from "next/link";
 import React, { useEffect, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import Layout from "../components/Layout";
+import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
 import { loadUser, UserWithId } from "../interfaces/User";

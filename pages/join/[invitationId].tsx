@@ -4,7 +4,7 @@ import { loadInvitation } from "../../interfaces/Invitation";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import React, { useContext, useEffect } from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
-import Layout from "components/Layout";
+import { Layout } from "components/Layout";
 import { AuthContext } from "context/AuthContext";
 import Router from "next/router";
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useContext } from "react";
 import { CreateGroupForm } from "../components/CreateGroupForm";
-import Layout from "../components/Layout";
+import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
 

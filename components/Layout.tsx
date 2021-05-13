@@ -13,7 +13,10 @@ type Props = {
   title?: string;
 };
 
-const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
+export const Layout = ({
+  children,
+  title = "Default Title",
+}: Props): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault();
@@ -106,5 +109,3 @@ const Layout = ({ children, title = "Default Title" }: Props): JSX.Element => {
     </div>
   );
 };
-
-export default Layout;

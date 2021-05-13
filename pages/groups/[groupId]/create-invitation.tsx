@@ -1,10 +1,10 @@
 import { GetServerSideProps } from "next";
-import Layout from "../../components/Layout";
-import { ErrorPage } from "../../components/ErrorPage";
-import { GroupWithId, loadGroup } from "../../interfaces/Group";
-import { CreateInvitationForm } from "../../components/CreateInvitationForm";
+import { Layout } from "../../../components/Layout";
+import { ErrorPage } from "../../../components/ErrorPage";
+import { GroupWithId, loadGroup } from "../../../interfaces/Group";
+import { CreateInvitationForm } from "../../../components/CreateInvitationForm";
 import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
 import { Row } from "react-bootstrap";
 
