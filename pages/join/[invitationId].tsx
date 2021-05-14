@@ -7,6 +7,7 @@ import { JoinGroupForm } from "../../components/JoinGroupForm";
 import { Layout } from "components/Layout";
 import { AuthContext } from "context/AuthContext";
 import Router from "next/router";
+import { MyHead } from "components/MyHead";
 
 type Props = {
   group?: GroupWithId;
@@ -29,14 +30,15 @@ const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
   }
 
   return (
-    <React.Fragment>
+    <Layout>
       {authUser !== undefined &&
         !(authUser != null && !authUser.emailVerified) && (
-          <Layout title={`${group.name}に参加`}>
+          <React.Fragment>
+            <MyHead title={`${group.name}に参加`} />
             <JoinGroupForm group={group} />
-          </Layout>
+          </React.Fragment>
         )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

@@ -1,8 +1,10 @@
 import { Layout } from "components/Layout";
+import { MyHead } from "components/MyHead";
 
 const PrivacyPolicyPage = (): JSX.Element => {
   return (
-    <Layout title="プライバシーポリシー">
+    <Layout>
+      <MyHead title="プライバシーポリシー" />
       <h1>プライバシーポリシー</h1>
       <p>
         「{document.location.origin}

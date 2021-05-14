@@ -13,6 +13,7 @@ import { GroupCalendar } from "../../../components/GroupCalendar";
 import { loadUser } from "../../../interfaces/User";
 import { Button, Row } from "react-bootstrap";
 import Link from "next/link";
+import { MyHead } from "components/MyHead";
 
 type GroupCalendarPageProps = {
   initGroup?: GroupWithId;
@@ -97,9 +98,10 @@ const GroupCalendarPage = ({
   };
 
   return (
-    <React.Fragment>
+    <Layout>
       {groupDateStatusList && group && (
-        <Layout title={`${group.name}のカレンダー`}>
+        <React.Fragment>
+          <MyHead title={`${group.name}のカレンダー`} />
           <Row className="justify-content-center">
             <h2>{group.name}のカレンダー</h2>
           </Row>
@@ -129,9 +131,9 @@ const GroupCalendarPage = ({
               <a>グループの設定</a>
             </Link>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

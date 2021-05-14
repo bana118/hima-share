@@ -1,3 +1,4 @@
+import { MyHead } from "components/MyHead";
 import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useContext } from "react";
@@ -14,9 +15,10 @@ const RegisterPage = (): JSX.Element => {
     }
   }, [authUser]);
   return (
-    <React.Fragment>
+    <Layout>
       {authUser === null && (
-        <Layout title="アカウント作成">
+        <React.Fragment>
+          <MyHead title="アカウント作成" />
           <Row className="justify-content-center">
             <h1>アカウント作成</h1>
           </Row>
@@ -29,9 +31,9 @@ const RegisterPage = (): JSX.Element => {
               <a>ログイン</a>
             </Link>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

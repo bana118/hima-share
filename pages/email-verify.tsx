@@ -1,4 +1,5 @@
 import { Layout } from "components/Layout";
+import { MyHead } from "components/MyHead";
 import { AuthContext } from "context/AuthContext";
 import Link from "next/link";
 import Router from "next/router";
@@ -29,9 +30,10 @@ const EmailVerifyPage = (): JSX.Element => {
     }
   };
   return (
-    <React.Fragment>
+    <Layout>
       {authUser != null && (
-        <Layout title="メールアドレス確認">
+        <React.Fragment>
+          <MyHead title="メールアドレス確認" />
           <Row className="justify-content-center">
             <h2>{authUser.email}に確認メールを送信しました</h2>
           </Row>
@@ -65,9 +67,9 @@ const EmailVerifyPage = (): JSX.Element => {
               <a>メールアドレスを変更する</a>
             </Link>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 export default EmailVerifyPage;

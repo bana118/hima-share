@@ -12,6 +12,7 @@ import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
 import { loadUser, UserWithId } from "../interfaces/User";
+import { MyHead } from "components/MyHead";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -81,9 +82,10 @@ const ProfilePage = (): JSX.Element => {
   }, [authUser]);
 
   return (
-    <React.Fragment>
+    <Layout>
       {updated && (
-        <Layout title="更新完了">
+        <React.Fragment>
+          <MyHead title="更新完了" />
           <Row className="justify-content-center">
             <h2>
               {updated == "updateEmail" && "メールアドレスを更新しました"}
@@ -105,10 +107,11 @@ const ProfilePage = (): JSX.Element => {
               戻る
             </Button>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
       {readyUpdateEmail && user && (
-        <Layout title="メールアドレス更新">
+        <React.Fragment>
+          <MyHead title="メールアドレス更新" />
           <Row className="justify-content-center">
             <UpdateEmailForm
               onUpdated={() => {
@@ -117,10 +120,11 @@ const ProfilePage = (): JSX.Element => {
               }}
             />
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
       {readyUpdatePassword && user && (
-        <Layout title="パスワード更新">
+        <React.Fragment>
+          <MyHead title="パスワード更新" />
           <Row className="justify-content-center">
             <UpdatePasswordForm
               onUpdated={() => {
@@ -129,10 +133,11 @@ const ProfilePage = (): JSX.Element => {
               }}
             />
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
       {readyDeleteUser && user && (
-        <Layout title="ユーザー削除">
+        <React.Fragment>
+          <MyHead title="ユーザー削除" />
           <Row className="justify-content-center">
             <h2>本当に{user.name}を削除しますか？</h2>
           </Row>
@@ -155,14 +160,15 @@ const ProfilePage = (): JSX.Element => {
               戻る
             </a>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
       {onLoginedAction != null &&
         !readyUpdateEmail &&
         !readyUpdatePassword &&
         !readyDeleteUser &&
         !updated && (
-          <Layout title="ログイン">
+          <React.Fragment>
+            <MyHead title="ログイン" />
             <Row className="justify-content-center">
               <LoginForm
                 onLogined={() => {
@@ -186,10 +192,11 @@ const ProfilePage = (): JSX.Element => {
                 戻る
               </a>
             </Row>
-          </Layout>
+          </React.Fragment>
         )}
       {user && groups && onLoginedAction == null && (
-        <Layout title={`${user.name}のプロフィール`}>
+        <React.Fragment>
+          <MyHead title="ユーザー情報" />
           <Row className="justify-content-center">
             <h2>ユーザー情報</h2>
           </Row>
@@ -282,9 +289,9 @@ const ProfilePage = (): JSX.Element => {
               ログイン画面へ
             </Button>
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

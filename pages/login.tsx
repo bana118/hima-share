@@ -1,3 +1,4 @@
+import { MyHead } from "components/MyHead";
 import { SendResetPasswordMailForm } from "components/SendResetPasswordMailForm";
 import Link from "next/link";
 import Router from "next/router";
@@ -17,11 +18,12 @@ const LoginPage = (): JSX.Element => {
   }, [authUser]);
 
   return (
-    <React.Fragment>
+    <Layout>
       {authUser === null && (
         <React.Fragment>
           {showResetPasswordForm && (
-            <Layout title="パスワードをリセット">
+            <React.Fragment>
+              <MyHead title="パスワードをリセット" />
               <Row className="justify-content-center">
                 <h1>パスワードの再設定</h1>
               </Row>
@@ -38,10 +40,11 @@ const LoginPage = (): JSX.Element => {
                   戻る
                 </a>
               </Row>
-            </Layout>
+            </React.Fragment>
           )}
           {!showResetPasswordForm && (
-            <Layout title="ログイン">
+            <React.Fragment>
+              <MyHead title="ログイン" />
               <Row className="justify-content-center">
                 <h1>ログイン</h1>
               </Row>
@@ -65,11 +68,11 @@ const LoginPage = (): JSX.Element => {
                   再設定する
                 </a>
               </Row>
-            </Layout>
+            </React.Fragment>
           )}
         </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

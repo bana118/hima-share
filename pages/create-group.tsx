@@ -4,6 +4,7 @@ import { CreateGroupForm } from "../components/CreateGroupForm";
 import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
+import { MyHead } from "components/MyHead";
 
 const CreateGroupPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -15,14 +16,15 @@ const CreateGroupPage = (): JSX.Element => {
     }
   }, [authUser]);
   return (
-    <React.Fragment>
+    <Layout>
       {authUser && !(authUser != null && !authUser.emailVerified) && (
-        <Layout title="Create Group">
-          <h1>Create Group</h1>
+        <React.Fragment>
+          <MyHead title="グループ作成" />
+          <h1>グループ作成</h1>
           <CreateGroupForm />
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 

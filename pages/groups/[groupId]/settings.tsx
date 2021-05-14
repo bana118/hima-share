@@ -8,6 +8,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Link from "next/link";
 import { UpdateGroupForm } from "components/UpdateGroupForm";
+import { MyHead } from "components/MyHead";
 
 type GroupSettingsPageProps = {
   group?: GroupWithId;
@@ -38,9 +39,10 @@ const GroupSettingsPage = ({
   }
 
   return (
-    <React.Fragment>
+    <Layout>
       {group && (
-        <Layout title={`グループの設定`}>
+        <React.Fragment>
+          <MyHead title="グループの設定" />
           <Row className="justify-content-center">
             <h2>グループの設定</h2>
           </Row>
@@ -76,9 +78,9 @@ const GroupSettingsPage = ({
               </Link>
             )}
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 
