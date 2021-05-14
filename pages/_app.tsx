@@ -8,6 +8,7 @@ import "../styles/sass/calendar.scss";
 import "../styles/sass/navbar.scss";
 import "../styles/sass/about.scss";
 import "react-calendar/dist/Calendar.css";
+import Head from "next/head";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
@@ -26,6 +27,10 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <AuthContext.Provider value={{ authUser }}>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Component {...pageProps} />
     </AuthContext.Provider>
   );
