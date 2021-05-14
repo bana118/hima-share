@@ -19,6 +19,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
     auth.onAuthStateChanged((u) => {
       setAuthUser(u);
     });
+    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === "production") {
       analytics();
     }
