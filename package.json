@@ -1,6 +1,6 @@
 {
   "name": "hima-share",
-  "version": "0.0.28",
+  "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
