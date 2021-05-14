@@ -5,6 +5,8 @@ import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
 import { MyHead } from "components/MyHead";
+import { Row } from "react-bootstrap";
+import Link from "next/link";
 
 const CreateGroupPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -20,8 +22,17 @@ const CreateGroupPage = (): JSX.Element => {
       {authUser && !(authUser != null && !authUser.emailVerified) && (
         <React.Fragment>
           <MyHead title="グループ作成" />
-          <h1>グループ作成</h1>
-          <CreateGroupForm />
+          <Row className="justify-content-center">
+            <h1>グループ作成</h1>
+          </Row>
+          <Row className="justify-content-center">
+            <CreateGroupForm />
+          </Row>
+          <Row className="justify-content-center">
+            <Link href="/">
+              <a>戻る</a>
+            </Link>
+          </Row>
         </React.Fragment>
       )}
     </Layout>
