@@ -7,7 +7,7 @@ interface MyHeadProps {
 export const MyHead = ({
   title = "Default Title",
 }: MyHeadProps): JSX.Element => {
-  const url = document.location.href;
+  const url = typeof window !== "undefined" ? document.location.href : "";
   const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
   return (
     <Head>
