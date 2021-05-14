@@ -1,3 +1,4 @@
+import { About } from "components/About";
 import { GroupList } from "components/GroupList";
 import { GroupWithId, loadGroup } from "interfaces/Group";
 import { loadUser, UserWithId } from "interfaces/User";
@@ -113,18 +114,7 @@ const IndexPage = (): JSX.Element => {
     <React.Fragment>
       {(dateStatusList === null || user === null || groups === null) && (
         <Layout title="Hima Share">
-          <h1>Hello Hima Share 👋</h1>
-          <h2>トップページ制作中...</h2>
-          <p>
-            <Link href="/login">
-              <a>ログイン</a>
-            </Link>
-          </p>
-          <p>
-            <Link href="/register">
-              <a>登録</a>
-            </Link>
-          </p>
+          <About />
         </Layout>
       )}
       {dateStatusList && user && groups && authUser?.emailVerified && (
