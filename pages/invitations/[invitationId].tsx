@@ -127,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if (invitation == null) {
         return { props: { errors: "Invalid URL" } };
       } else {
-        const appUrl = process.env.APP_URL;
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL;
         const group = await loadGroup(invitation.groupId);
         if (appUrl == null) {
           return { props: { errors: "Unexpected Error" } };

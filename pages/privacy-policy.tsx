@@ -2,12 +2,13 @@ import { Layout } from "components/Layout";
 import { MyHead } from "components/MyHead";
 
 const PrivacyPolicyPage = (): JSX.Element => {
+  const url = process.env.NEXT_PUBLIC_APP_URL;
   return (
     <Layout>
       <MyHead title="プライバシーポリシー" />
       <h1>プライバシーポリシー</h1>
       <p>
-        「{document.location.origin}
+        「{url}
         」（以下、当サイト）を利用される方は、以下に記載する諸条件に同意したものとみなします。
       </p>
       <h2>アクセス解析ツールについて</h2>
