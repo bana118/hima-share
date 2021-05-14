@@ -1,15 +1,13 @@
 import type { AppProps } from "next/app";
-import "react-calendar/dist/Calendar.css";
-import { useEffect } from "react";
-import { useState } from "react";
-import firebase from "firebase/app";
-import { auth } from "../utils/firebase";
+import { useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import firebase from "firebase/app";
+import { auth, analytics } from "../utils/firebase";
 import "../styles/sass/bootstrap-custom.scss";
 import "../styles/sass/calendar.scss";
 import "../styles/sass/navbar.scss";
 import "../styles/sass/about.scss";
-import { analytics } from "../utils/firebase";
+import "react-calendar/dist/Calendar.css";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
