@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
 import { Row } from "react-bootstrap";
+import { MyHead } from "components/MyHead";
 
 type Props = {
   group?: GroupWithId;
@@ -33,7 +34,8 @@ const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
   }
 
   return (
-    <Layout title="招待を作成">
+    <Layout>
+      <MyHead title="招待を作成" />
       <Row className="justify-content-center">
         <CreateInvitationForm group={group} />
       </Row>

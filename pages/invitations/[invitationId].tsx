@@ -11,6 +11,7 @@ import Router from "next/router";
 import { AuthContext } from "../../context/AuthContext";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { Overlay, Row, Tooltip } from "react-bootstrap";
+import { MyHead } from "components/MyHead";
 
 type Props = {
   invitation?: InvitationWithId;
@@ -72,7 +73,8 @@ const CreateInvitationPage = ({
   };
 
   return (
-    <Layout title="招待URL">
+    <Layout>
+      <MyHead title="招待URL" />
       <Row className="justify-content-center">
         <p>招待URLは以下です(クリックでコピー)</p>
       </Row>

@@ -1,5 +1,6 @@
 import { About } from "components/About";
 import { GroupList } from "components/GroupList";
+import { MyHead } from "components/MyHead";
 import { GroupWithId, loadGroup } from "interfaces/Group";
 import { loadUser, UserWithId } from "interfaces/User";
 import Link from "next/link";
@@ -111,14 +112,16 @@ const IndexPage = (): JSX.Element => {
   }, [dateStatusList]);
 
   return (
-    <React.Fragment>
+    <Layout>
       {(dateStatusList === null || user === null || groups === null) && (
-        <Layout title="Hima Share">
+        <React.Fragment>
+          <MyHead title="Hima Share" />
           <About />
-        </Layout>
+        </React.Fragment>
       )}
       {dateStatusList && user && groups && authUser?.emailVerified && (
-        <Layout title="ユーザーカレンダー">
+        <React.Fragment>
+          <MyHead title="ユーザーカレンダー" />
           <Row className="justify-content-center">
             <h1>{user.name}のカレンダー</h1>
           </Row>
@@ -142,9 +145,9 @@ const IndexPage = (): JSX.Element => {
           <Row className="justify-content-center">
             <GroupList groups={groups} />
           </Row>
-        </Layout>
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </Layout>
   );
 };
 
