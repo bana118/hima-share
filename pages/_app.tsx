@@ -9,6 +9,7 @@ import "../styles/sass/bootstrap-custom.scss";
 import "../styles/sass/calendar.scss";
 import "../styles/sass/navbar.scss";
 import "../styles/sass/about.scss";
+import { analytics } from "../utils/firebase";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
@@ -18,6 +19,9 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
     auth.onAuthStateChanged((u) => {
       setAuthUser(u);
     });
+    if (process.env.NODE_ENV === "production") {
+      analytics();
+    }
   }, []);
 
   return (

@@ -21,4 +21,5 @@ if (firebase.apps.length === 0) {
 
 const db = firebase.database();
 const auth = firebase.auth();
-export { db, auth };
+const analytics = firebase.analytics;
+export { db, auth, analytics };
