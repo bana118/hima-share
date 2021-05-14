@@ -13,26 +13,24 @@ import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { Overlay, Row, Tooltip } from "react-bootstrap";
 import { MyHead } from "components/MyHead";
 
-type Props = {
+type CreateInvitationPageProps = {
   invitation?: InvitationWithId;
   group?: GroupWithId;
-  appUrl?: string;
   errors?: string;
 };
 
 const CreateInvitationPage = ({
   invitation,
   group,
-  appUrl,
   errors,
-}: Props): JSX.Element => {
+}: CreateInvitationPageProps): JSX.Element => {
   const [showTooltip, setShowTooltop] = useState(false);
   const invitationUrlInput = useRef(null);
 
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
-  if (!invitation || !group || !appUrl) {
+  if (!invitation || !group) {
     return <ErrorPage />;
   }
   const { authUser } = useContext(AuthContext);
@@ -48,7 +46,11 @@ const CreateInvitationPage = ({
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
-  const joinUrl = `${appUrl}/join/${invitation.id}`;
+  const joinUrl =
+    typeof window !== "undefined"
+      ? `${document.location.origin}/join/${invitation.id}`
+      : "";
+
   const copyURL = () => {
     const joinUrlElement = document.getElementById(
       "hima-share-join-url"
@@ -127,13 +129,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if (invitation == null) {
         return { props: { errors: "Invalid URL" } };
       } else {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL;
         const group = await loadGroup(invitation.groupId);
-        if (appUrl == null) {
-          return { props: { errors: "Unexpected Error" } };
-        } else {
-          return { props: { invitation, group, appUrl } };
-        }
+        return { props: { invitation, group } };
       }
     } catch {
       console.error("Unexpected Error");

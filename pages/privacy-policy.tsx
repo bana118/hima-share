@@ -2,7 +2,7 @@ import { Layout } from "components/Layout";
 import { MyHead } from "components/MyHead";
 
 const PrivacyPolicyPage = (): JSX.Element => {
-  const url = process.env.NEXT_PUBLIC_APP_URL;
+  const url = typeof window !== "undefined" ? document.location.origin : "";
   return (
     <Layout>
       <MyHead title="プライバシーポリシー" />
