@@ -6,6 +6,7 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
+import Image from "next/image";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -21,6 +22,20 @@ const RegisterPage = (): JSX.Element => {
           <MyHead title="アカウント作成" />
           <Row className="justify-content-center">
             <h1>アカウント作成</h1>
+          </Row>
+          <Row className="justify-content-center">
+            <p>またはGoogleアカウントでログイン</p>
+          </Row>
+          <Row className="justify-content-center">
+            <Image
+              src="/btn_google_signin_light_normal_web.png"
+              onClick={() => {
+                console.log("hoge");
+              }}
+              alt="Calender writing color"
+              width={191}
+              height={46}
+            />
           </Row>
           <Row className="justify-content-center">
             <RegisterForm onRegistered={() => Router.push("/email-verify")} />

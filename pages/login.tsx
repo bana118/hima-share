@@ -7,6 +7,7 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
+import Image from "next/image";
 
 const LoginPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -50,6 +51,17 @@ const LoginPage = (): JSX.Element => {
               </Row>
               <Row className="justify-content-center">
                 <LoginForm onLogined={() => Router.push("/")} />
+              </Row>
+              <Row className="justify-content-center mt-2">
+                <Image
+                  src="/btn_google_signin_light_normal_web.png"
+                  onClick={() => {
+                    console.log("hoge");
+                  }}
+                  alt="Calender writing color"
+                  width={191}
+                  height={46}
+                />
               </Row>
               <Row className="justify-content-center mt-2">
                 <p>まだ登録していませんか?</p>
