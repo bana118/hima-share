@@ -198,6 +198,11 @@ const ProfilePage = (): JSX.Element => {
         <React.Fragment>
           <MyHead title="ユーザー情報" />
           <Row className="justify-content-center">
+            <Link href="/">
+              <a>戻る</a>
+            </Link>
+          </Row>
+          <Row className="justify-content-center">
             <h2>ユーザー情報</h2>
           </Row>
           <Row className="justify-content-center">
