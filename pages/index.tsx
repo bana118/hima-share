@@ -123,7 +123,7 @@ const IndexPage = (): JSX.Element => {
         <React.Fragment>
           <MyHead title="ユーザーカレンダー" />
           <Row className="justify-content-center">
-            <h1>{user.name}のカレンダー</h1>
+            <h1>{user.name}</h1>
           </Row>
           <Row className="justify-content-center">
             <p className="text-muted">日付をクリックして</p>

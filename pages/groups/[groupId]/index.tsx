@@ -103,7 +103,7 @@ const GroupCalendarPage = ({
         <React.Fragment>
           <MyHead title={`${group.name}のカレンダー`} />
           <Row className="justify-content-center">
-            <h2>{group.name}のカレンダー</h2>
+            <h2>{group.name}</h2>
           </Row>
           <Row className="justify-content-center">
             <Button
