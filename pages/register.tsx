@@ -7,6 +7,7 @@ import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
 import Image from "next/image";
+import { loginWithGoogle } from "utils/google";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -27,14 +28,11 @@ const RegisterPage = (): JSX.Element => {
             <p>またはGoogleアカウントでログイン</p>
           </Row>
           <Row className="justify-content-center">
-            <Image
+            <input
+              type="image"
               src="/btn_google_signin_light_normal_web.png"
-              onClick={() => {
-                console.log("hoge");
-              }}
-              alt="Calender writing color"
-              width={191}
-              height={46}
+              alt="Login with Google"
+              onClick={loginWithGoogle}
             />
           </Row>
           <Row className="justify-content-center">
