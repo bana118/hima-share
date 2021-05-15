@@ -6,7 +6,6 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
-import Image from "next/image";
 import { loginWithGoogle } from "utils/google";
 
 const RegisterPage = (): JSX.Element => {
@@ -33,6 +32,14 @@ const RegisterPage = (): JSX.Element => {
               src="/btn_google_signin_light_normal_web.png"
               alt="Login with Google"
               onClick={loginWithGoogle}
+              onMouseOver={(event) =>
+                (event.currentTarget.src =
+                  "btn_google_signin_light_focus_web.png")
+              }
+              onMouseOut={(event) =>
+                (event.currentTarget.src =
+                  "btn_google_signin_light_normal_web.png")
+              }
             />
           </Row>
           <Row className="justify-content-center">
