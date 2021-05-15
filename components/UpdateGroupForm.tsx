@@ -17,8 +17,8 @@ interface InputsType {
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required("名前は必須です"),
-  description: yup.string(),
+  name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),
+  description: yup.string().max(100, "説明は100文字までです"),
 });
 
 export const UpdateGroupForm = ({
@@ -69,6 +69,7 @@ export const UpdateGroupForm = ({
             {errors.name.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">最大20文字</Form.Text>
       </Form.Group>
       <Form.Group>
         <Form.Label>グループの説明</Form.Label>
@@ -84,7 +85,7 @@ export const UpdateGroupForm = ({
           </Form.Control.Feedback>
         )}
         <Form.Text className="text-muted">
-          グループの概要，使用するチャットツールなど
+          グループの概要，使用するチャットツールなど 最大100文字
         </Form.Text>
       </Form.Group>
 

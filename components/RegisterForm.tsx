@@ -22,6 +22,7 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .email("メールアドレスの形式に誤りがあります")
+    .max(100, "メールアドレスは100文字までです")
     .required("メールアドレスは必須です")
     .test(
       "email-test",
@@ -50,11 +51,12 @@ const schema = yup.object().shape({
         }
       }
     ),
-  name: yup.string().required("名前は必須です"),
-  description: yup.string(),
+  name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),
+  description: yup.string().max(100, "プロフィールは100文字までです"),
   password: yup
     .string()
     .min(8, "パスワードは8文字以上に設定してください")
+    .max(100, "パスワードは100文字までです")
     .matches(/[0-9]/, "パスワードは1文字以上の数字を含む必要があります")
     .matches(/[a-z]/, "パスワードは1文字以上の英小文字を含む必要があります")
     .matches(/[A-Z]/, "パスワードは1文字以上の英大文字を含む必要があります")
@@ -135,6 +137,7 @@ export const RegisterForm = ({
             {errors.name.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">最大20文字</Form.Text>
       </Form.Group>
       <Form.Group>
         <Form.Label>プロフィール</Form.Label>
@@ -148,7 +151,7 @@ export const RegisterForm = ({
           </Form.Control.Feedback>
         )}
         <Form.Text className="text-muted">
-          簡単な自己紹介，空いている時間帯など
+          簡単な自己紹介，空いている時間帯など 最大100文字
         </Form.Text>
       </Form.Group>
       <Form.Group>

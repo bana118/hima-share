@@ -14,6 +14,7 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .email("メールアドレスの形式に誤りがあります")
+    .max(100, "メールアドレスは100文字までです")
     .required("メールアドレスは必須です"),
 });
 

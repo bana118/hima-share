@@ -19,7 +19,7 @@ interface InputsType {
 }
 
 const schema = yup.object().shape({
-  chatId: yup.string(),
+  chatId: yup.string().max(20, "チャットIDは20文字までです"),
 });
 
 type LoginOrRegister = "login" | "register";
@@ -155,7 +155,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
                 <p>グループ: {group.name}に参加しますか？</p>
                 <p>グループの説明: {group.description}</p>
                 <Form.Group>
-                  <Form.Label>Chat ID</Form.Label>
+                  <Form.Label>チャットID</Form.Label>
                   <Form.Control
                     isInvalid={!!errors.chatId}
                     {...register("chatId")}
@@ -165,6 +165,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
                       {errors.chatId.message}
                     </Form.Control.Feedback>
                   )}
+                  <Form.Text className="text-muted">最大20文字</Form.Text>
                 </Form.Group>
                 <Button variant="accent" type="submit">
                   参加
