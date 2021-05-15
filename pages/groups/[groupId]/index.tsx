@@ -164,6 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           const user = usersDateStatusList[i].user;
           const userDateStatusList = usersDateStatusList[i].dateStatusList;
           if (user == null) {
+            console.error("Unexpected Error");
             return { props: { errors: "Unexpected Error" } };
           }
           initGroupDateStatusList.push({

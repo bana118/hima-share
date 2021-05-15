@@ -93,20 +93,17 @@ export const RegisterForm = ({
         setUnexpectedError();
         return;
       }
-      Promise.all([]);
       const user: User = {
         name: data["name"],
         description: data["description"],
       };
-      await Promise.all([
-        storeUser(user, authUser.uid),
-        authUser.updateProfile({
-          displayName: data["name"],
-        }),
-        authUser.sendEmailVerification({
-          url: `${document.location.origin}`,
-        }),
-      ]);
+      await authUser.updateProfile({
+        displayName: data["name"],
+      });
+      await storeUser(user, authUser.uid);
+      await authUser.sendEmailVerification({
+        url: `${document.location.origin}`,
+      });
       if (onRegistered != null) {
         onRegistered();
       }

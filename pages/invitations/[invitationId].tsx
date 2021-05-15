@@ -12,18 +12,19 @@ import { AuthContext } from "../../context/AuthContext";
 import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { Overlay, Row, Tooltip } from "react-bootstrap";
 import { MyHead } from "components/MyHead";
+import Link from "next/link";
 
-type CreateInvitationPageProps = {
+type InvitationPageProps = {
   invitation?: InvitationWithId;
   group?: GroupWithId;
   errors?: string;
 };
 
-const CreateInvitationPage = ({
+const InvitationPage = ({
   invitation,
   group,
   errors,
-}: CreateInvitationPageProps): JSX.Element => {
+}: InvitationPageProps): JSX.Element => {
   const [showTooltip, setShowTooltop] = useState(false);
   const invitationUrlInput = useRef(null);
 
@@ -113,11 +114,16 @@ const CreateInvitationPage = ({
           招待URLを無効化
         </a>
       </Row>
+      <Row className="justify-content-center">
+        <Link href={`/groups/${group.id}`}>
+          <a>戻る</a>
+        </Link>
+      </Row>
     </Layout>
   );
 };
 
-export default CreateInvitationPage;
+export default InvitationPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { invitationId } = context.query;
