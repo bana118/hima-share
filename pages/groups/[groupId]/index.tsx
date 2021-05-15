@@ -103,7 +103,7 @@ const GroupCalendarPage = ({
         <React.Fragment>
           <MyHead title={`${group.name}のカレンダー`} />
           <Row className="justify-content-center">
-            <h2>{group.name}のカレンダー</h2>
+            <h2>{group.name}</h2>
           </Row>
           <Row className="justify-content-center">
             <Button
@@ -164,6 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           const user = usersDateStatusList[i].user;
           const userDateStatusList = usersDateStatusList[i].dateStatusList;
           if (user == null) {
+            console.error("Unexpected Error");
             return { props: { errors: "Unexpected Error" } };
           }
           initGroupDateStatusList.push({

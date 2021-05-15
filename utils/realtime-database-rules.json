@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "calendars": {
+      "$user_id": {
+        ".read": true,
+        ".write": "$user_id === auth.uid"
+      }
+    },
+    "groups": {
+      "$group_id": {
+        ".read": true,
+        ".write": "auth.uid != null"
+      }
+    },
+    "invitations": {
+      "$invitation_id": {
+        ".read": true,
+        ".write": "auth.uid != null"
+      }
+    },
+    "users": {
+      "$user_id": {
+        ".read": true,
+        ".write": "$user_id === auth.uid"
+      }
+    }
+  }
+}

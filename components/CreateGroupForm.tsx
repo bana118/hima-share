@@ -14,9 +14,9 @@ interface InputsType {
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required("名前は必須です"),
-  description: yup.string(),
-  chatId: yup.string(),
+  name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),
+  description: yup.string().max(100, "説明は100文字までです"),
+  chatId: yup.string().max(20, "チャットIDは20文字までです"),
 });
 
 export const CreateGroupForm = (): JSX.Element => {
@@ -60,6 +60,7 @@ export const CreateGroupForm = (): JSX.Element => {
             {errors.name.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">最大20文字</Form.Text>
       </Form.Group>
 
       <Form.Group>
@@ -76,18 +77,19 @@ export const CreateGroupForm = (): JSX.Element => {
           </Form.Control.Feedback>
         )}
         <Form.Text className="text-muted">
-          グループの概要，使用するチャットツールなど
+          グループの概要，使用するチャットツールなど 最大100文字
         </Form.Text>
       </Form.Group>
 
       <Form.Group>
-        <Form.Label>Chat ID</Form.Label>
+        <Form.Label>チャットID</Form.Label>
         <Form.Control isInvalid={!!errors.chatId} {...register("chatId")} />
         {errors.chatId && (
           <Form.Control.Feedback type="invalid">
             {errors.chatId.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">最大20文字</Form.Text>
       </Form.Group>
 
       <Button variant="accent" type="submit">

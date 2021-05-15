@@ -17,8 +17,8 @@ interface InputsType {
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required("名前は必須です"),
-  description: yup.string(),
+  name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),
+  description: yup.string().max(100, "プロフィールは100文字までです"),
 });
 
 export const UpdateUserForm = ({
@@ -74,6 +74,7 @@ export const UpdateUserForm = ({
             {errors.name.message}
           </Form.Control.Feedback>
         )}
+        <Form.Text className="text-muted">最大20文字</Form.Text>
       </Form.Group>
       <Form.Group>
         <Form.Label>プロフィール</Form.Label>
@@ -89,7 +90,7 @@ export const UpdateUserForm = ({
           </Form.Control.Feedback>
         )}
         <Form.Text className="text-muted">
-          簡単な自己紹介，空いている時間帯など
+          簡単な自己紹介，空いている時間帯など 最大100文字
         </Form.Text>
       </Form.Group>
 
