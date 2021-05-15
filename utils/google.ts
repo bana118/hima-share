@@ -12,10 +12,9 @@ export const loginWithGoogle = async (): Promise<void> => {
   }
 };
 
-export const getLoginResult = async (): Promise<void> => {
+export const storeUserfromLoginResult = async (): Promise<void> => {
   try {
     const result = await auth.getRedirectResult();
-    console.log(result);
     if (
       result.credential &&
       result.user &&
@@ -23,11 +22,7 @@ export const getLoginResult = async (): Promise<void> => {
     ) {
       const authUser = result.user;
       const user: User = {
-        name:
-          result.additionalUserInfo == null ||
-          result.additionalUserInfo.username == null
-            ? "ユーザー"
-            : result.additionalUserInfo.username,
+        name: authUser.displayName == null ? "ユーザー" : authUser.displayName,
         description: "",
       };
       await storeUser(user, authUser.uid);

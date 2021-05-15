@@ -6,15 +6,22 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
-import { loginWithGoogle } from "utils/google";
+import { loginWithGoogle, storeUserfromLoginResult } from "utils/google";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   useEffect(() => {
-    if (authUser != null) {
+    const getLoginResult = async () => {
+      await storeUserfromLoginResult();
       Router.push("/");
+    };
+
+    if (authUser != null) {
+      getLoginResult();
     }
   }, [authUser]);
+
   return (
     <Layout>
       {authUser === null && (
