@@ -13,6 +13,7 @@ import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
 import { loadUser, UserWithId } from "../interfaces/User";
 import { MyHead } from "components/MyHead";
+import firebase from "firebase/app";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -27,6 +28,15 @@ const ProfilePage = (): JSX.Element => {
   const [updated, setUpdated] = useState<
     "updateEmail" | "updatePassword" | undefined
   >(undefined);
+
+  const getProviderUserData = (u: firebase.User, providerId: string) => {
+    const userInfoList = u.providerData;
+    const providerUserData = userInfoList.find(
+      (userInfo) => userInfo != null && userInfo.providerId === providerId
+    );
+    if (providerUserData == null) return null;
+    return providerUserData;
+  };
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
