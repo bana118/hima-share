@@ -17,6 +17,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const url = typeof window !== "undefined" ? document.location.href : "";
   const origin = typeof window !== "undefined" ? document.location.origin : "";
   const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
+
   useEffect(() => {
     auth.onAuthStateChanged((u) => {
       setAuthUser(u);
