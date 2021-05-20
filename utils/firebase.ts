@@ -1,6 +1,7 @@
 import "firebase/auth";
 import "firebase/database";
 import "firebase/analytics";
+import "firebase/app-check";
 
 import firebase from "firebase/app";
 
@@ -17,6 +18,12 @@ const config = {
 // initializeを複数回走らせない
 if (firebase.apps.length === 0) {
   firebase.initializeApp(config);
+  if (
+    process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY != null &&
+    typeof window !== "undefined"
+  ) {
+    firebase.appCheck().activate(process.env.NEXT_PUBLIC_RECAPTCHA_PUBLIC_KEY);
+  }
 }
 
 const db = firebase.database();
