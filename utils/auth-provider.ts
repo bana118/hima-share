@@ -19,8 +19,19 @@ export const loginWithGoogle = async (): Promise<void> => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     await auth.signInWithRedirect(provider);
-  } catch (error) {
-    console.error(error);
+  } catch {
+    console.error("Unexpected Error");
+  }
+};
+
+export const linkWithGoogle = async (
+  authUser: firebase.User
+): Promise<void> => {
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await authUser.linkWithRedirect(provider);
+  } catch {
+    console.error("Unexpected Error");
   }
 };
 
