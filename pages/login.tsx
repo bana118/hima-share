@@ -7,13 +7,20 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
+import { loginWithGoogle, storeUserfromLoginResult } from "utils/auth-provider";
 
 const LoginPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
+
   useEffect(() => {
-    if (authUser != null) {
+    const getLoginResult = async () => {
+      await storeUserfromLoginResult();
       Router.push("/");
+    };
+
+    if (authUser != null) {
+      getLoginResult();
     }
   }, [authUser]);
 
@@ -50,6 +57,22 @@ const LoginPage = (): JSX.Element => {
               </Row>
               <Row className="justify-content-center">
                 <LoginForm onLogined={() => Router.push("/")} />
+              </Row>
+              <Row className="justify-content-center mt-2">
+                <input
+                  type="image"
+                  src="/btn_google_signin_light_normal_web.png"
+                  alt="Login with Google"
+                  onClick={loginWithGoogle}
+                  onMouseOver={(event) =>
+                    (event.currentTarget.src =
+                      "btn_google_signin_light_focus_web.png")
+                  }
+                  onMouseOut={(event) =>
+                    (event.currentTarget.src =
+                      "btn_google_signin_light_normal_web.png")
+                  }
+                />
               </Row>
               <Row className="justify-content-center mt-2">
                 <p>まだ登録していませんか?</p>

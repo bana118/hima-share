@@ -13,19 +13,35 @@ import { AuthContext } from "../context/AuthContext";
 import { GroupWithId, loadGroup } from "../interfaces/Group";
 import { loadUser, UserWithId } from "../interfaces/User";
 import { MyHead } from "components/MyHead";
+import firebase from "firebase/app";
+import {
+  getProviderUserData,
+  linkWithGoogle,
+  loginWithGoogle,
+} from "utils/auth-provider";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
   const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
   const [onLoginedAction, setOnLoginedAction] = useState<
-    "updateEmail" | "updatePassword" | "deleteUser" | undefined
+    | "updateEmail"
+    | "updatePassword"
+    | "deleteUser"
+    | "linkWithGoogle"
+    | undefined
   >(undefined);
   const [readyUpdateEmail, setReadyUpdateEmail] = useState(false);
   const [readyUpdatePassword, setReadyUpdatePassword] = useState(false);
   const [readyDeleteUser, setReadyDeleteUser] = useState(false);
   const [updated, setUpdated] = useState<
     "updateEmail" | "updatePassword" | undefined
+  >(undefined);
+  const [passwordUserData, setPasswordUserData] = useState<
+    firebase.UserInfo | undefined | null
+  >(undefined);
+  const [googleUserData, setGoogleUserData] = useState<
+    firebase.UserInfo | undefined | null
   >(undefined);
 
   // TODO よく使う処理なのでカスタムフックにする
@@ -36,6 +52,8 @@ const ProfilePage = (): JSX.Element => {
       if (authUser === null) {
         Router.push("/login");
       } else if (authUser != null) {
+        setPasswordUserData(getProviderUserData(authUser, "password"));
+        setGoogleUserData(getProviderUserData(authUser, "google.com"));
         try {
           const user = await loadUser(authUser.uid);
           if (user != null && !unmounted) {
@@ -170,17 +188,39 @@ const ProfilePage = (): JSX.Element => {
           <React.Fragment>
             <MyHead title="ログイン" />
             <Row className="justify-content-center">
-              <LoginForm
-                onLogined={() => {
-                  if (onLoginedAction == "updateEmail") {
-                    setReadyUpdateEmail(true);
-                  } else if (onLoginedAction == "updatePassword") {
-                    setReadyUpdatePassword(true);
-                  } else {
-                    setReadyDeleteUser(true);
-                  }
-                }}
-              />
+              {passwordUserData != null && (
+                <LoginForm
+                  onLogined={() => {
+                    if (onLoginedAction == "updateEmail") {
+                      setReadyUpdateEmail(true);
+                    } else if (onLoginedAction == "updatePassword") {
+                      setReadyUpdatePassword(true);
+                    } else if (onLoginedAction == "deleteUser") {
+                      setReadyDeleteUser(true);
+                    } else {
+                      if (authUser != null) {
+                        linkWithGoogle(authUser);
+                      } else {
+                        Router.push("/login");
+                      }
+                    }
+                  }}
+                />
+              )}
+              {passwordUserData === null && (
+                <React.Fragment>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      window.history.replaceState(null, "", "/create-password");
+                      loginWithGoogle();
+                    }}
+                  >
+                    パスワードの設定
+                  </a>
+                  が必要です
+                </React.Fragment>
+              )}
             </Row>
             <Row className="justify-content-center">
               <a
@@ -226,6 +266,84 @@ const ProfilePage = (): JSX.Element => {
               setGroups={(g: GroupWithId[]) => setGroups(g)}
             />
           </Row>
+          <Row className="justify-content-center mt-3">
+            <h2>Googleアカウント</h2>
+          </Row>
+          {authUser != null &&
+            googleUserData == null &&
+            authUser.emailVerified && (
+              <React.Fragment>
+                <Row className="justify-content-center">
+                  <p>Googleアカウントとの連携にはログインが必要です</p>
+                </Row>
+                <Row className="justify-content-center">
+                  <Button
+                    variant="accent"
+                    type="button"
+                    onClick={() => setOnLoginedAction("linkWithGoogle")}
+                  >
+                    ログイン画面へ
+                  </Button>
+                </Row>
+              </React.Fragment>
+            )}
+          {authUser != null &&
+            googleUserData == null &&
+            !authUser.emailVerified && (
+              <Row className="justify-content-center">
+                <p>
+                  Googleアカウントとの連携には
+                  <a href="/email-verify">メールアドレスの確認</a>
+                  が必要です
+                </p>
+              </Row>
+            )}
+          {authUser != null &&
+            googleUserData != null &&
+            passwordUserData != null && (
+              <React.Fragment>
+                <Row className="justify-content-center">
+                  <p>Googleアカウントと連携しています</p>
+                </Row>
+                <Row className="justify-content-center">
+                  <Button
+                    variant="main"
+                    type="button"
+                    onClick={() => {
+                      authUser
+                        .unlink("google.com")
+                        .then(() => {
+                          Router.reload();
+                        })
+                        .catch(() => {
+                          console.error("Unexpected Error");
+                        });
+                    }}
+                  >
+                    Googleアカウントとの連携を解除
+                  </Button>
+                </Row>
+              </React.Fragment>
+            )}
+          {authUser != null &&
+            googleUserData != null &&
+            passwordUserData == null && (
+              <Row className="justify-content-center">
+                <p>
+                  Googleアカウントとの連携を解除するには
+                  <a
+                    href="#"
+                    onClick={() => {
+                      window.history.replaceState(null, "", "/create-password");
+                      loginWithGoogle();
+                    }}
+                  >
+                    パスワードの設定
+                  </a>
+                  が必要です
+                </p>
+              </Row>
+            )}
           <Row className="justify-content-center mt-3">
             <h2>メールアドレス</h2>
           </Row>

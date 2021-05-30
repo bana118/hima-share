@@ -57,7 +57,8 @@ export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
             onLogined();
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error(error);
           const errorMessage =
             "メールアドレスが登録されていないかパスワードが間違えています";
           setError("email", {
