@@ -7,7 +7,7 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
-import { loginWithGoogle, storeUserfromLoginResult } from "utils/google";
+import { loginWithGoogle, storeUserfromLoginResult } from "utils/auth-provider";
 
 const LoginPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);

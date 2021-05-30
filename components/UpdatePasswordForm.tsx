@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
+import { getProviderUserData } from "utils/auth-provider";
+import firebase from "firebase/app";
 
 interface UpdatePasswordFormProps {
   onUpdated?: () => void;
@@ -48,7 +50,32 @@ export const UpdatePasswordForm = ({
   const updatePassword = async (data: InputsType) => {
     if (authUser == null) {
       setUnexpectedError();
+      return;
+    }
+    const passwordUserData = getProviderUserData(authUser, "password");
+    if (passwordUserData == null) {
+      // パスワードの追加
+      if (authUser.email == null) {
+        setUnexpectedError();
+        return;
+      }
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        authUser.email,
+        data["password"]
+      );
+      authUser
+        .linkWithCredential(credential)
+        .then(() => {
+          if (onUpdated != null) {
+            onUpdated();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setUnexpectedError();
+        });
     } else {
+      // パスワードの更新
       authUser
         .updatePassword(data["password"])
         .then(() => {
@@ -56,7 +83,9 @@ export const UpdatePasswordForm = ({
             onUpdated();
           }
         })
-        .catch(() => setUnexpectedError());
+        .catch(() => {
+          setUnexpectedError();
+        });
     }
   };
   return (

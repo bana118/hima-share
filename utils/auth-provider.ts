@@ -3,6 +3,18 @@ import firebase from "firebase/app";
 import { auth } from "./firebase";
 import { storeUser, User } from "interfaces/User";
 
+export const getProviderUserData = (
+  u: firebase.User,
+  providerId: "password" | "google.com"
+): firebase.UserInfo | null => {
+  const userInfoList = u.providerData;
+  const providerUserData = userInfoList.find(
+    (userInfo) => userInfo != null && userInfo.providerId === providerId
+  );
+  if (providerUserData == null) return null;
+  return providerUserData;
+};
+
 export const loginWithGoogle = async (): Promise<void> => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();

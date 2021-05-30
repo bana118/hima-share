@@ -6,7 +6,7 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
-import { loginWithGoogle, storeUserfromLoginResult } from "utils/google";
+import { loginWithGoogle, storeUserfromLoginResult } from "utils/auth-provider";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);

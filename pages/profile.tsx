@@ -14,6 +14,7 @@ import { GroupWithId, loadGroup } from "../interfaces/Group";
 import { loadUser, UserWithId } from "../interfaces/User";
 import { MyHead } from "components/MyHead";
 import firebase from "firebase/app";
+import { getProviderUserData, loginWithGoogle } from "utils/auth-provider";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -28,15 +29,12 @@ const ProfilePage = (): JSX.Element => {
   const [updated, setUpdated] = useState<
     "updateEmail" | "updatePassword" | undefined
   >(undefined);
-
-  const getProviderUserData = (u: firebase.User, providerId: string) => {
-    const userInfoList = u.providerData;
-    const providerUserData = userInfoList.find(
-      (userInfo) => userInfo != null && userInfo.providerId === providerId
-    );
-    if (providerUserData == null) return null;
-    return providerUserData;
-  };
+  const [passwordUserData, setPasswordUserData] = useState<
+    firebase.UserInfo | undefined | null
+  >(undefined);
+  const [googleUserData, setGoogleUserData] = useState<
+    firebase.UserInfo | undefined | null
+  >(undefined);
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
@@ -46,6 +44,8 @@ const ProfilePage = (): JSX.Element => {
       if (authUser === null) {
         Router.push("/login");
       } else if (authUser != null) {
+        setPasswordUserData(getProviderUserData(authUser, "password"));
+        setGoogleUserData(getProviderUserData(authUser, "google.com"));
         try {
           const user = await loadUser(authUser.uid);
           if (user != null && !unmounted) {
@@ -180,17 +180,33 @@ const ProfilePage = (): JSX.Element => {
           <React.Fragment>
             <MyHead title="ログイン" />
             <Row className="justify-content-center">
-              <LoginForm
-                onLogined={() => {
-                  if (onLoginedAction == "updateEmail") {
-                    setReadyUpdateEmail(true);
-                  } else if (onLoginedAction == "updatePassword") {
-                    setReadyUpdatePassword(true);
-                  } else {
-                    setReadyDeleteUser(true);
-                  }
-                }}
-              />
+              {passwordUserData != null && (
+                <LoginForm
+                  onLogined={() => {
+                    if (onLoginedAction == "updateEmail") {
+                      setReadyUpdateEmail(true);
+                    } else if (onLoginedAction == "updatePassword") {
+                      setReadyUpdatePassword(true);
+                    } else {
+                      setReadyDeleteUser(true);
+                    }
+                  }}
+                />
+              )}
+              {passwordUserData === null && (
+                <React.Fragment>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      window.history.replaceState(null, "", "/create-password");
+                      loginWithGoogle();
+                    }}
+                  >
+                    パスワードの設定
+                  </a>
+                  が必要です
+                </React.Fragment>
+              )}
             </Row>
             <Row className="justify-content-center">
               <a
