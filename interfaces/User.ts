@@ -47,6 +47,7 @@ export const updateUser = async (
 ): Promise<void> => {
   const newUser = {
     name: name ? name : user.name,
+    groups: user.groups ? user.groups : null,
     description: description ? description : user.description,
   };
   const updates = {
