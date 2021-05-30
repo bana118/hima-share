@@ -4,15 +4,13 @@ import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { AuthContext } from "context/AuthContext";
 import Link from "next/link";
 import Router from "next/router";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Row } from "react-bootstrap";
 import { getProviderUserData } from "utils/auth-provider";
 import firebase from "firebase/app";
 
 const CreatePasswordPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const buttonRef = useRef(null);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [passwordUserData, setPasswordUserdata] = useState<
     firebase.UserInfo | null | undefined
   >(undefined);
