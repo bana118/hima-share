@@ -65,11 +65,8 @@ export const GroupListItem = ({
       setShowModal(false);
       leaveGroup(user.id, group)
         .then(() => {
-          const index = groups.findIndex((g) => g.id == group.id);
-          if (index != -1) {
-            const newGroups = [...groups];
-            setGroups([...newGroups]);
-          }
+          const newGroups = groups.filter((g) => g.id !== group.id);
+          setGroups(newGroups);
         })
         .catch(() => {
           console.error("Unexpected Error");
