@@ -5,16 +5,23 @@ interface EventMessageProps {
   dateText: string;
   freeChatIds: string[];
   unEnteredChatIds: string[];
+  invitationId?: string;
 }
 
 export const EventMessage = ({
   dateText,
   freeChatIds,
   unEnteredChatIds,
+  invitationId,
 }: EventMessageProps): JSX.Element => {
   const eventMessageInputRef = useRef(null);
+
+  const appUrl = typeof window !== "undefined" ? document.location.origin : "";
+  const invitationUrl =
+    invitationId == null ? appUrl : `${appUrl}/join/${invitationId}`;
+  const appLinkMessage = `- Hima Share(β) あなたの暇な日をシェアしよう ${invitationUrl}`;
   // TODO グループ設定で変更可能にする
-  const eventMessage = `${dateText}に一緒に〇〇しませんか？`;
+  const eventMessage = `${dateText}に一緒に〇〇しませんか？ ${appLinkMessage}`;
   const initFullMessage =
     freeChatIds.length == 0
       ? `${eventMessage}`
@@ -62,10 +69,10 @@ export const EventMessage = ({
       <Button variant="accent" size="sm" onClick={copyMessage}>
         コピー
       </Button>
-      <input
+      <textarea
         id="hima-share-event-message"
+        rows={5}
         ref={eventMessageInputRef}
-        type="text"
         className="form-control"
         value={fullMessage}
         onChange={(event) => {

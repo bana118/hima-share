@@ -9,6 +9,8 @@ import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 interface JoinGroupFormProps {
   group: GroupWithId;
@@ -130,7 +132,12 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
               />
             </Form>
           </Row>
-
+          <Row className="justify-content-center">
+            <p>またはGoogleアカウントでログイン</p>
+          </Row>
+          <Row className="justify-content-center">
+            <GoogleLoginButton />
+          </Row>
           {loginOrRegister == "login" && (
             <Row className="justify-content-center">
               <LoginForm />
@@ -146,9 +153,16 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
       {authUser != null && isAlreadyJoined != null && (
         <React.Fragment>
           {isAlreadyJoined && (
-            <Row className="justify-content-center">
-              <p>{`すでに${group.name}に参加しています!`}</p>
-            </Row>
+            <React.Fragment>
+              <Row className="justify-content-center">
+                <p>{`すでに${group.name}に参加しています!`}</p>
+              </Row>
+              <Row className="justify-content-center">
+                <Link href={`/groups/${group.id}`}>
+                  <a>{group.name}のカレンダー</a>
+                </Link>
+              </Row>
+            </React.Fragment>
           )}
           {!isAlreadyJoined && user && (
             <Row className="justify-content-center">

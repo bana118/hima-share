@@ -7,6 +7,7 @@ import { EventMessage } from "./EventMessage";
 interface UserInfoOfDayProps {
   date: Date | null;
   groupId: string;
+  invitationId?: string;
   users: UserWithId[];
   dateToStatusInfoList: DateTimeToStatusInfoList;
   close: () => void;
@@ -15,6 +16,7 @@ interface UserInfoOfDayProps {
 export const UserInfoOfDay = ({
   date,
   groupId,
+  invitationId,
   users,
   dateToStatusInfoList,
   close,
@@ -140,6 +142,7 @@ export const UserInfoOfDay = ({
           dateText={dateText}
           freeChatIds={freeChatIds}
           unEnteredChatIds={unEnteredChatIds}
+          invitationId={invitationId}
         />
       </Card.Footer>
     </Card>
