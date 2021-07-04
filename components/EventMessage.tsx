@@ -5,18 +5,22 @@ interface EventMessageProps {
   dateText: string;
   freeChatIds: string[];
   unEnteredChatIds: string[];
+  invitationId?: string;
 }
 
 export const EventMessage = ({
   dateText,
   freeChatIds,
   unEnteredChatIds,
+  invitationId,
 }: EventMessageProps): JSX.Element => {
   const eventMessageInputRef = useRef(null);
   // TODO グループ設定で変更可能にする
   const eventMessage = `${dateText}に一緒に〇〇しませんか？`;
-  const url = typeof window !== "undefined" ? document.location.origin : "";
-  const appLinkMessage = `- Hima Share(β) あなたの暇な日をシェアしよう ${url}`;
+  const appUrl = typeof window !== "undefined" ? document.location.origin : "";
+  const invitationUrl =
+    invitationId == null ? appUrl : `${appUrl}/join/${invitationId}`;
+  const appLinkMessage = `- Hima Share(β) あなたの暇な日をシェアしよう ${invitationUrl}`;
   const initFullMessage =
     freeChatIds.length == 0
       ? `${eventMessage} ${appLinkMessage}`

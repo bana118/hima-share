@@ -60,11 +60,14 @@ export const GroupCalendar = ({
     }
   };
 
+  const invitationId = group.invitationId;
+
   return (
     <React.Fragment>
       <UserInfoOfDay
         date={focusedDate}
         groupId={group.id}
+        invitationId={invitationId}
         users={users}
         dateToStatusInfoList={dateToStatusInfoList}
         close={() => {
