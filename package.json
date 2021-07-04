@@ -11,10 +11,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^14.14.41",
-    "@types/react": "^17.0.3",
+    "@types/node": "^16.0.0",
+    "@types/react": "^17.0.13",
     "@types/react-calendar": "^3.1.4",
-    "@types/react-dom": "^17.0.3",
+    "@types/react-dom": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.25.0",
@@ -23,13 +23,13 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.4.0",
     "bootstrap": "^4.6.0",
     "firebase": "^8.6.1",
-    "next": "^10.2.0",
+    "next": "^11.0.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-calendar": "^3.4.0",
