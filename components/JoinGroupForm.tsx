@@ -31,9 +31,8 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   );
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
 
-  const [loginOrRegister, setLoginOrRegister] = useState<LoginOrRegister>(
-    "login"
-  );
+  const [loginOrRegister, setLoginOrRegister] =
+    useState<LoginOrRegister>("login");
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
@@ -68,6 +67,9 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
       unmounted = true;
     };
     return cleanup;
+
+    // authUser の変更のみを検知
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
 
   const {

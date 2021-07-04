@@ -293,7 +293,9 @@ const ProfilePage = (): JSX.Element => {
               <Row className="justify-content-center">
                 <p>
                   Googleアカウントとの連携には
-                  <a href="/email-verify">メールアドレスの確認</a>
+                  <Link href="/email-verify">
+                    <a>メールアドレスの確認</a>
+                  </Link>
                   が必要です
                 </p>
               </Row>

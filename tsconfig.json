@@ -19,7 +19,6 @@
     "target": "esnext",
     "baseUrl": "./",
     "paths": {
-      "react-calendar": ["./types/react-calendar"],
       "react-obfuscate": ["./types/react-obfuscate"]
     },
     "typeRoots": ["./types", "./node_modules/@types"]
