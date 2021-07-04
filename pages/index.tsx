@@ -109,7 +109,7 @@ const IndexPage = (): JSX.Element => {
     if (authUser !== undefined) {
       setToDatabase();
     }
-  }, [dateStatusList]);
+  }, [authUser, dateStatusList]);
 
   return (
     <Layout>

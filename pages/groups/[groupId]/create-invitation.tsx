@@ -17,13 +17,15 @@ type Props = {
 };
 
 const CreateInvitationPage = ({ group, errors }: Props): JSX.Element => {
+  const { authUser } = useContext(AuthContext);
+
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
   }
   if (!group) {
     return <ErrorPage />;
   }
-  const { authUser } = useContext(AuthContext);
+
   if (authUser === undefined) {
     return <React.Fragment />;
   }

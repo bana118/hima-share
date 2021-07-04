@@ -27,6 +27,7 @@ const InvitationPage = ({
 }: InvitationPageProps): JSX.Element => {
   const [showTooltip, setShowTooltop] = useState(false);
   const invitationUrlInput = useRef(null);
+  const { authUser } = useContext(AuthContext);
 
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
@@ -34,7 +35,7 @@ const InvitationPage = ({
   if (!invitation || !group) {
     return <ErrorPage />;
   }
-  const { authUser } = useContext(AuthContext);
+
   if (authUser === undefined) {
     return <React.Fragment />;
   }
