@@ -6,8 +6,8 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "lint": "eslint . --ext .ts,.tsx",
-    "test": "yarn lint && yarn type-check && bash ./scripts/git_tag_checker.sh"
+    "lint": "next lint",
+    "test": "next lint && yarn type-check && bash ./scripts/git_tag_checker.sh"
   },
   "license": "MIT",
   "devDependencies": {
@@ -18,6 +18,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "eslint": "^7.30.0",
+    "eslint-config-next": "^11.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
