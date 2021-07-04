@@ -15,10 +15,12 @@ export const EventMessage = ({
   const eventMessageInputRef = useRef(null);
   // TODO グループ設定で変更可能にする
   const eventMessage = `${dateText}に一緒に〇〇しませんか？`;
+  const url = typeof window !== "undefined" ? document.location.origin : "";
+  const appLinkMessage = `- Hima Share(β) あなたの暇な日をシェアしよう ${url}`;
   const initFullMessage =
     freeChatIds.length == 0
-      ? `${eventMessage}`
-      : `${freeChatIds.join(" ")} ${eventMessage}`;
+      ? `${eventMessage} ${appLinkMessage}`
+      : `${freeChatIds.join(" ")} ${eventMessage} ${appLinkMessage}`;
 
   const [fullMessage, setFullMessage] = useState(initFullMessage);
   const [showTooltip, setShowTooltip] = useState(false);
