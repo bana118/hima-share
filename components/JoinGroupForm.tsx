@@ -10,6 +10,7 @@ import { RegisterForm } from "./RegisterForm";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 interface JoinGroupFormProps {
   group: GroupWithId;
@@ -131,7 +132,12 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
               />
             </Form>
           </Row>
-
+          <Row className="justify-content-center">
+            <p>またはGoogleアカウントでログイン</p>
+          </Row>
+          <Row className="justify-content-center">
+            <GoogleLoginButton />
+          </Row>
           {loginOrRegister == "login" && (
             <Row className="justify-content-center">
               <LoginForm />

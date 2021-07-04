@@ -7,7 +7,8 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
-import { loginWithGoogle, storeUserfromLoginResult } from "utils/auth-provider";
+import { storeUserfromLoginResult } from "utils/auth-provider";
+import { GoogleLoginButton } from "components/GoogleLoginButton";
 
 const LoginPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -56,23 +57,13 @@ const LoginPage = (): JSX.Element => {
                 <h1>ログイン</h1>
               </Row>
               <Row className="justify-content-center">
-                <LoginForm onLogined={() => Router.push("/")} />
+                <p>またはGoogleアカウントでログイン</p>
               </Row>
-              <Row className="justify-content-center mt-2">
-                <input
-                  type="image"
-                  src="/btn_google_signin_light_normal_web.png"
-                  alt="Login with Google"
-                  onClick={loginWithGoogle}
-                  onMouseOver={(event) =>
-                    (event.currentTarget.src =
-                      "btn_google_signin_light_focus_web.png")
-                  }
-                  onMouseOut={(event) =>
-                    (event.currentTarget.src =
-                      "btn_google_signin_light_normal_web.png")
-                  }
-                />
+              <Row className="justify-content-center">
+                <GoogleLoginButton />
+              </Row>
+              <Row className="justify-content-center">
+                <LoginForm onLogined={() => Router.push("/")} />
               </Row>
               <Row className="justify-content-center mt-2">
                 <p>まだ登録していませんか?</p>

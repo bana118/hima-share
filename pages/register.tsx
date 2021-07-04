@@ -6,7 +6,8 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
-import { loginWithGoogle, storeUserfromLoginResult } from "utils/auth-provider";
+import { storeUserfromLoginResult } from "utils/auth-provider";
+import { GoogleLoginButton } from "components/GoogleLoginButton";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -34,20 +35,7 @@ const RegisterPage = (): JSX.Element => {
             <p>またはGoogleアカウントでログイン</p>
           </Row>
           <Row className="justify-content-center">
-            <input
-              type="image"
-              src="/btn_google_signin_light_normal_web.png"
-              alt="Login with Google"
-              onClick={loginWithGoogle}
-              onMouseOver={(event) =>
-                (event.currentTarget.src =
-                  "btn_google_signin_light_focus_web.png")
-              }
-              onMouseOut={(event) =>
-                (event.currentTarget.src =
-                  "btn_google_signin_light_normal_web.png")
-              }
-            />
+            <GoogleLoginButton />
           </Row>
           <Row className="justify-content-center">
             <RegisterForm onRegistered={() => Router.push("/email-verify")} />
