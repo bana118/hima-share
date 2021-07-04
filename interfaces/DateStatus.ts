@@ -53,19 +53,6 @@ export const loadDateStatusList = async (
   const snapShot = await db.ref().child("calendars").child(uid).once("value");
   if (snapShot.exists()) {
     const dateStatusList = snapShot.val() as DateStatusList;
-    const dateList = Object.keys(dateStatusList);
-    const now = new Date();
-    const yesterdayNumber = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() - 1
-    ).getTime();
-    for (const date of dateList) {
-      const dateNumber = Number(date);
-      if (dateNumber <= yesterdayNumber) {
-        delete dateList[dateNumber];
-      }
-    }
     return dateStatusList;
   } else {
     return [];
