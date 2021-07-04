@@ -41,7 +41,7 @@ export const storeDateStatusList = async (
   for (const date of dateList) {
     const dateNumber = Number(date);
     if (dateNumber <= yesterdayNumber) {
-      delete dateList[dateNumber];
+      delete dateStatusList[dateNumber];
     }
   }
   return db.ref(`calendars/${uid}`).set(dateStatusList);
