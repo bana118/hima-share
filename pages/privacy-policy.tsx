@@ -1,5 +1,6 @@
 import { Layout } from "components/Layout";
 import { MyHead } from "components/MyHead";
+import Obfuscate from "react-obfuscate";
 
 const PrivacyPolicyPage = (): JSX.Element => {
   const url = typeof window !== "undefined" ? document.location.origin : "";
@@ -34,7 +35,7 @@ const PrivacyPolicyPage = (): JSX.Element => {
       <h2>お問い合わせ</h2>
       <p>
         本ポリシーに関するお問い合せは下記までご連絡ください。
-        <br />⇒<a href="mailto:bana.titech@gmail.com">bana.titech@gmail.com</a>
+        <br />⇒<Obfuscate email="bana.titech@gmail.com" />
       </p>
     </Layout>
   );

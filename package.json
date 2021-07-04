@@ -1,6 +1,6 @@
 {
   "name": "hima-share",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -35,6 +35,7 @@
     "react-calendar": "^3.4.0",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.3.6",
+    "react-obfuscate": "^3.6.8",
     "sass": "^1.32.12",
     "yup": "^0.32.9"
   }
