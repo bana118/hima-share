@@ -26,7 +26,7 @@ const schema = yup.object().shape({
     .required("メールアドレスは必須です")
     .test(
       "email-test",
-      "入力したメールアドレスは既に登録されています",
+      "入力したメールアドレスはすでに登録されています",
       async (value) => {
         if (value == null) {
           return true;
