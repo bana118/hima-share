@@ -15,16 +15,17 @@ export const EventMessage = ({
   invitationId,
 }: EventMessageProps): JSX.Element => {
   const eventMessageInputRef = useRef(null);
-  // TODO グループ設定で変更可能にする
-  const eventMessage = `${dateText}に一緒に〇〇しませんか？`;
+
   const appUrl = typeof window !== "undefined" ? document.location.origin : "";
   const invitationUrl =
     invitationId == null ? appUrl : `${appUrl}/join/${invitationId}`;
   const appLinkMessage = `- Hima Share(β) あなたの暇な日をシェアしよう ${invitationUrl}`;
+  // TODO グループ設定で変更可能にする
+  const eventMessage = `${dateText}に一緒に〇〇しませんか？ ${appLinkMessage}`;
   const initFullMessage =
     freeChatIds.length == 0
-      ? `${eventMessage} ${appLinkMessage}`
-      : `${freeChatIds.join(" ")} ${eventMessage} ${appLinkMessage}`;
+      ? `${eventMessage}`
+      : `${freeChatIds.join(" ")} ${eventMessage}`;
 
   const [fullMessage, setFullMessage] = useState(initFullMessage);
   const [showTooltip, setShowTooltip] = useState(false);
