@@ -68,10 +68,10 @@ export const EventMessage = ({
       <Button variant="accent" size="sm" onClick={copyMessage}>
         コピー
       </Button>
-      <input
+      <textarea
         id="hima-share-event-message"
+        rows={5}
         ref={eventMessageInputRef}
-        type="text"
         className="form-control"
         value={fullMessage}
         onChange={(event) => {
