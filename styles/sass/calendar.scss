@@ -14,7 +14,10 @@
 
 .react-calendar__tile--active {
   background-color: #ffffff !important;
-  color: #000000;
+}
+
+.react-calendar__tile--active {
+  color: #000000 !important;
 }
 
 .react-calendar__tile--active:hover {
@@ -35,12 +38,12 @@
 // Set Saturday's text color to blue expect disable day
 // Set Sunday's text color to red expect disable day
 
-.react-calendar__tile:nth-child(7n-1) {
-  color: #0000ff;
+.react-calendar__tile:nth-child(7n-1):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: #0000ff !important;
 }
 
-.react-calendar__tile:nth-child(7n) {
-  color: #ff0000;
+.react-calendar__tile:nth-child(7n):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: #ff0000 !important;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
