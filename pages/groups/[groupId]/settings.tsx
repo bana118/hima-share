@@ -44,6 +44,11 @@ const GroupSettingsPage = ({
         <React.Fragment>
           <MyHead title="グループの設定" />
           <Row className="justify-content-center">
+            <Link href={`/groups/${group.id}`}>
+              <a>戻る</a>
+            </Link>
+          </Row>
+          <Row className="justify-content-center">
             <h2>グループの設定</h2>
           </Row>
           <Row className="justify-content-center">
