@@ -127,7 +127,7 @@ const IndexPage = (): JSX.Element => {
             <h1>{user.name}</h1>
           </Row>
           <Row className="justify-content-center">
-            <p className="text-muted">日付をクリックして</p>
+            <p className="text-muted">日付，曜日ボタンをクリックして</p>
             <p className="text-accent">「暇」</p>
             <p className="text-main">「忙しい」</p>
             <p className="text-muted">「未定」</p>

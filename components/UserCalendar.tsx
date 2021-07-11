@@ -18,15 +18,36 @@ export const UserCalendar = ({
     const dateTime = date.getTime();
     const status = dateStatusList[dateTime];
 
-    if (status == null) {
-      dateStatusList[dateTime] = "calendar-free";
-      setDateStatusList({ ...dateStatusList });
-    } else if (status == "calendar-free") {
-      dateStatusList[dateTime] = "calendar-busy";
-      setDateStatusList({ ...dateStatusList });
+    const weekDay = dateTimeToWeekDay(dateTime);
+    const weekDayStatus = dateStatusList[weekDay];
+
+    if (weekDayStatus == "calendar-free") {
+      if (status == "calendar-busy") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-busy";
+        setDateStatusList({ ...dateStatusList });
+      }
+    } else if (weekDayStatus == "calendar-busy") {
+      if (status == "calendar-free") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-free";
+        setDateStatusList({ ...dateStatusList });
+      }
     } else {
-      delete dateStatusList[dateTime];
-      setDateStatusList({ ...dateStatusList });
+      if (status == "calendar-free") {
+        dateStatusList[dateTime] = "calendar-busy";
+        setDateStatusList({ ...dateStatusList });
+      } else if (status == "calendar-busy") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-free";
+        setDateStatusList({ ...dateStatusList });
+      }
     }
   };
 
