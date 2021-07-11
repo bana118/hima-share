@@ -1,6 +1,7 @@
 import { About } from "components/About";
 import { GroupList } from "components/GroupList";
 import { MyHead } from "components/MyHead";
+import { WeekDayButtons } from "components/WeekDayButtons";
 import { GroupWithId, loadGroup } from "interfaces/Group";
 import { loadUser, UserWithId } from "interfaces/User";
 import Link from "next/link";
@@ -131,6 +132,12 @@ const IndexPage = (): JSX.Element => {
             <p className="text-main">「忙しい」</p>
             <p className="text-muted">「未定」</p>
             <p className="text-muted">を切り替え</p>
+          </Row>
+          <Row className="justify-content-center">
+            <WeekDayButtons
+              dateStatusList={dateStatusList}
+              setDateStatusList={(list) => setDateStatusList(list)}
+            />
           </Row>
           <Row className="justify-content-center">
             <UserCalendar

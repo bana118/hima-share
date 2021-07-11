@@ -4,10 +4,20 @@ import firebase from "firebase/app";
 
 export type Status = "calendar-free" | "calendar-busy";
 
+type DateTimeOrWeekDay =
+  | number
+  | "mon"
+  | "tue"
+  | "wed"
+  | "thu"
+  | "fri"
+  | "sat"
+  | "sun";
+
 // dateTime => Date: new Date(dateTime), Date => dateTime: Date.getTime()
-export interface DateStatusList {
-  [dateTime: number]: Status | undefined;
-}
+export type DateStatusList = {
+  [dateTimeOrWeekDay in DateTimeOrWeekDay]?: Status | undefined;
+};
 
 export interface UserDateStatusList {
   user: UserWithId;
@@ -23,9 +33,9 @@ export interface StatusInfo {
   busy: number;
   usersStatus: UsersStatus;
 }
-export interface DateTimeToStatusInfoList {
-  [dateTime: number]: StatusInfo | undefined;
-}
+export type DateTimeToStatusInfoList = {
+  [dateTimeOrWeekDay in DateTimeOrWeekDay]?: StatusInfo | undefined;
+};
 
 export const storeDateStatusList = async (
   dateStatusList: DateStatusList,
@@ -55,7 +65,7 @@ export const loadDateStatusList = async (
     const dateStatusList = snapShot.val() as DateStatusList;
     return dateStatusList;
   } else {
-    return [];
+    return {};
   }
 };
 
