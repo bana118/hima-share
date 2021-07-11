@@ -36,6 +36,7 @@ export const linkWithGoogle = async (
 };
 
 export const storeUserfromLoginResult = async (): Promise<void> => {
+  let authUser: firebase.User | null = null;
   try {
     const result = await auth.getRedirectResult();
     if (
@@ -43,7 +44,7 @@ export const storeUserfromLoginResult = async (): Promise<void> => {
       result.user &&
       result.additionalUserInfo?.isNewUser
     ) {
-      const authUser = result.user;
+      authUser = result.user;
       const user: User = {
         name: authUser.displayName == null ? "ユーザー" : authUser.displayName,
         description: "",
@@ -51,6 +52,12 @@ export const storeUserfromLoginResult = async (): Promise<void> => {
       await storeUser(user, authUser.uid);
     }
   } catch (error) {
-    console.error(error);
+    try {
+      // ユーザ作成に失敗したらfirebase authのユーザーを削除
+      console.error(error);
+      await authUser?.delete();
+    } catch (error) {
+      console.error(error);
+    }
   }
 };

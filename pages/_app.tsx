@@ -9,6 +9,7 @@ import "../styles/sass/navbar.scss";
 import "../styles/sass/about.scss";
 import "react-calendar/dist/Calendar.css";
 import Head from "next/head";
+import { storeUserfromLoginResult } from "utils/auth-provider";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
@@ -19,8 +20,14 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
 
   useEffect(() => {
-    auth.onAuthStateChanged((u) => {
+    const getLoginResult = async () => {
+      await storeUserfromLoginResult();
+    };
+    auth.onAuthStateChanged(async (u) => {
       setAuthUser(u);
+      if (u != null) {
+        await getLoginResult();
+      }
     });
 
     if (process.env.NODE_ENV === "production") {
