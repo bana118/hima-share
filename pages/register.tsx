@@ -6,20 +6,14 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { RegisterForm } from "../components/RegisterForm";
 import { AuthContext } from "../context/AuthContext";
-import { storeUserfromLoginResult } from "utils/auth-provider";
 import { GoogleLoginButton } from "components/GoogleLoginButton";
 
 const RegisterPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const getLoginResult = async () => {
-      await storeUserfromLoginResult();
-      Router.push("/");
-    };
-
     if (authUser != null) {
-      getLoginResult();
+      Router.push("/");
     }
   }, [authUser]);
 

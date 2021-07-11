@@ -7,7 +7,6 @@ import { Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { LoginForm } from "../components/LoginForm";
 import { AuthContext } from "../context/AuthContext";
-import { storeUserfromLoginResult } from "utils/auth-provider";
 import { GoogleLoginButton } from "components/GoogleLoginButton";
 
 const LoginPage = (): JSX.Element => {
@@ -15,13 +14,8 @@ const LoginPage = (): JSX.Element => {
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
 
   useEffect(() => {
-    const getLoginResult = async () => {
-      await storeUserfromLoginResult();
-      Router.push("/");
-    };
-
     if (authUser != null) {
-      getLoginResult();
+      Router.push("/");
     }
   }, [authUser]);
 
