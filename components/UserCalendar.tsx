@@ -1,5 +1,9 @@
 import Calendar from "react-calendar";
-import { Status, DateStatusList } from "../interfaces/DateStatus";
+import {
+  Status,
+  DateStatusList,
+  dateTimeToWeekDay,
+} from "../interfaces/DateStatus";
 
 type UserCalendarProps = {
   dateStatusList: DateStatusList;
@@ -45,11 +49,11 @@ export const UserCalendar = ({
       tileClassName={({ date }): Status | null => {
         const dateTime = date.getTime();
         const status = dateStatusList[dateTime];
-        if (status == null) {
-          return null;
-        } else {
-          return status;
-        }
+        if (status != null) return status;
+        const weekDay = dateTimeToWeekDay(dateTime);
+        const weekDayStatus = dateStatusList[weekDay];
+        if (weekDayStatus != null) return weekDayStatus;
+        return null;
       }}
     />
   );
