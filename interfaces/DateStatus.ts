@@ -41,9 +41,6 @@ export interface StatusInfo {
   busy: number;
   usersStatus: UsersStatus;
 }
-export type DateTimeToStatusInfoList = {
-  [dateTimeOrWeekDay in DateTimeOrWeekDay]?: StatusInfo | undefined;
-};
 
 export const storeDateStatusList = async (
   dateStatusList: DateStatusList,

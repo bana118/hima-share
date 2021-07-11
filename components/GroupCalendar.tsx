@@ -2,7 +2,7 @@ import { GroupWithId } from "interfaces/Group";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import {
-  DateTimeToStatusInfoList,
+  dateTimeToWeekDay,
   UserDateStatusList,
 } from "../interfaces/DateStatus";
 import { UserInfoOfDay } from "./UserInfoOfDay";
@@ -16,48 +16,24 @@ export const GroupCalendar = ({
   groupDateStatusList,
   group,
 }: GroupCalendarProps): JSX.Element => {
-  const users = groupDateStatusList.map(
-    (groupDateStatus) => groupDateStatus.user
-  );
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
-  const dateToStatusInfoList: DateTimeToStatusInfoList = {};
-
-  for (const userDateStatusList of groupDateStatusList) {
-    const user = userDateStatusList.user;
-    const dateTimeList = Object.keys(userDateStatusList.dateStatusList);
-    for (const dateTime of dateTimeList) {
-      const numberDateTime = Number(dateTime);
-      if (dateToStatusInfoList[numberDateTime] == null) {
-        dateToStatusInfoList[numberDateTime] = {
-          free: 0,
-          busy: 0,
-          usersStatus: {},
-        };
-      }
-      const status = userDateStatusList.dateStatusList[numberDateTime];
-      const statusInfo = dateToStatusInfoList[numberDateTime];
-      if (statusInfo != null) {
-        if (status == "calendar-free") {
-          statusInfo.free += 1;
-        } else if (status == "calendar-busy") {
-          statusInfo.busy += 1;
-        }
-        if (status != null) {
-          statusInfo.usersStatus[user.id] = status;
-        }
-      }
-    }
-  }
 
   const countFreeNum = (date: Date): number => {
     const dateTime = date.getTime();
-    const statusInfo = dateToStatusInfoList[dateTime];
-    if (statusInfo == null) {
-      return 0;
-    } else {
-      return statusInfo.free;
+    const weekDay = dateTimeToWeekDay(dateTime);
+    let count = 0;
+    for (const userDateStatusList of groupDateStatusList) {
+      const dateStatusList = userDateStatusList.dateStatusList;
+      if (
+        dateStatusList[dateTime] == "calendar-free" ||
+        (dateStatusList[dateTime] == null &&
+          dateStatusList[weekDay] == "calendar-free")
+      ) {
+        count += 1;
+      }
     }
+    return count;
   };
 
   const invitationId = group.invitationId;
@@ -68,8 +44,7 @@ export const GroupCalendar = ({
         date={focusedDate}
         groupId={group.id}
         invitationId={invitationId}
-        users={users}
-        dateToStatusInfoList={dateToStatusInfoList}
+        groupDateStatusList={groupDateStatusList}
         close={() => {
           setShowUserInfo(false);
           setFocusedDate(null);
@@ -100,7 +75,7 @@ export const GroupCalendar = ({
         tileClassName={({ date }) => {
           const freeNum = countFreeNum(date);
           // TODO 暇な人の人数でスタイルを変えるための基準人数を設定可能にする
-          // TODO 色はグラデーションでもいいかもしれない
+          // TODO 色は無段階でもいいかもしれない
           if (freeNum >= 5) {
             return "calendar-free";
           } else if (freeNum >= 2) {

@@ -1,5 +1,8 @@
-import { DateTimeToStatusInfoList } from "interfaces/DateStatus";
-import { UserWithId } from "interfaces/User";
+import {
+  dateTimeToWeekDay,
+  StatusInfo,
+  UserDateStatusList,
+} from "interfaces/DateStatus";
 import React from "react";
 import { Button, Card, Table } from "react-bootstrap";
 import { EventMessage } from "./EventMessage";
@@ -8,8 +11,7 @@ interface UserInfoOfDayProps {
   date: Date | null;
   groupId: string;
   invitationId?: string;
-  users: UserWithId[];
-  dateToStatusInfoList: DateTimeToStatusInfoList;
+  groupDateStatusList: UserDateStatusList[];
   close: () => void;
 }
 
@@ -17,15 +19,35 @@ export const UserInfoOfDay = ({
   date,
   groupId,
   invitationId,
-  users,
-  dateToStatusInfoList,
+  groupDateStatusList,
   close,
 }: UserInfoOfDayProps): JSX.Element => {
   if (date == null) {
     return <React.Fragment />;
   }
+  const users = groupDateStatusList.map(
+    (groupDateStatus) => groupDateStatus.user
+  );
   const dateTime = date.getTime();
-  const statusInfo = dateToStatusInfoList[dateTime];
+  const weekDay = dateTimeToWeekDay(dateTime);
+  const statusInfo: StatusInfo = {
+    free: 0,
+    busy: 0,
+    usersStatus: {},
+  };
+  for (const userDateStatusList of groupDateStatusList) {
+    const user = userDateStatusList.user;
+    const dateStatusList = userDateStatusList.dateStatusList;
+    const status = dateStatusList[dateTime] || dateStatusList[weekDay];
+    if (status == "calendar-free") {
+      statusInfo.free += 1;
+    } else if (status == "calendar-busy") {
+      statusInfo.busy += 1;
+    }
+    if (status != null) {
+      statusInfo.usersStatus[user.id] = status;
+    }
+  }
   const unEnteredText = "未入力";
   const freeText = "〇";
   const busyText = "×";
