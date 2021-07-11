@@ -4,15 +4,9 @@ import firebase from "firebase/app";
 
 export type Status = "calendar-free" | "calendar-busy";
 
-type DateTimeOrWeekDay =
-  | number
-  | "mon"
-  | "tue"
-  | "wed"
-  | "thu"
-  | "fri"
-  | "sat"
-  | "sun";
+export type WeekDay = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
+
+type DateTimeOrWeekDay = number | WeekDay;
 
 // dateTime => Date: new Date(dateTime), Date => dateTime: Date.getTime()
 export type DateStatusList = {
