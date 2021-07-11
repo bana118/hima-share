@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { Layout } from "../../../components/Layout";
 import { ErrorPage } from "../../../components/ErrorPage";
 import { GroupWithId, loadGroup } from "../../../interfaces/Group";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../../interfaces/DateStatus";
 import { GroupCalendar } from "../../../components/GroupCalendar";
 import { loadUser } from "../../../interfaces/User";
-import { Button, Row } from "react-bootstrap";
+import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
 import Link from "next/link";
 import { MyHead } from "components/MyHead";
 
@@ -31,6 +31,8 @@ const GroupCalendarPage = ({
   const [groupDateStatusList, setGroupDateStatusList] = useState(
     initGroupDateStatusList
   );
+  const reloadButtonRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   if (errors) {
     return <ErrorPage errorMessage={errors} />;
@@ -91,6 +93,7 @@ const GroupCalendarPage = ({
 
         setGroup(newGroup);
         setGroupDateStatusList(newGroupDateStatusList);
+        setShowTooltip(true);
       }
     } catch {
       console.error("Unexpected Error");
@@ -107,13 +110,28 @@ const GroupCalendarPage = ({
           </Row>
           <Row className="justify-content-center">
             <Button
+              ref={reloadButtonRef}
               className="m-2"
               variant="accent"
               type="button"
               onClick={reload}
+              onBlur={() => {
+                setShowTooltip(false);
+              }}
             >
               更新
             </Button>
+            <Overlay
+              target={reloadButtonRef.current}
+              show={showTooltip}
+              placement="right"
+            >
+              {(props) => (
+                <Tooltip id="update-group-tooltip" {...props}>
+                  更新しました！
+                </Tooltip>
+              )}
+            </Overlay>
           </Row>
           <Row className="justify-content-center">
             <GroupCalendar

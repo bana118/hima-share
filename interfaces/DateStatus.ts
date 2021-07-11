@@ -4,10 +4,28 @@ import firebase from "firebase/app";
 
 export type Status = "calendar-free" | "calendar-busy";
 
+export type WeekDay = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+
+type DateTimeOrWeekDay = number | WeekDay;
+
+export const dateTimeToWeekDay = (dateTime: number): WeekDay => {
+  const date = new Date(dateTime);
+  const weekDayArray: WeekDay[] = [
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat",
+  ];
+  return weekDayArray[date.getDay()];
+};
+
 // dateTime => Date: new Date(dateTime), Date => dateTime: Date.getTime()
-export interface DateStatusList {
-  [dateTime: number]: Status | undefined;
-}
+export type DateStatusList = {
+  [dateTimeOrWeekDay in DateTimeOrWeekDay]?: Status | undefined;
+};
 
 export interface UserDateStatusList {
   user: UserWithId;
@@ -22,9 +40,6 @@ export interface StatusInfo {
   free: number;
   busy: number;
   usersStatus: UsersStatus;
-}
-export interface DateTimeToStatusInfoList {
-  [dateTime: number]: StatusInfo | undefined;
 }
 
 export const storeDateStatusList = async (
@@ -55,7 +70,7 @@ export const loadDateStatusList = async (
     const dateStatusList = snapShot.val() as DateStatusList;
     return dateStatusList;
   } else {
-    return [];
+    return {};
   }
 };
 

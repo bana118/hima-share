@@ -1,5 +1,9 @@
 import Calendar from "react-calendar";
-import { Status, DateStatusList } from "../interfaces/DateStatus";
+import {
+  Status,
+  DateStatusList,
+  dateTimeToWeekDay,
+} from "../interfaces/DateStatus";
 
 type UserCalendarProps = {
   dateStatusList: DateStatusList;
@@ -14,15 +18,36 @@ export const UserCalendar = ({
     const dateTime = date.getTime();
     const status = dateStatusList[dateTime];
 
-    if (status == null) {
-      dateStatusList[dateTime] = "calendar-free";
-      setDateStatusList({ ...dateStatusList });
-    } else if (status == "calendar-free") {
-      dateStatusList[dateTime] = "calendar-busy";
-      setDateStatusList({ ...dateStatusList });
+    const weekDay = dateTimeToWeekDay(dateTime);
+    const weekDayStatus = dateStatusList[weekDay];
+
+    if (weekDayStatus == "calendar-free") {
+      if (status == "calendar-busy") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-busy";
+        setDateStatusList({ ...dateStatusList });
+      }
+    } else if (weekDayStatus == "calendar-busy") {
+      if (status == "calendar-free") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-free";
+        setDateStatusList({ ...dateStatusList });
+      }
     } else {
-      delete dateStatusList[dateTime];
-      setDateStatusList({ ...dateStatusList });
+      if (status == "calendar-free") {
+        dateStatusList[dateTime] = "calendar-busy";
+        setDateStatusList({ ...dateStatusList });
+      } else if (status == "calendar-busy") {
+        delete dateStatusList[dateTime];
+        setDateStatusList({ ...dateStatusList });
+      } else {
+        dateStatusList[dateTime] = "calendar-free";
+        setDateStatusList({ ...dateStatusList });
+      }
     }
   };
 
@@ -45,11 +70,11 @@ export const UserCalendar = ({
       tileClassName={({ date }): Status | null => {
         const dateTime = date.getTime();
         const status = dateStatusList[dateTime];
-        if (status == null) {
-          return null;
-        } else {
-          return status;
-        }
+        if (status != null) return status;
+        const weekDay = dateTimeToWeekDay(dateTime);
+        const weekDayStatus = dateStatusList[weekDay];
+        if (weekDayStatus != null) return weekDayStatus;
+        return null;
       }}
     />
   );
