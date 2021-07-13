@@ -123,9 +123,9 @@ export const UserInfoOfDay = ({
     }
   };
 
-  const dateText = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}(${dayFormat(
-    date.getDay()
-  )})`;
+  const dateText = `${date.getFullYear()}/${
+    date.getMonth() + 1
+  }/${date.getDate()}(${dayFormat(date.getDay())})`;
 
   const cardTitleText =
     statusInfo == null
