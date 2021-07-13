@@ -83,24 +83,45 @@ export const RegisterForm = ({
     });
   };
   const registerUser = async (data: InputsType) => {
+    let userCredential: firebase.auth.UserCredential | null = null;
+
     try {
-      const userCredential = await auth.createUserWithEmailAndPassword(
+      userCredential = await auth.createUserWithEmailAndPassword(
         data["email"],
         data["password"]
       );
-      const authUser = userCredential.user;
-      if (authUser == null) {
-        setUnexpectedError();
-        return;
-      }
+    } catch {
+      setUnexpectedError();
+      return;
+    }
+
+    const authUser = userCredential.user;
+    if (authUser == null) {
+      setUnexpectedError();
+      return;
+    }
+
+    try {
       const user: User = {
         name: data["name"],
         description: data["description"],
       };
+      await storeUser(user, authUser.uid);
+    } catch {
+      try {
+        // ユーザ作成に失敗したらfirebase authのユーザーを削除
+        await authUser.delete();
+        setUnexpectedError();
+        return;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    try {
       await authUser.updateProfile({
         displayName: data["name"],
       });
-      await storeUser(user, authUser.uid);
       await authUser.sendEmailVerification({
         url: `${document.location.origin}`,
       });

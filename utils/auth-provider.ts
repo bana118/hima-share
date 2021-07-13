@@ -54,8 +54,8 @@ export const storeUserfromLoginResult = async (): Promise<void> => {
   } catch (error) {
     try {
       // ユーザ作成に失敗したらfirebase authのユーザーを削除
-      console.error(error);
       await authUser?.delete();
+      console.error(error);
     } catch (error) {
       console.error(error);
     }
