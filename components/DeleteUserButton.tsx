@@ -19,15 +19,15 @@ export const DeleteUserButton = ({
     if (authUser == null) {
       console.error("Unexpected Error");
     } else {
-      Promise.all([authUser.delete(), deleteUser(user)])
-        .then(() => {
-          if (onDeleted != null) {
-            onDeleted();
-          }
-        })
-        .catch(() => {
-          console.error("Unexpected Error");
-        });
+      try {
+        await authUser.delete();
+        await deleteUser(user);
+        if (onDeleted != null) {
+          onDeleted();
+        }
+      } catch {
+        console.error("Unexpected Error");
+      }
     }
   };
   return (
