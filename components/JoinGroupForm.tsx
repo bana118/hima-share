@@ -24,8 +24,6 @@ const schema = yup.object().shape({
   chatId: yup.string().max(20, "チャットIDは20文字までです"),
 });
 
-type LoginOrRegister = "login" | "register";
-
 export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | undefined>(
@@ -33,8 +31,9 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   );
   const [user, setUser] = useState<UserWithId | undefined>(undefined);
 
-  const [loginOrRegister, setLoginOrRegister] =
-    useState<LoginOrRegister>("login");
+  const [loginOrRegister, setLoginOrRegister] = useState<"login" | "register">(
+    "login"
+  );
 
   // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
@@ -116,19 +115,14 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
                 type={"radio"}
                 name="loginOrRegister"
                 label="ログイン"
-                onClick={() => {
-                  setLoginOrRegister("login");
-                }}
-                checked={loginOrRegister == "login"}
+                onChange={() => setLoginOrRegister("login")}
+                defaultChecked
               />
               <Form.Check
                 type={"radio"}
                 name="loginOrRegister"
                 label="登録"
-                onClick={() => {
-                  setLoginOrRegister("register");
-                }}
-                checked={loginOrRegister == "register"}
+                onChange={() => setLoginOrRegister("register")}
               />
             </Form>
           </Row>
