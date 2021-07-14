@@ -1,32 +1,34 @@
-import { GetServerSideProps } from "next";
 import { ErrorPage } from "../../components/ErrorPage";
-import { loadInvitation } from "../../interfaces/Invitation";
-import { GroupWithId, loadGroup } from "../../interfaces/Group";
+import { loadInvitationGroup } from "../../interfaces/Invitation";
 import React, { useContext, useEffect } from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
 import { Layout } from "components/Layout";
 import { AuthContext } from "context/AuthContext";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { MyHead } from "components/MyHead";
+import { useAsync } from "../../hooks/useAsync";
 
-type Props = {
-  group?: GroupWithId;
-  errors?: string;
-};
+const JoinGroupPage = (): JSX.Element => {
+  const router = useRouter();
+  const { invitationId } = router.query;
 
-const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   useEffect(() => {
     if (authUser != null && !authUser.emailVerified) {
       Router.push("/email-verify");
     }
   }, [authUser]);
 
-  if (errors) {
-    return <ErrorPage errorMessage={errors} />;
-  }
-  if (!group) {
-    return <ErrorPage />;
+  const group = useAsync(loadInvitationGroup, invitationId);
+  console.log(group.data);
+
+  if (
+    invitationId == null ||
+    Array.isArray(invitationId) ||
+    group.data == null
+  ) {
+    return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   return (
@@ -34,8 +36,8 @@ const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
       {authUser !== undefined &&
         !(authUser != null && !authUser.emailVerified) && (
           <React.Fragment>
-            <MyHead title={`${group.name}に参加`} />
-            <JoinGroupForm group={group} />
+            <MyHead title={`${group.data.name}に参加`} />
+            <JoinGroupForm group={group.data} />
           </React.Fragment>
         )}
     </Layout>
@@ -43,27 +45,3 @@ const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
 };
 
 export default JoinGroupPage;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { invitationId } = context.query;
-  if (invitationId == null || Array.isArray(invitationId)) {
-    return { props: { errors: "Invalid URL" } };
-  } else {
-    try {
-      const invitation = await loadInvitation(invitationId);
-      if (invitation == null) {
-        return { props: { errors: "Invalid URL" } };
-      } else {
-        const group = await loadGroup(invitation.groupId);
-        if (group == null) {
-          return { props: { errors: "Unexpected Error" } };
-        } else {
-          return { props: { group } };
-        }
-      }
-    } catch {
-      console.error("Unexpected Error");
-      return { props: { errors: "Unexpected Error" } };
-    }
-  }
-};

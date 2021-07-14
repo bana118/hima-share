@@ -1,5 +1,5 @@
 import { db } from "../utils/firebase";
-import { setInvitation } from "./Group";
+import { GroupWithId, loadGroup, setInvitation } from "./Group";
 
 export interface Invitation {
   groupId: string;
@@ -38,6 +38,14 @@ export const loadInvitation = async (
   } else {
     return null;
   }
+};
+
+export const loadInvitationGroup = async (
+  invitationId: string
+): Promise<GroupWithId | null> => {
+  const invitation = await loadInvitation(invitationId);
+  if (invitation == null) return null;
+  return await loadGroup(invitation.groupId);
 };
 
 export const deleteInvitation = async (
