@@ -5,20 +5,20 @@ type AsyncFunction<T> = (props: any) => Promise<T>;
 
 export const useAsync = <T>(
   asyncFunction: AsyncFunction<T>,
-  functionProps: unknown
+  functionProps: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  propsTypeGuard?: (arg: any) => boolean
 ): {
   data: T | null | undefined;
   error: string | null;
-  isLoading: boolean;
 } => {
   const [data, setData] = useState<T | undefined | null>(undefined);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     let unmounted = false;
     const setDataFromAsyncFunction = async () => {
+      if (propsTypeGuard != null && !propsTypeGuard(functionProps)) return;
       try {
-        console.log(functionProps);
         const loadedData = await asyncFunction(functionProps);
         if (!unmounted) {
           setData(loadedData);
@@ -29,10 +29,6 @@ export const useAsync = <T>(
           setError(error);
           setData(null);
         }
-      } finally {
-        if (!unmounted) {
-          setIsLoading(false);
-        }
       }
     };
     setDataFromAsyncFunction();
@@ -40,6 +36,6 @@ export const useAsync = <T>(
       unmounted = true;
     };
     return cleanup;
-  }, [asyncFunction, functionProps]);
-  return { data, error, isLoading };
+  }, [asyncFunction, functionProps, propsTypeGuard]);
+  return { data, error };
 };

@@ -7,6 +7,8 @@ import { AuthContext } from "context/AuthContext";
 import Router, { useRouter } from "next/router";
 import { MyHead } from "components/MyHead";
 import { useAsync } from "../../hooks/useAsync";
+import { LoaingPage } from "components/LoadingPage";
+import { isQueryString } from "utils/query";
 
 const JoinGroupPage = (): JSX.Element => {
   const router = useRouter();
@@ -20,14 +22,13 @@ const JoinGroupPage = (): JSX.Element => {
     }
   }, [authUser]);
 
-  const group = useAsync(loadInvitationGroup, invitationId);
-  console.log(group.data);
+  const group = useAsync(loadInvitationGroup, invitationId, isQueryString);
 
-  if (
-    invitationId == null ||
-    Array.isArray(invitationId) ||
-    group.data == null
-  ) {
+  if (group.data === undefined) {
+    return <LoaingPage />;
+  }
+
+  if (group.data === null) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 

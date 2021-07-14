@@ -1,13 +1,13 @@
 import { Layout } from "./Layout";
 import { MyHead } from "./MyHead";
 
-type Props = {
+type ErrorPageProps = {
   errorMessage?: string;
 };
 
 export const ErrorPage = ({
   errorMessage = "Unexpected Error",
-}: Props): JSX.Element => {
+}: ErrorPageProps): JSX.Element => {
   return (
     <Layout>
       <MyHead title="エラー" />
