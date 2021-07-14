@@ -61,32 +61,32 @@
 
 // Set free day's text color to accent color
 
-.calendar-free {
+.calendar-free:not(:disabled) {
   background-color: $accent-color !important;
   color: #ffffff !important;
 }
 
-.calendar-free:hover {
+.calendar-free:hover:not(:disabled) {
   background-color: $accent-dark-color !important;
 }
 
-.calendar-light-free {
+.calendar-light-free:not(:disabled) {
   background-color: $accent-light-color !important;
   color: #ffffff !important;
 }
 
-.calendar-light-free:hover {
+.calendar-light-free:hover:not(:disabled) {
   background-color: $accent-dark-color !important;
 }
 
 // Set busy day's text color to may color
 
-.calendar-busy {
+.calendar-busy:not(:disabled) {
   background-color: $main-color !important;
   color: #ffffff !important;
 }
 
-.calendar-busy:hover {
+.calendar-busy:hover:not(:disabled) {
   background-color: $main-dark-color !important;
 }
 
