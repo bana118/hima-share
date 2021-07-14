@@ -24,7 +24,11 @@ const JoinGroupPage = (): JSX.Element => {
 
   const group = useAsync(loadInvitationGroup, invitationId, isQueryString);
 
-  if (group.data === undefined) {
+  if (
+    group.data === undefined ||
+    authUser === undefined ||
+    (authUser != null && !authUser.emailVerified)
+  ) {
     return <LoaingPage />;
   }
 
@@ -34,13 +38,8 @@ const JoinGroupPage = (): JSX.Element => {
 
   return (
     <Layout>
-      {authUser !== undefined &&
-        !(authUser != null && !authUser.emailVerified) && (
-          <React.Fragment>
-            <MyHead title={`${group.data.name}に参加`} />
-            <JoinGroupForm group={group.data} />
-          </React.Fragment>
-        )}
+      <MyHead title={`${group.data.name}に参加`} />
+      <JoinGroupForm group={group.data} />
     </Layout>
   );
 };
