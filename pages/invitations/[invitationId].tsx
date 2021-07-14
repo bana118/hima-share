@@ -1,56 +1,52 @@
-import { GetServerSideProps } from "next";
 import { Layout } from "../../components/Layout";
 import { ErrorPage } from "../../components/ErrorPage";
 import {
   deleteInvitation,
-  InvitationWithId,
-  loadInvitation,
+  loadInvitationAndGroup,
 } from "../../interfaces/Invitation";
 import React, { useContext, useRef, useState } from "react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { AuthContext } from "../../context/AuthContext";
-import { GroupWithId, loadGroup } from "../../interfaces/Group";
 import { Overlay, Row, Tooltip } from "react-bootstrap";
 import { MyHead } from "components/MyHead";
 import Link from "next/link";
+import { useAsync } from "hooks/useAsync";
+import { isQueryString } from "utils/query";
+import { LoaingPage } from "components/LoadingPage";
 
-type InvitationPageProps = {
-  invitation?: InvitationWithId;
-  group?: GroupWithId;
-  errors?: string;
-};
+const InvitationPage = (): JSX.Element => {
+  const router = useRouter();
+  const { invitationId } = router.query;
 
-const InvitationPage = ({
-  invitation,
-  group,
-  errors,
-}: InvitationPageProps): JSX.Element => {
-  const [showTooltip, setShowTooltop] = useState(false);
-  const invitationUrlInput = useRef(null);
   const { authUser } = useContext(AuthContext);
 
-  if (errors) {
-    return <ErrorPage errorMessage={errors} />;
-  }
-  if (!invitation || !group) {
-    return <ErrorPage />;
+  const [showTooltip, setShowTooltop] = useState(false);
+  const invitationUrlInput = useRef(null);
+
+  const invitationAndGroup = useAsync(
+    loadInvitationAndGroup,
+    invitationId,
+    isQueryString
+  );
+  if (invitationAndGroup.data === undefined || authUser === undefined) {
+    return <LoaingPage />;
   }
 
-  if (authUser === undefined) {
-    return <React.Fragment />;
+  if (invitationAndGroup.data === null) {
+    return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   if (
     authUser === null ||
-    group.members == null ||
-    !Object.keys(group.members).includes(authUser.uid)
+    invitationAndGroup.data.group.members == null ||
+    !Object.keys(invitationAndGroup.data.group.members).includes(authUser.uid)
   ) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   const joinUrl =
     typeof window !== "undefined"
-      ? `${document.location.origin}/join/${invitation.id}`
+      ? `${document.location.origin}/join/${invitationAndGroup.data.invitation.id}`
       : "";
 
   const copyURL = () => {
@@ -63,13 +59,21 @@ const InvitationPage = ({
       setShowTooltop(true);
     }
   };
+
   const invalidateInvitation = async (
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
+    if (invitationAndGroup.data == null) {
+      console.error("Unexpected Error");
+      return;
+    }
     event.preventDefault();
-    deleteInvitation(invitation.id, invitation.groupId)
+    deleteInvitation(
+      invitationAndGroup.data.invitation.id,
+      invitationAndGroup.data.invitation.groupId
+    )
       .then(() => {
-        Router.push(`/groups/${group.id}`);
+        Router.push(`/groups/${invitationAndGroup.data?.group.id}`);
       })
       .catch(() => {
         console.error("Unexpected Error");
@@ -116,7 +120,7 @@ const InvitationPage = ({
         </a>
       </Row>
       <Row className="justify-content-center">
-        <Link href={`/groups/${group.id}`}>
+        <Link href={`/groups/${invitationAndGroup.data.group.id}`}>
           <a>戻る</a>
         </Link>
       </Row>
@@ -125,23 +129,3 @@ const InvitationPage = ({
 };
 
 export default InvitationPage;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { invitationId } = context.query;
-  if (invitationId == null || Array.isArray(invitationId)) {
-    return { props: { errors: "Invalid URL" } };
-  } else {
-    try {
-      const invitation = await loadInvitation(invitationId);
-      if (invitation == null) {
-        return { props: { errors: "Invalid URL" } };
-      } else {
-        const group = await loadGroup(invitation.groupId);
-        return { props: { invitation, group } };
-      }
-    } catch {
-      console.error("Unexpected Error");
-      return { props: { errors: "Unexpected Error" } };
-    }
-  }
-};
