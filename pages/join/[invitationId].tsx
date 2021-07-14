@@ -1,5 +1,5 @@
 import { ErrorPage } from "../../components/ErrorPage";
-import { loadInvitationGroup } from "../../interfaces/Invitation";
+import { loadInvitationAndGroup } from "../../interfaces/Invitation";
 import React, { useContext, useEffect } from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
 import { Layout } from "components/Layout";
@@ -22,24 +22,28 @@ const JoinGroupPage = (): JSX.Element => {
     }
   }, [authUser]);
 
-  const group = useAsync(loadInvitationGroup, invitationId, isQueryString);
+  const invitationAndGroup = useAsync(
+    loadInvitationAndGroup,
+    invitationId,
+    isQueryString
+  );
 
   if (
-    group.data === undefined ||
+    invitationAndGroup.data === undefined ||
     authUser === undefined ||
     (authUser != null && !authUser.emailVerified)
   ) {
     return <LoaingPage />;
   }
 
-  if (group.data === null) {
+  if (invitationAndGroup.data === null) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   return (
     <Layout>
-      <MyHead title={`${group.data.name}に参加`} />
-      <JoinGroupForm group={group.data} />
+      <MyHead title={`${invitationAndGroup.data.group.name}に参加`} />
+      <JoinGroupForm group={invitationAndGroup.data.group} />
     </Layout>
   );
 };

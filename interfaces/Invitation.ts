@@ -40,12 +40,14 @@ export const loadInvitation = async (
   }
 };
 
-export const loadInvitationGroup = async (
+export const loadInvitationAndGroup = async (
   invitationId: string
-): Promise<GroupWithId | null> => {
+): Promise<{ invitation: InvitationWithId; group: GroupWithId } | null> => {
   const invitation = await loadInvitation(invitationId);
   if (invitation == null) return null;
-  return await loadGroup(invitation.groupId);
+  const group = await loadGroup(invitation.groupId);
+  if (group == null) return null;
+  return { invitation, group };
 };
 
 export const deleteInvitation = async (
