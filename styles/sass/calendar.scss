@@ -38,12 +38,16 @@
 // Set Saturday's text color to blue expect disable day
 // Set Sunday's text color to red expect disable day
 
-.react-calendar__tile:nth-child(7n-1):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+.react-calendar__tile:nth-child(7n-1):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth):not(:disabled) {
   color: #0000ff !important;
 }
 
-.react-calendar__tile:nth-child(7n):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+.react-calendar__tile:nth-child(7n):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth):not(:disabled) {
   color: #ff0000 !important;
+}
+
+.react-calendar__tile:disabled:not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: #1010104d !important;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
