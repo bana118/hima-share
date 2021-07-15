@@ -36,7 +36,7 @@ const GroupSettingsPage = (): JSX.Element => {
 
   return (
     <Layout>
-      {group && (
+      {group != null && (
         <React.Fragment>
           <MyHead title="グループの設定" />
           <Row className="justify-content-center">

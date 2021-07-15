@@ -2,14 +2,13 @@ import { useForm } from "react-hook-form";
 import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "context/AuthContext";
+import { useRef, useState } from "react";
 import { GroupWithId, updateGroup } from "interfaces/Group";
 
-interface UpdateGroupFormProps {
+type UpdateGroupFormProps = {
   group: GroupWithId;
   defaultValues: InputsType;
-}
+};
 
 interface InputsType {
   name: string;
@@ -25,8 +24,6 @@ export const UpdateGroupForm = ({
   group,
   defaultValues,
 }: UpdateGroupFormProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
-
   const {
     register,
     handleSubmit,
@@ -47,17 +44,13 @@ export const UpdateGroupForm = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   const onSubmit = async (data: InputsType) => {
-    if (authUser == null) {
-      setUnexpectedError();
-    } else {
-      updateGroup(group, data["name"], data["description"])
-        .then(() => {
-          setShowTooltip(true);
-        })
-        .catch(() => {
-          setUnexpectedError();
-        });
-    }
+    updateGroup(group, data["name"], data["description"])
+      .then(() => {
+        setShowTooltip(true);
+      })
+      .catch(() => {
+        setUnexpectedError();
+      });
   };
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
