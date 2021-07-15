@@ -1,7 +1,7 @@
 import { NextSeoProps } from "next-seo";
 
 const url = typeof window !== "undefined" ? document.location.href : "";
-const origin = typeof window !== "undefined" ? document.location.origin : "";
+const origin = process.env.NEXT_PUBLIC_APP_URL;
 const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
 
 export const defaultSeoConfig: NextSeoProps = {
