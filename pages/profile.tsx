@@ -146,6 +146,7 @@ const ProfilePage = (): JSX.Element => {
           </Row>
           <Row className="justify-content-center">
             <DeleteUserButton
+              authUser={authUser}
               user={userAndGroups.data.user}
               onDeleted={() => {
                 Router.push("/");
