@@ -8,10 +8,11 @@ import Router from "next/router";
 import Image from "next/image";
 
 type LayoutProps = {
+  footerHide?: boolean;
   children?: ReactNode;
 };
 
-export const Layout = ({ children }: LayoutProps): JSX.Element => {
+export const Layout = ({ footerHide, children }: LayoutProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
 
   const logout = async (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -53,45 +54,47 @@ export const Layout = ({ children }: LayoutProps): JSX.Element => {
         </Navbar>
       </header>
       <Container>{children}</Container>
-      <footer className="footer mt-auto py-3">
-        <hr />
-        <Container>
-          <Row className="justify-content-center">
-            <Link href="/">
-              <a>
-                <Image
-                  src="/logo.png"
-                  alt="Logo of Hima Share"
-                  width={200}
-                  height={25}
-                />
-              </a>
-            </Link>
-          </Row>
-          <Row className="justify-content-center">
-            <ListGroup horizontal={"md"}>
-              <ListGroup.Item className="border-0">
-                <Link href="/">
-                  <a className="text-muted">トップページ</a>
-                </Link>
-              </ListGroup.Item>
-              <ListGroup.Item className="border-0">
-                <Link href="/privacy-policy">
-                  <a className="text-muted">プライバシーポリシー</a>
-                </Link>
-              </ListGroup.Item>
-              <ListGroup.Item className="border-0">
-                <a
-                  className="text-muted"
-                  href="https://github.com/bana118/hima-share"
-                >
-                  Github
+      {!footerHide && (
+        <footer className="footer mt-auto py-3">
+          <hr />
+          <Container>
+            <Row className="justify-content-center">
+              <Link href="/">
+                <a>
+                  <Image
+                    src="/logo.png"
+                    alt="Logo of Hima Share"
+                    width={200}
+                    height={25}
+                  />
                 </a>
-              </ListGroup.Item>
-            </ListGroup>
-          </Row>
-        </Container>
-      </footer>
+              </Link>
+            </Row>
+            <Row className="justify-content-center">
+              <ListGroup horizontal={"md"}>
+                <ListGroup.Item className="border-0">
+                  <Link href="/">
+                    <a className="text-muted">トップページ</a>
+                  </Link>
+                </ListGroup.Item>
+                <ListGroup.Item className="border-0">
+                  <Link href="/privacy-policy">
+                    <a className="text-muted">プライバシーポリシー</a>
+                  </Link>
+                </ListGroup.Item>
+                <ListGroup.Item className="border-0">
+                  <a
+                    className="text-muted"
+                    href="https://github.com/bana118/hima-share"
+                  >
+                    Github
+                  </a>
+                </ListGroup.Item>
+              </ListGroup>
+            </Row>
+          </Container>
+        </footer>
+      )}
     </div>
   );
 };
