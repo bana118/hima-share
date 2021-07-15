@@ -1,69 +1,58 @@
-import { GetServerSideProps } from "next";
 import { ErrorPage } from "../../components/ErrorPage";
-import { loadInvitation } from "../../interfaces/Invitation";
-import { GroupWithId, loadGroup } from "../../interfaces/Group";
+import { loadInvitationAndGroup } from "../../interfaces/Invitation";
 import React, { useContext, useEffect } from "react";
 import { JoinGroupForm } from "../../components/JoinGroupForm";
 import { Layout } from "components/Layout";
 import { AuthContext } from "context/AuthContext";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { MyHead } from "components/MyHead";
+import { useAsync } from "../../hooks/useAsync";
+import { LoaingPage } from "components/LoadingPage";
+import { isQueryString, isUidString } from "utils/type-guard";
+import { loadUser } from "interfaces/User";
 
-type Props = {
-  group?: GroupWithId;
-  errors?: string;
-};
+const JoinGroupPage = (): JSX.Element => {
+  const router = useRouter();
+  const { invitationId } = router.query;
 
-const JoinGroupPage = ({ group, errors }: Props): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   useEffect(() => {
     if (authUser != null && !authUser.emailVerified) {
       Router.push("/email-verify");
     }
   }, [authUser]);
 
-  if (errors) {
-    return <ErrorPage errorMessage={errors} />;
+  const invitationAndGroup = useAsync(
+    loadInvitationAndGroup,
+    invitationId,
+    isQueryString
+  );
+
+  const user = useAsync(loadUser, authUser?.uid, isUidString);
+
+  if (
+    invitationAndGroup.data === undefined ||
+    authUser === undefined ||
+    (authUser != null && !authUser.emailVerified)
+  ) {
+    return <LoaingPage />;
   }
-  if (!group) {
-    return <ErrorPage />;
+
+  if (invitationAndGroup.data === null) {
+    return <ErrorPage errorMessage={"Invalid URL"} />;
   }
 
   return (
     <Layout>
-      {authUser !== undefined &&
-        !(authUser != null && !authUser.emailVerified) && (
-          <React.Fragment>
-            <MyHead title={`${group.name}に参加`} />
-            <JoinGroupForm group={group} />
-          </React.Fragment>
-        )}
+      <MyHead title={`${invitationAndGroup.data.group.name}に参加`} />
+      <JoinGroupForm
+        authUser={authUser}
+        user={user.data}
+        group={invitationAndGroup.data.group}
+      />
     </Layout>
   );
 };
 
 export default JoinGroupPage;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { invitationId } = context.query;
-  if (invitationId == null || Array.isArray(invitationId)) {
-    return { props: { errors: "Invalid URL" } };
-  } else {
-    try {
-      const invitation = await loadInvitation(invitationId);
-      if (invitation == null) {
-        return { props: { errors: "Invalid URL" } };
-      } else {
-        const group = await loadGroup(invitation.groupId);
-        if (group == null) {
-          return { props: { errors: "Unexpected Error" } };
-        } else {
-          return { props: { group } };
-        }
-      }
-    } catch {
-      console.error("Unexpected Error");
-      return { props: { errors: "Unexpected Error" } };
-    }
-  }
-};

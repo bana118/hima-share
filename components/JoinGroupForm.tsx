@@ -1,78 +1,44 @@
 import { Form, Button, Row } from "react-bootstrap";
 import Router from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState } from "react";
 import { GroupWithId } from "../interfaces/Group";
 import { useForm } from "react-hook-form";
-import { joinGroup, loadUser, UserWithId } from "../interfaces/User";
+import { joinGroup, UserWithId } from "../interfaces/User";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { GoogleLoginButton } from "./GoogleLoginButton";
+import firebase from "firebase/app";
 
-interface JoinGroupFormProps {
+type JoinGroupFormProps = {
+  authUser: firebase.User | null;
+  user: UserWithId | null | undefined;
   group: GroupWithId;
-}
+};
 
-interface InputsType {
+type InputsType = {
   chatId: string;
-}
+};
 
 const schema = yup.object().shape({
   chatId: yup.string().max(20, "チャットIDは20文字までです"),
 });
 
-type LoginOrRegister = "login" | "register";
-
-export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
-  const [isAlreadyJoined, setIsAlreadyJoined] = useState<boolean | undefined>(
-    undefined
+export const JoinGroupForm = ({
+  authUser,
+  user,
+  group,
+}: JoinGroupFormProps): JSX.Element => {
+  const [loginOrRegister, setLoginOrRegister] = useState<"login" | "register">(
+    "login"
   );
-  const [user, setUser] = useState<UserWithId | undefined>(undefined);
 
-  const [loginOrRegister, setLoginOrRegister] =
-    useState<LoginOrRegister>("login");
-
-  // TODO よく使う処理なのでカスタムフックにする
-  useEffect(() => {
-    // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
-    let unmounted = false;
-    const setFromDatabase = async () => {
-      if (authUser != null) {
-        try {
-          const user = await loadUser(authUser.uid);
-          if (user == null) {
-            setUnexpectedError();
-          } else if (user != null && !unmounted) {
-            if (
-              user.groups != null &&
-              Object.keys(user.groups).includes(group.id)
-            ) {
-              setIsAlreadyJoined(true);
-            } else {
-              setIsAlreadyJoined(false);
-              setUser(user);
-            }
-          }
-        } catch {
-          console.error("Unexpected Error");
-        }
-      }
-    };
-    if (authUser !== undefined) {
-      setFromDatabase();
-    }
-    const cleanup = () => {
-      unmounted = true;
-    };
-    return cleanup;
-
-    // authUser の変更のみを検知
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser]);
+  const isAlreadyJoined =
+    user != null &&
+    user.groups != null &&
+    Object.keys(user.groups).includes(group.id);
 
   const {
     register,
@@ -105,7 +71,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
   // TODO コンポーネントにRowを含めないようにしたい
   return (
     <React.Fragment>
-      {authUser === null && (
+      {authUser == null && (
         <React.Fragment>
           <Row className="justify-content-center">
             <Form>
@@ -116,19 +82,14 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
                 type={"radio"}
                 name="loginOrRegister"
                 label="ログイン"
-                onClick={() => {
-                  setLoginOrRegister("login");
-                }}
-                checked={loginOrRegister == "login"}
+                onChange={() => setLoginOrRegister("login")}
+                defaultChecked
               />
               <Form.Check
                 type={"radio"}
                 name="loginOrRegister"
                 label="登録"
-                onClick={() => {
-                  setLoginOrRegister("register");
-                }}
-                checked={loginOrRegister == "register"}
+                onChange={() => setLoginOrRegister("register")}
               />
             </Form>
           </Row>
@@ -140,7 +101,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
           </Row>
           {loginOrRegister == "login" && (
             <Row className="justify-content-center">
-              <LoginForm />
+              <LoginForm authUser={authUser} />
             </Row>
           )}
           {loginOrRegister == "register" && (
@@ -150,7 +111,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
           )}
         </React.Fragment>
       )}
-      {authUser != null && isAlreadyJoined != null && (
+      {authUser != null && (
         <React.Fragment>
           {isAlreadyJoined && (
             <React.Fragment>
@@ -164,7 +125,7 @@ export const JoinGroupForm = ({ group }: JoinGroupFormProps): JSX.Element => {
               </Row>
             </React.Fragment>
           )}
-          {!isAlreadyJoined && user && (
+          {!isAlreadyJoined && user != null && (
             <Row className="justify-content-center">
               <Form onSubmit={handleSubmit(confirmJoinGroup)}>
                 <p>{user.name} としてログイン中</p>

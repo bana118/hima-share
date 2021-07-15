@@ -8,6 +8,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
 import { getProviderUserData } from "utils/auth-provider";
 import firebase from "firebase/app";
+import { LoaingPage } from "components/LoadingPage";
 
 const CreatePasswordPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -27,22 +28,30 @@ const CreatePasswordPage = (): JSX.Element => {
     }
   }, [authUser]);
 
+  if (
+    authUser == null ||
+    passwordUserData === undefined ||
+    passwordUserData != null
+  ) {
+    return <LoaingPage />;
+  }
+
   return (
     <Layout>
-      {authUser != null && passwordUserData === null && (
-        <React.Fragment>
-          <MyHead title="パスワード作成" />
-          <Row className="justify-content-center">
-            <UpdatePasswordForm onUpdated={() => Router.push("/profile")} />
-          </Row>
-          <Row className="justify-content-center">
-            <Link href="/profile">
-              <a>戻る</a>
-            </Link>
-          </Row>
-        </React.Fragment>
-      )}
+      <MyHead title="パスワード作成" />
+      <Row className="justify-content-center">
+        <UpdatePasswordForm
+          authUser={authUser}
+          onUpdated={() => Router.push("/profile")}
+        />
+      </Row>
+      <Row className="justify-content-center">
+        <Link href="/profile">
+          <a>戻る</a>
+        </Link>
+      </Row>
     </Layout>
   );
 };
+
 export default CreatePasswordPage;

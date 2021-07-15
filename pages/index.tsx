@@ -1,14 +1,17 @@
-import { About } from "components/About";
+import { AboutPage } from "components/AboutPage";
+import { ErrorPage } from "components/ErrorPage";
 import { GroupList } from "components/GroupList";
+import { LoaingPage } from "components/LoadingPage";
 import { MyHead } from "components/MyHead";
 import { WeekDayButtons } from "components/WeekDayButtons";
-import { GroupWithId, loadGroup } from "interfaces/Group";
-import { loadUser, UserWithId } from "interfaces/User";
+import { useAsync } from "hooks/useAsync";
+import { loadUserAndGroups } from "interfaces/User";
 import Link from "next/link";
 import Router from "next/router";
 import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
+import { isUidString } from "utils/type-guard";
 import { Layout } from "../components/Layout";
 import { UserCalendar } from "../components/UserCalendar";
 import { AuthContext } from "../context/AuthContext";
@@ -20,81 +23,27 @@ import {
 
 const IndexPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [dateStatusList, setDateStatusList] = useState<
-    DateStatusList | undefined | null
-  >(undefined);
-  const [user, setUser] = useState<UserWithId | undefined | null>(undefined);
-  const [groups, setGroups] = useState<GroupWithId[] | undefined | null>(
-    undefined
+
+  const userAndGroups = useAsync(loadUserAndGroups, authUser?.uid, isUidString);
+  const initDateStatusList = useAsync(
+    loadDateStatusList,
+    authUser?.uid,
+    isUidString
   );
+
+  const [dateStatusList, setDateStatusList] = useState<
+    DateStatusList | null | undefined
+  >(undefined);
+
   useEffect(() => {
     if (authUser != null && !authUser.emailVerified) {
       Router.push("/email-verify");
     }
-    // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
-    let unmounted = false;
-    const setFromDatabase = async () => {
-      if (authUser == null) {
-        if (!unmounted) {
-          setDateStatusList(null);
-          setUser(null);
-          setGroups(null);
-        }
-      } else {
-        try {
-          const [userData, data] = await Promise.all([
-            loadUser(authUser.uid),
-            loadDateStatusList(authUser.uid),
-          ]);
-          if (!unmounted) {
-            if (data != null) {
-              setDateStatusList(data);
-            } else {
-              setDateStatusList({});
-            }
-            if (userData != null) {
-              setUser(userData);
-              const groupList: GroupWithId[] = [];
-              if (userData.groups != null) {
-                const groupIds = Object.keys(userData.groups);
-                const groupsData = await Promise.all(
-                  groupIds.map((groupId) => loadGroup(groupId))
-                );
-                for (const groupData of groupsData) {
-                  if (groupData != null) {
-                    groupList.push(groupData);
-                  }
-                }
-              }
-              if (!unmounted) {
-                groupList.sort((a, b) => {
-                  const nameA = a.name.toUpperCase();
-                  const nameB = b.name.toUpperCase();
-                  if (nameA < nameB) {
-                    return -1;
-                  }
-                  if (nameA > nameB) {
-                    return 1;
-                  }
-                  return 0;
-                });
-                setGroups(groupList);
-              }
-            }
-          }
-        } catch {
-          console.error("Unexpected Error");
-        }
-      }
-    };
-    if (authUser !== undefined) {
-      setFromDatabase();
-    }
-    const cleanup = () => {
-      unmounted = true;
-    };
-    return cleanup;
   }, [authUser]);
+
+  useEffect(() => {
+    setDateStatusList(initDateStatusList.data);
+  }, [initDateStatusList.data]);
 
   useEffect(() => {
     const setToDatabase = async () => {
@@ -112,52 +61,60 @@ const IndexPage = (): JSX.Element => {
     }
   }, [authUser, dateStatusList]);
 
+  if (authUser === undefined || (authUser != null && !authUser.emailVerified)) {
+    return <LoaingPage />;
+  }
+
+  if (authUser === null) {
+    return <AboutPage />;
+  }
+
+  if (userAndGroups.data === undefined || dateStatusList === undefined) {
+    return <LoaingPage />;
+  }
+
+  if (userAndGroups.data === null || dateStatusList === null) {
+    return <ErrorPage />;
+  }
+
   return (
     <Layout>
-      {(dateStatusList === null || user === null || groups === null) && (
-        <React.Fragment>
-          <MyHead title="Hima Share" />
-          <About />
-        </React.Fragment>
-      )}
-      {dateStatusList && user && groups && authUser?.emailVerified && (
-        <React.Fragment>
-          <MyHead title="ユーザーカレンダー" />
-          <Row className="justify-content-center">
-            <h1>{user.name}</h1>
-          </Row>
-          <Row className="justify-content-center">
-            <p className="text-muted">日付，曜日ボタンをクリックして</p>
-            <p className="text-accent">「暇」</p>
-            <p className="text-main">「忙しい」</p>
-            <p className="text-muted">「未定」</p>
-            <p className="text-muted">を切り替え</p>
-          </Row>
-          <Row className="justify-content-center">
-            <WeekDayButtons
-              dateStatusList={dateStatusList}
-              setDateStatusList={(list) => setDateStatusList(list)}
-            />
-          </Row>
-          <Row className="justify-content-center">
-            <UserCalendar
-              dateStatusList={dateStatusList}
-              setDateStatusList={(list) => setDateStatusList(list)}
-            />
-          </Row>
-          <Row className="justify-content-center">
-            <Link href="/create-group">
-              <a>グループ作成</a>
-            </Link>
-          </Row>
-          <Row className="justify-content-center">
-            <h2>グループ一覧</h2>
-          </Row>
-          <Row className="justify-content-center">
-            <GroupList groups={groups} />
-          </Row>
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <MyHead title="ユーザーカレンダー" />
+        <Row className="justify-content-center">
+          <h1>{userAndGroups.data.user.name}</h1>
+        </Row>
+        <Row className="justify-content-center">
+          <p className="text-muted">日付，曜日ボタンをクリックして</p>
+          <p className="text-accent">「暇」</p>
+          <p className="text-main">「忙しい」</p>
+          <p className="text-muted">「未定」</p>
+          <p className="text-muted">を切り替え</p>
+        </Row>
+        <Row className="justify-content-center">
+          <WeekDayButtons
+            dateStatusList={dateStatusList}
+            setDateStatusList={(list) => setDateStatusList(list)}
+          />
+        </Row>
+        <Row className="justify-content-center">
+          <UserCalendar
+            dateStatusList={dateStatusList}
+            setDateStatusList={(list) => setDateStatusList(list)}
+          />
+        </Row>
+        <Row className="justify-content-center">
+          <Link href="/create-group">
+            <a>グループ作成</a>
+          </Link>
+        </Row>
+        <Row className="justify-content-center">
+          <h2>グループ一覧</h2>
+        </Row>
+        <Row className="justify-content-center">
+          <GroupList groups={userAndGroups.data.groups} />
+        </Row>
+      </React.Fragment>
     </Layout>
   );
 };

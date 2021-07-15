@@ -3,15 +3,14 @@ import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Router from "next/router";
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Group, storeGroup } from "../interfaces/Group";
+import firebase from "firebase/app";
 
-interface InputsType {
+type InputsType = {
   name: string;
   description: string;
   chatId: string;
-}
+};
 
 const schema = yup.object().shape({
   name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),
@@ -19,8 +18,13 @@ const schema = yup.object().shape({
   chatId: yup.string().max(20, "チャットIDは20文字までです"),
 });
 
-export const CreateGroupForm = (): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
+type CreateGroupFormProps = {
+  authUser: firebase.User;
+};
+
+export const CreateGroupForm = ({
+  authUser,
+}: CreateGroupFormProps): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -34,21 +38,17 @@ export const CreateGroupForm = (): JSX.Element => {
     });
   };
   const createGroup = async (data: InputsType) => {
-    if (authUser != null) {
-      const group: Group = {
-        name: data["name"],
-        description: data["description"],
-      };
-      storeGroup(group, authUser.uid, data["chatId"])
-        .then(() => {
-          Router.push("/");
-        })
-        .catch(() => {
-          setUnexpectedError();
-        });
-    } else {
-      setUnexpectedError();
-    }
+    const group: Group = {
+      name: data["name"],
+      description: data["description"],
+    };
+    storeGroup(group, authUser.uid, data["chatId"])
+      .then(() => {
+        Router.push("/");
+      })
+      .catch(() => {
+        setUnexpectedError();
+      });
   };
   return (
     <Form onSubmit={handleSubmit(createGroup)}>

@@ -1,10 +1,10 @@
 import { Button, Col, Row } from "react-bootstrap";
 import { DateStatusList, WeekDay } from "../interfaces/DateStatus";
 
-interface WeekDayButtonsProps {
+type WeekDayButtonsProps = {
   dateStatusList: DateStatusList;
   setDateStatusList: (list: DateStatusList) => void;
-}
+};
 
 export const WeekDayButtons = ({
   dateStatusList,

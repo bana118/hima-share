@@ -28,6 +28,37 @@ export const loadUser = async (uid: string): Promise<UserWithId | null> => {
   }
 };
 
+export const loadUserAndGroups = async (
+  uid: string
+): Promise<{ user: UserWithId; groups: GroupWithId[] } | null> => {
+  const user = await loadUser(uid);
+  if (user == null) return null;
+  const groups: GroupWithId[] = [];
+
+  if (user.groups == null) return { user, groups };
+
+  const groupIds = Object.keys(user.groups);
+  const nullableGroups = await Promise.all(
+    groupIds.map((groupId) => loadGroup(groupId))
+  );
+  for (const nullableGroup of nullableGroups) {
+    if (nullableGroup == null) return null;
+    groups.push(nullableGroup);
+  }
+  groups.sort((a, b) => {
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
+  return { user, groups };
+};
+
 export const joinGroup = async (
   uid: string,
   groupId: string,

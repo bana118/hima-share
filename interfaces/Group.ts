@@ -1,6 +1,7 @@
 import { db } from "../utils/firebase";
-import { joinGroup } from "./User";
+import { joinGroup, loadUser } from "./User";
 import firebase from "firebase/app";
+import { loadDateStatusList, UserDateStatusList } from "./DateStatus";
 
 export interface Group {
   name: string;
@@ -85,6 +86,52 @@ export const setInvitation = async (
 ): Promise<string> => {
   await db.ref(`groups/${groupId}`).update({ invitationId: invitationId });
   return invitationId;
+};
+
+export const loadGroupAndGroupDateStatusList = async (
+  groupId: string
+): Promise<{
+  group: GroupWithId;
+  groupDateStatusList: UserDateStatusList[];
+} | null> => {
+  const group = await loadGroup(groupId);
+  if (group == null || group.members == null) return null;
+
+  const userIds = Object.keys(group.members);
+  const nullableGroupDateStatusList = await Promise.all(
+    userIds.map(async (userId) => {
+      return {
+        user: await loadUser(userId),
+        dateStatusList: await loadDateStatusList(userId),
+      };
+    })
+  );
+  const groupDateStatusList: UserDateStatusList[] = [];
+  for (let i = 0; i < userIds.length; i++) {
+    const user = nullableGroupDateStatusList[i].user;
+    const dateStatusList = nullableGroupDateStatusList[i].dateStatusList;
+    if (user == null) {
+      return null;
+    }
+    groupDateStatusList.push({
+      user: user,
+      dateStatusList: dateStatusList,
+    });
+  }
+
+  groupDateStatusList.sort((a, b) => {
+    const nameA = a.user.name.toUpperCase();
+    const nameB = b.user.name.toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return { group, groupDateStatusList };
 };
 
 export const watchGroup = (

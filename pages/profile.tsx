@@ -10,8 +10,8 @@ import React, { useEffect, useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
-import { GroupWithId, loadGroup } from "../interfaces/Group";
-import { loadUser, UserWithId } from "../interfaces/User";
+import { GroupWithId } from "../interfaces/Group";
+import { loadUserAndGroups } from "../interfaces/User";
 import { MyHead } from "components/MyHead";
 import firebase from "firebase/app";
 import {
@@ -19,11 +19,20 @@ import {
   linkWithGoogle,
   loginWithGoogle,
 } from "utils/auth-provider";
+import { useAsync } from "hooks/useAsync";
+import { isUidString } from "utils/type-guard";
+import { LoaingPage } from "components/LoadingPage";
+import { ErrorPage } from "components/ErrorPage";
 
 const ProfilePage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [user, setUser] = useState<UserWithId | undefined>(undefined);
-  const [groups, setGroups] = useState<GroupWithId[] | undefined>(undefined);
+
+  const userAndGroups = useAsync(loadUserAndGroups, authUser?.uid, isUidString);
+
+  const [groups, setGroups] = useState<GroupWithId[] | null | undefined>(
+    undefined
+  );
+
   const [onLoginedAction, setOnLoginedAction] = useState<
     | "updateEmail"
     | "updatePassword"
@@ -44,60 +53,36 @@ const ProfilePage = (): JSX.Element => {
     firebase.UserInfo | undefined | null
   >(undefined);
 
-  // TODO よく使う処理なのでカスタムフックにする
   useEffect(() => {
-    // コンポーネントが削除された後にsetDateStatusListが呼ばれないようにするため
-    let unmounted = false;
-    const setFromDatabase = async () => {
-      if (authUser === null) {
-        Router.push("/login");
-      } else if (authUser != null) {
-        setPasswordUserData(getProviderUserData(authUser, "password"));
-        setGoogleUserData(getProviderUserData(authUser, "google.com"));
-        try {
-          const user = await loadUser(authUser.uid);
-          if (user != null && !unmounted) {
-            setUser(user);
-            const groupList: GroupWithId[] = [];
-            if (user.groups != null) {
-              const groupIds = Object.keys(user.groups);
-              const groupsfromDatabase = await Promise.all(
-                groupIds.map((groupId) => loadGroup(groupId))
-              );
-              for (const group of groupsfromDatabase) {
-                if (group != null) {
-                  groupList.push(group);
-                }
-              }
-            }
-            if (!unmounted) {
-              groupList.sort((a, b) => {
-                const nameA = a.name.toUpperCase();
-                const nameB = b.name.toUpperCase();
-                if (nameA < nameB) {
-                  return -1;
-                }
-                if (nameA > nameB) {
-                  return 1;
-                }
-                return 0;
-              });
-              setGroups(groupList);
-            }
-          }
-        } catch {
-          console.error("Unexpected Error");
-        }
-      }
-    };
-    if (authUser !== undefined) {
-      setFromDatabase();
+    if (authUser === null) {
+      Router.push("/login");
+    } else if (authUser != null) {
+      setPasswordUserData(getProviderUserData(authUser, "password"));
+      setGoogleUserData(getProviderUserData(authUser, "google.com"));
     }
-    const cleanup = () => {
-      unmounted = true;
-    };
-    return cleanup;
   }, [authUser]);
+
+  useEffect(() => {
+    if (userAndGroups.data === undefined) {
+      setGroups(undefined);
+    } else if (userAndGroups.data === null) {
+      setGroups(null);
+    } else {
+      setGroups(userAndGroups.data.groups);
+    }
+  }, [userAndGroups.data]);
+
+  if (
+    authUser == null ||
+    userAndGroups.data === undefined ||
+    groups === undefined
+  ) {
+    return <LoaingPage />;
+  }
+
+  if (userAndGroups.data === null || groups === null) {
+    return <ErrorPage />;
+  }
 
   return (
     <Layout>
@@ -127,11 +112,12 @@ const ProfilePage = (): JSX.Element => {
           </Row>
         </React.Fragment>
       )}
-      {readyUpdateEmail && user && (
+      {readyUpdateEmail && (
         <React.Fragment>
           <MyHead title="メールアドレス更新" />
           <Row className="justify-content-center">
             <UpdateEmailForm
+              authUser={authUser}
               onUpdated={() => {
                 setReadyUpdateEmail(false);
                 setUpdated("updateEmail");
@@ -140,11 +126,12 @@ const ProfilePage = (): JSX.Element => {
           </Row>
         </React.Fragment>
       )}
-      {readyUpdatePassword && user && (
+      {readyUpdatePassword && (
         <React.Fragment>
           <MyHead title="パスワード更新" />
           <Row className="justify-content-center">
             <UpdatePasswordForm
+              authUser={authUser}
               onUpdated={() => {
                 setReadyUpdatePassword(false);
                 setUpdated("updatePassword");
@@ -153,15 +140,16 @@ const ProfilePage = (): JSX.Element => {
           </Row>
         </React.Fragment>
       )}
-      {readyDeleteUser && user && (
+      {readyDeleteUser && (
         <React.Fragment>
           <MyHead title="ユーザー削除" />
           <Row className="justify-content-center">
-            <h2>本当に{user.name}を削除しますか？</h2>
+            <h2>本当に{userAndGroups.data.user.name}を削除しますか？</h2>
           </Row>
           <Row className="justify-content-center">
             <DeleteUserButton
-              user={user}
+              authUser={authUser}
+              user={userAndGroups.data.user}
               onDeleted={() => {
                 Router.push("/");
               }}
@@ -190,6 +178,7 @@ const ProfilePage = (): JSX.Element => {
             <Row className="justify-content-center">
               {passwordUserData != null && (
                 <LoginForm
+                  authUser={authUser}
                   onLogined={() => {
                     if (onLoginedAction == "updateEmail") {
                       setReadyUpdateEmail(true);
@@ -234,7 +223,7 @@ const ProfilePage = (): JSX.Element => {
             </Row>
           </React.Fragment>
         )}
-      {user && groups && onLoginedAction == null && (
+      {onLoginedAction == null && (
         <React.Fragment>
           <MyHead title="ユーザー情報" />
           <Row className="justify-content-center">
@@ -248,10 +237,11 @@ const ProfilePage = (): JSX.Element => {
           <Row className="justify-content-center">
             <Col md={6}>
               <UpdateUserForm
-                user={user}
+                authUser={authUser}
+                user={userAndGroups.data.user}
                 defaultValues={{
-                  name: user.name,
-                  description: user.description,
+                  name: userAndGroups.data.user.name,
+                  description: userAndGroups.data.user.description,
                 }}
               />
             </Col>
@@ -261,7 +251,7 @@ const ProfilePage = (): JSX.Element => {
           </Row>
           <Row>
             <GroupListForm
-              user={user}
+              user={userAndGroups.data.user}
               groups={groups}
               setGroups={(g: GroupWithId[]) => setGroups(g)}
             />
@@ -269,83 +259,75 @@ const ProfilePage = (): JSX.Element => {
           <Row className="justify-content-center mt-3">
             <h2>Googleアカウント</h2>
           </Row>
-          {authUser != null &&
-            googleUserData == null &&
-            authUser.emailVerified && (
-              <React.Fragment>
-                <Row className="justify-content-center">
-                  <p>Googleアカウントとの連携にはログインが必要です</p>
-                </Row>
-                <Row className="justify-content-center">
-                  <Button
-                    variant="accent"
-                    type="button"
-                    onClick={() => setOnLoginedAction("linkWithGoogle")}
-                  >
-                    ログイン画面へ
-                  </Button>
-                </Row>
-              </React.Fragment>
-            )}
-          {authUser != null &&
-            googleUserData == null &&
-            !authUser.emailVerified && (
+          {googleUserData == null && authUser.emailVerified && (
+            <React.Fragment>
               <Row className="justify-content-center">
-                <p>
-                  Googleアカウントとの連携には
-                  <Link href="/email-verify">
-                    <a>メールアドレスの確認</a>
-                  </Link>
-                  が必要です
-                </p>
+                <p>Googleアカウントとの連携にはログインが必要です</p>
               </Row>
-            )}
-          {authUser != null &&
-            googleUserData != null &&
-            passwordUserData != null && (
-              <React.Fragment>
-                <Row className="justify-content-center">
-                  <p>Googleアカウントと連携しています</p>
-                </Row>
-                <Row className="justify-content-center">
-                  <Button
-                    variant="main"
-                    type="button"
-                    onClick={() => {
-                      authUser
-                        .unlink("google.com")
-                        .then(() => {
-                          Router.reload();
-                        })
-                        .catch(() => {
-                          console.error("Unexpected Error");
-                        });
-                    }}
-                  >
-                    Googleアカウントとの連携を解除
-                  </Button>
-                </Row>
-              </React.Fragment>
-            )}
-          {authUser != null &&
-            googleUserData != null &&
-            passwordUserData == null && (
               <Row className="justify-content-center">
-                <p>
-                  Googleアカウントとの連携を解除するには
-                  <a
-                    href="#"
-                    onClick={() => {
-                      window.history.replaceState(null, "", "/create-password");
-                      loginWithGoogle();
-                    }}
-                  >
-                    パスワードの設定
-                  </a>
-                  が必要です
-                </p>
+                <Button
+                  variant="accent"
+                  type="button"
+                  onClick={() => setOnLoginedAction("linkWithGoogle")}
+                >
+                  ログイン画面へ
+                </Button>
               </Row>
-            )}
+            </React.Fragment>
+          )}
+          {googleUserData == null && !authUser.emailVerified && (
+            <Row className="justify-content-center">
+              <p>
+                Googleアカウントとの連携には
+                <Link href="/email-verify">
+                  <a>メールアドレスの確認</a>
+                </Link>
+                が必要です
+              </p>
+            </Row>
+          )}
+          {googleUserData != null && passwordUserData != null && (
+            <React.Fragment>
+              <Row className="justify-content-center">
+                <p>Googleアカウントと連携しています</p>
+              </Row>
+              <Row className="justify-content-center">
+                <Button
+                  variant="main"
+                  type="button"
+                  onClick={() => {
+                    authUser
+                      .unlink("google.com")
+                      .then(() => {
+                        Router.reload();
+                      })
+                      .catch(() => {
+                        console.error("Unexpected Error");
+                      });
+                  }}
+                >
+                  Googleアカウントとの連携を解除
+                </Button>
+              </Row>
+            </React.Fragment>
+          )}
+          {googleUserData != null && passwordUserData == null && (
+            <Row className="justify-content-center">
+              <p>
+                Googleアカウントとの連携を解除するには
+                <a
+                  href="#"
+                  onClick={() => {
+                    window.history.replaceState(null, "", "/create-password");
+                    loginWithGoogle();
+                  }}
+                >
+                  パスワードの設定
+                </a>
+                が必要です
+              </p>
+            </Row>
+          )}
           <Row className="justify-content-center mt-3">
             <h2>メールアドレス</h2>
           </Row>
@@ -355,16 +337,12 @@ const ProfilePage = (): JSX.Element => {
           <Row className="justify-content-center">
             <Col md={6}>
               <Form.Control
-                value={
-                  authUser != null && authUser.email != null
-                    ? authUser.email
-                    : ""
-                }
+                value={authUser.email != null ? authUser.email : ""}
                 readOnly
               />
             </Col>
           </Row>
-          {authUser != null && !authUser.emailVerified && (
+          {!authUser.emailVerified && (
             <Row className="justify-content-center">
               <Form.Text>
                 メールアドレスが未確認です！

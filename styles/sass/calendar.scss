@@ -38,12 +38,16 @@
 // Set Saturday's text color to blue expect disable day
 // Set Sunday's text color to red expect disable day
 
-.react-calendar__tile:nth-child(7n-1):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+.react-calendar__tile:nth-child(7n-1):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth):not(:disabled) {
   color: #0000ff !important;
 }
 
-.react-calendar__tile:nth-child(7n):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth) {
+.react-calendar__tile:nth-child(7n):not(.calendar-free):not(.calendar-busy):not(.react-calendar__month-view__days__day--neighboringMonth):not(:disabled) {
   color: #ff0000 !important;
+}
+
+.react-calendar__tile:disabled:not(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: #1010104d !important;
 }
 
 .react-calendar__month-view__days__day--neighboringMonth {
@@ -61,32 +65,32 @@
 
 // Set free day's text color to accent color
 
-.calendar-free {
+.calendar-free:not(:disabled) {
   background-color: $accent-color !important;
   color: #ffffff !important;
 }
 
-.calendar-free:hover {
+.calendar-free:hover:not(:disabled) {
   background-color: $accent-dark-color !important;
 }
 
-.calendar-light-free {
+.calendar-light-free:not(:disabled) {
   background-color: $accent-light-color !important;
   color: #ffffff !important;
 }
 
-.calendar-light-free:hover {
+.calendar-light-free:hover:not(:disabled) {
   background-color: $accent-dark-color !important;
 }
 
 // Set busy day's text color to may color
 
-.calendar-busy {
+.calendar-busy:not(:disabled) {
   background-color: $main-color !important;
   color: #ffffff !important;
 }
 
-.calendar-busy:hover {
+.calendar-busy:hover:not(:disabled) {
   background-color: $main-dark-color !important;
 }
 

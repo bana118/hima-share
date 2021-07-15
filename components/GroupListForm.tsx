@@ -3,11 +3,11 @@ import { UserWithId } from "interfaces/User";
 import { Table } from "react-bootstrap";
 import { GroupListItem } from "./GrupListItem";
 
-interface GroupListFormProps {
+type GroupListFormProps = {
   user: UserWithId;
   groups: GroupWithId[];
   setGroups: (groups: GroupWithId[]) => void;
-}
+};
 
 export const GroupListForm = ({
   user,

@@ -1,33 +1,30 @@
-import { AuthContext } from "context/AuthContext";
 import { deleteUser, UserWithId } from "interfaces/User";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { ConfirmModal } from "./ConfirmModal";
+import firebase from "firebase/app";
 
-interface DeleteUserButtonProps {
+type DeleteUserButtonProps = {
+  authUser: firebase.User;
   user: UserWithId;
   onDeleted?: () => void;
-}
+};
 
 export const DeleteUserButton = ({
+  authUser,
   user,
   onDeleted,
 }: DeleteUserButtonProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const onClickDeleteButton = async () => {
-    if (authUser == null) {
-      console.error("Unexpected Error");
-    } else {
-      try {
-        await authUser.delete();
-        await deleteUser(user);
-        if (onDeleted != null) {
-          onDeleted();
-        }
-      } catch {
-        console.error("Unexpected Error");
+    try {
+      await authUser.delete();
+      await deleteUser(user);
+      if (onDeleted != null) {
+        onDeleted();
       }
+    } catch {
+      console.error("Unexpected Error");
     }
   };
   return (

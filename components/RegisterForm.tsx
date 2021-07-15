@@ -6,17 +6,17 @@ import { auth } from "../utils/firebase";
 import { storeUser, User } from "../interfaces/User";
 import firebase from "firebase/app";
 
-interface RegisterFormProps {
+type RegisterFormProps = {
   onRegistered?: () => void;
-}
+};
 
-interface InputsType {
+type InputsType = {
   email: string;
   name: string;
   description: string;
   password: string;
   confirmPassword: string;
-}
+};
 
 const schema = yup.object().shape({
   email: yup
