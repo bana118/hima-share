@@ -7,7 +7,8 @@ const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
 export const defaultSeoConfig: NextSeoProps = {
   defaultTitle: "Hima Share",
   titleTemplate: "%s | Hima Share",
-  description: "あなたの暇な日をシェアしよう",
+  description:
+    "あなたの暇な日をシェアしよう。簡単操作で暇な日、忙しい日をグループ内で共有することができます。",
   canonical: url,
   openGraph: {
     type: "website",

@@ -80,7 +80,7 @@ const IndexPage = (): JSX.Element => {
   return (
     <Layout>
       <React.Fragment>
-        <NextSeo title="ユーザーカレンダー" />
+        <NextSeo title={`${userAndGroups.data.user.name}のカレンダー`} />
         <Row className="justify-content-center">
           <h1>{userAndGroups.data.user.name}</h1>
         </Row>

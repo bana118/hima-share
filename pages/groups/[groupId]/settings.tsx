@@ -36,51 +36,47 @@ const GroupSettingsPage = (): JSX.Element => {
 
   return (
     <Layout>
-      {group != null && (
-        <React.Fragment>
-          <NextSeo title="グループの設定" />
-          <Row className="justify-content-center">
-            <Link href={`/groups/${group.data.id}`}>
-              <a>戻る</a>
-            </Link>
-          </Row>
-          <Row className="justify-content-center">
-            <h2>グループの設定</h2>
-          </Row>
-          <Row className="justify-content-center">
-            <Col md={6}>
-              <UpdateGroupForm
-                group={group.data}
-                defaultValues={{
-                  name: group.data.name,
-                  description: group.data.description,
-                }}
-              />
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <h2>グループへの招待</h2>
-          </Row>
-          <Row className="justify-content-center">
-            {group.data.invitationId && (
-              <Link
-                href="/invitations/[invitationId]"
-                as={`/invitations/${group.data.invitationId}`}
-              >
-                <a>招待リンク確認</a>
-              </Link>
-            )}
-            {!group.data.invitationId && (
-              <Link
-                href="/groups/[groupId]/create-invitation"
-                as={`/groups/${group.data.id}/create-invitation`}
-              >
-                <a>招待リンク作成</a>
-              </Link>
-            )}
-          </Row>
-        </React.Fragment>
-      )}
+      <NextSeo title={`${group.data.name}の設定`} />
+      <Row className="justify-content-center">
+        <Link href={`/groups/${group.data.id}`}>
+          <a>戻る</a>
+        </Link>
+      </Row>
+      <Row className="justify-content-center">
+        <h2>グループの設定</h2>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <UpdateGroupForm
+            group={group.data}
+            defaultValues={{
+              name: group.data.name,
+              description: group.data.description,
+            }}
+          />
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <h2>グループへの招待</h2>
+      </Row>
+      <Row className="justify-content-center">
+        {group.data.invitationId && (
+          <Link
+            href="/invitations/[invitationId]"
+            as={`/invitations/${group.data.invitationId}`}
+          >
+            <a>招待リンク確認</a>
+          </Link>
+        )}
+        {!group.data.invitationId && (
+          <Link
+            href="/groups/[groupId]/create-invitation"
+            as={`/groups/${group.data.id}/create-invitation`}
+          >
+            <a>招待リンク作成</a>
+          </Link>
+        )}
+      </Row>
     </Layout>
   );
 };

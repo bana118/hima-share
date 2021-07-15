@@ -88,7 +88,7 @@ const GroupCalendarPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <NextSeo title={`${group.name}のカレンダー`} />
+      <NextSeo title={`${group.name}のグループカレンダー`} />
       <Row className="justify-content-center">
         <h2>{group.name}</h2>
       </Row>

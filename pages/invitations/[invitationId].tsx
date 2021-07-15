@@ -79,7 +79,7 @@ const InvitationPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <NextSeo title="招待URL" />
+      <NextSeo title={`${invitationAndGroup.data.group.name}への招待URL`} />
       <Row className="justify-content-center">
         <p>招待URLは以下です(クリックでコピー)</p>
       </Row>

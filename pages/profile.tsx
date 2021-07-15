@@ -225,7 +225,7 @@ const ProfilePage = (): JSX.Element => {
         )}
       {onLoginedAction == null && (
         <React.Fragment>
-          <NextSeo title="ユーザー情報" />
+          <NextSeo title={`${userAndGroups.data.user.name}のプロフィール`} />
           <Row className="justify-content-center">
             <Link href="/">
               <a>戻る</a>
