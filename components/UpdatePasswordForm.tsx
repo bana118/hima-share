@@ -2,14 +2,8 @@ import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useContext } from "react";
-import { AuthContext } from "context/AuthContext";
 import { getProviderUserData } from "utils/auth-provider";
 import firebase from "firebase/app";
-
-interface UpdatePasswordFormProps {
-  onUpdated?: () => void;
-}
 
 interface InputsType {
   password: string;
@@ -31,10 +25,15 @@ const schema = yup.object().shape({
     .required("パスワードは必須です"),
 });
 
+type UpdatePasswordFormProps = {
+  authUser: firebase.User;
+  onUpdated?: () => void;
+};
+
 export const UpdatePasswordForm = ({
+  authUser,
   onUpdated,
 }: UpdatePasswordFormProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -48,10 +47,6 @@ export const UpdatePasswordForm = ({
     });
   };
   const updatePassword = async (data: InputsType) => {
-    if (authUser == null) {
-      setUnexpectedError();
-      return;
-    }
     const passwordUserData = getProviderUserData(authUser, "password");
     if (passwordUserData == null) {
       // パスワードの追加

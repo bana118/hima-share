@@ -131,6 +131,7 @@ const ProfilePage = (): JSX.Element => {
           <MyHead title="パスワード更新" />
           <Row className="justify-content-center">
             <UpdatePasswordForm
+              authUser={authUser}
               onUpdated={() => {
                 setReadyUpdatePassword(false);
                 setUpdated("updatePassword");
