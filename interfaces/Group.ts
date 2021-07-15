@@ -96,6 +96,7 @@ export const loadGroupAndGroupDateStatusList = async (
 } | null> => {
   const group = await loadGroup(groupId);
   if (group == null || group.members == null) return null;
+
   const userIds = Object.keys(group.members);
   const nullableGroupDateStatusList = await Promise.all(
     userIds.map(async (userId) => {
