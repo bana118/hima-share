@@ -3,8 +3,7 @@ import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
-import React, { useContext, useRef, useState } from "react";
-import { AuthContext } from "context/AuthContext";
+import { useRef, useState } from "react";
 
 interface InputsType {
   email: string;
@@ -19,7 +18,6 @@ const schema = yup.object().shape({
 });
 
 export const SendResetPasswordMailForm = (): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
   const buttonRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const {
@@ -36,15 +34,11 @@ export const SendResetPasswordMailForm = (): JSX.Element => {
   };
 
   const sendResetMail = async (data: InputsType) => {
-    if (authUser != null) {
+    try {
+      await auth.sendPasswordResetEmail(data["email"]);
+      setShowTooltip(true);
+    } catch {
       setUnexpectedError();
-    } else {
-      try {
-        await auth.sendPasswordResetEmail(data["email"]);
-        setShowTooltip(true);
-      } catch {
-        setUnexpectedError();
-      }
     }
   };
   // TODO エラーメッセージがなぜかでない？
