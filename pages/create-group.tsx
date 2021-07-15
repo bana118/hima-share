@@ -7,6 +7,7 @@ import Router from "next/router";
 import { MyHead } from "components/MyHead";
 import { Row } from "react-bootstrap";
 import Link from "next/link";
+import { LoaingPage } from "components/LoadingPage";
 
 const CreateGroupPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
@@ -19,24 +20,26 @@ const CreateGroupPage = (): JSX.Element => {
     }
   }, [authUser]);
 
+  if (authUser == null || (authUser != null && !authUser.emailVerified)) {
+    return <LoaingPage />;
+  }
+
   return (
     <Layout>
-      {authUser && !(authUser != null && !authUser.emailVerified) && (
-        <React.Fragment>
-          <MyHead title="グループ作成" />
-          <Row className="justify-content-center">
-            <h1>グループ作成</h1>
-          </Row>
-          <Row className="justify-content-center">
-            <CreateGroupForm />
-          </Row>
-          <Row className="justify-content-center">
-            <Link href="/">
-              <a>戻る</a>
-            </Link>
-          </Row>
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <MyHead title="グループ作成" />
+        <Row className="justify-content-center">
+          <h1>グループ作成</h1>
+        </Row>
+        <Row className="justify-content-center">
+          <CreateGroupForm authUser={authUser} />
+        </Row>
+        <Row className="justify-content-center">
+          <Link href="/">
+            <a>戻る</a>
+          </Link>
+        </Row>
+      </React.Fragment>
     </Layout>
   );
 };
