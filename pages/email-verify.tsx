@@ -1,6 +1,6 @@
 import { Layout } from "components/Layout";
 import { LoaingPage } from "components/LoadingPage";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { AuthContext } from "context/AuthContext";
 import Link from "next/link";
 import Router from "next/router";
@@ -40,7 +40,7 @@ const EmailVerifyPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="メールアドレス確認" />
+      <NextSeo title="メールアドレス確認" />
       <Row className="justify-content-center">
         <h2>{authUser.email}に確認メールを送信しました</h2>
       </Row>

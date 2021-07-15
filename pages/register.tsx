@@ -1,4 +1,4 @@
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import Router from "next/router";
 import { useEffect, useContext } from "react";
@@ -24,7 +24,7 @@ const RegisterPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="アカウント作成" />
+      <NextSeo title="アカウント作成" />
       <Row className="justify-content-center">
         <h1>アカウント作成</h1>
       </Row>

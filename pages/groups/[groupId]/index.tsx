@@ -11,7 +11,7 @@ import { UserDateStatusList } from "../../../interfaces/DateStatus";
 import { GroupCalendar } from "../../../components/GroupCalendar";
 import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
 import Link from "next/link";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useAsync } from "hooks/useAsync";
 import { isQueryString } from "utils/type-guard";
@@ -88,7 +88,7 @@ const GroupCalendarPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title={`${group.name}のカレンダー`} />
+      <NextSeo title={`${group.name}のグループカレンダー`} />
       <Row className="justify-content-center">
         <h2>{group.name}</h2>
       </Row>

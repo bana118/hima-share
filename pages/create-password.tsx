@@ -1,5 +1,5 @@
 import { Layout } from "components/Layout";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { UpdatePasswordForm } from "components/UpdatePasswordForm";
 import { AuthContext } from "context/AuthContext";
 import Link from "next/link";
@@ -38,7 +38,7 @@ const CreatePasswordPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="パスワード作成" />
+      <NextSeo title="パスワード作成" />
       <Row className="justify-content-center">
         <UpdatePasswordForm
           authUser={authUser}

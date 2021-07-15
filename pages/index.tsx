@@ -2,13 +2,12 @@ import { AboutPage } from "components/AboutPage";
 import { ErrorPage } from "components/ErrorPage";
 import { GroupList } from "components/GroupList";
 import { LoaingPage } from "components/LoadingPage";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { WeekDayButtons } from "components/WeekDayButtons";
 import { useAsync } from "hooks/useAsync";
 import { loadUserAndGroups } from "interfaces/User";
 import Link from "next/link";
 import Router from "next/router";
-import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
 import { isUidString } from "utils/type-guard";
@@ -79,42 +78,40 @@ const IndexPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <React.Fragment>
-        <MyHead title="ユーザーカレンダー" />
-        <Row className="justify-content-center">
-          <h1>{userAndGroups.data.user.name}</h1>
-        </Row>
-        <Row className="justify-content-center">
-          <p className="text-muted">日付，曜日ボタンをクリックして</p>
-          <p className="text-accent">「暇」</p>
-          <p className="text-main">「忙しい」</p>
-          <p className="text-muted">「未定」</p>
-          <p className="text-muted">を切り替え</p>
-        </Row>
-        <Row className="justify-content-center">
-          <WeekDayButtons
-            dateStatusList={dateStatusList}
-            setDateStatusList={(list) => setDateStatusList(list)}
-          />
-        </Row>
-        <Row className="justify-content-center">
-          <UserCalendar
-            dateStatusList={dateStatusList}
-            setDateStatusList={(list) => setDateStatusList(list)}
-          />
-        </Row>
-        <Row className="justify-content-center">
-          <Link href="/create-group">
-            <a>グループ作成</a>
-          </Link>
-        </Row>
-        <Row className="justify-content-center">
-          <h2>グループ一覧</h2>
-        </Row>
-        <Row className="justify-content-center">
-          <GroupList groups={userAndGroups.data.groups} />
-        </Row>
-      </React.Fragment>
+      <NextSeo title={`${userAndGroups.data.user.name}のカレンダー`} />
+      <Row className="justify-content-center">
+        <h1>{userAndGroups.data.user.name}</h1>
+      </Row>
+      <Row className="justify-content-center">
+        <p className="text-muted">日付，曜日ボタンをクリックして</p>
+        <p className="text-accent">「暇」</p>
+        <p className="text-main">「忙しい」</p>
+        <p className="text-muted">「未定」</p>
+        <p className="text-muted">を切り替え</p>
+      </Row>
+      <Row className="justify-content-center">
+        <WeekDayButtons
+          dateStatusList={dateStatusList}
+          setDateStatusList={(list) => setDateStatusList(list)}
+        />
+      </Row>
+      <Row className="justify-content-center">
+        <UserCalendar
+          dateStatusList={dateStatusList}
+          setDateStatusList={(list) => setDateStatusList(list)}
+        />
+      </Row>
+      <Row className="justify-content-center">
+        <Link href="/create-group">
+          <a>グループ作成</a>
+        </Link>
+      </Row>
+      <Row className="justify-content-center">
+        <h2>グループ一覧</h2>
+      </Row>
+      <Row className="justify-content-center">
+        <GroupList groups={userAndGroups.data.groups} />
+      </Row>
     </Layout>
   );
 };

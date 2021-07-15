@@ -1,4 +1,4 @@
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { SendResetPasswordMailForm } from "components/SendResetPasswordMailForm";
 import Link from "next/link";
 import Router from "next/router";
@@ -28,7 +28,7 @@ const LoginPage = (): JSX.Element => {
     <Layout>
       {showResetPasswordForm && (
         <React.Fragment>
-          <MyHead title="パスワードをリセット" />
+          <NextSeo title="パスワードをリセット" />
           <Row className="justify-content-center">
             <h1>パスワードの再設定</h1>
           </Row>
@@ -49,7 +49,7 @@ const LoginPage = (): JSX.Element => {
       )}
       {!showResetPasswordForm && (
         <React.Fragment>
-          <MyHead title="ログイン" />
+          <NextSeo title="ログイン" />
           <Row className="justify-content-center">
             <h1>ログイン</h1>
           </Row>

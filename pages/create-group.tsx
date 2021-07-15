@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
 import { CreateGroupForm } from "../components/CreateGroupForm";
 import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import Router from "next/router";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { Row } from "react-bootstrap";
 import Link from "next/link";
 import { LoaingPage } from "components/LoadingPage";
@@ -26,20 +26,18 @@ const CreateGroupPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <React.Fragment>
-        <MyHead title="グループ作成" />
-        <Row className="justify-content-center">
-          <h1>グループ作成</h1>
-        </Row>
-        <Row className="justify-content-center">
-          <CreateGroupForm authUser={authUser} />
-        </Row>
-        <Row className="justify-content-center">
-          <Link href="/">
-            <a>戻る</a>
-          </Link>
-        </Row>
-      </React.Fragment>
+      <NextSeo title="グループ作成" />
+      <Row className="justify-content-center">
+        <h1>グループ作成</h1>
+      </Row>
+      <Row className="justify-content-center">
+        <CreateGroupForm authUser={authUser} />
+      </Row>
+      <Row className="justify-content-center">
+        <Link href="/">
+          <a>戻る</a>
+        </Link>
+      </Row>
     </Layout>
   );
 };

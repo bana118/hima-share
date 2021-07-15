@@ -1,5 +1,5 @@
 import { Layout } from "./Layout";
-import { MyHead } from "./MyHead";
+import { NextSeo } from "next-seo";
 import { Row } from "react-bootstrap";
 
 type ErrorPageProps = {
@@ -11,7 +11,7 @@ export const ErrorPage = ({
 }: ErrorPageProps): JSX.Element => {
   return (
     <Layout>
-      <MyHead title="エラー" />
+      <NextSeo title="エラー" />
       <Row className="justify-content-center mt-3">
         <p>
           <span style={{ color: "red" }}>Error:</span> {errorMessage}

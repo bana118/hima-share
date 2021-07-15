@@ -5,7 +5,7 @@ import { CreateInvitationForm } from "../../../components/CreateInvitationForm";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { Row } from "react-bootstrap";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import Router, { useRouter } from "next/router";
 import React from "react";
 import Link from "next/link";
@@ -41,7 +41,7 @@ const CreateInvitationPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="招待を作成" />
+      <NextSeo title="招待を作成" />
       <Row className="justify-content-center">
         <CreateInvitationForm authUser={authUser} group={group.data} />
       </Row>

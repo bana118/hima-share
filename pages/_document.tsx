@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
 
   render(): JSX.Element {
     return (
-      <Html>
+      <Html lang="ja">
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link

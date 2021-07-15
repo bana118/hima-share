@@ -10,14 +10,13 @@ import "../styles/sass/about.scss";
 import "react-calendar/dist/Calendar.css";
 import Head from "next/head";
 import { storeUserfromLoginResult } from "utils/auth-provider";
+import { DefaultSeo } from "next-seo";
+import { defaultSeoConfig } from "../next-seo.config";
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const [authUser, setAuthUser] = useState<firebase.User | null | undefined>(
     undefined
   );
-  const url = typeof window !== "undefined" ? document.location.href : "";
-  const origin = typeof window !== "undefined" ? document.location.origin : "";
-  const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
 
   useEffect(() => {
     const getLoginResult = async () => {
@@ -40,18 +39,8 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={url} />
-        <meta property="og:locale" content="ja_JP" />
-        <meta property="og:title" content="Hima Share" />
-        <meta
-          property="og:description"
-          content="あなたの暇な日をシェアしよう"
-        />
-        <meta property="og:image" content={`${origin}/about1.png`} />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content={twiiterId} />
       </Head>
+      <DefaultSeo {...defaultSeoConfig} />
       <Component {...pageProps} />
     </AuthContext.Provider>
   );

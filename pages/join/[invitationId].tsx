@@ -5,7 +5,7 @@ import { JoinGroupForm } from "../../components/JoinGroupForm";
 import { Layout } from "components/Layout";
 import { AuthContext } from "context/AuthContext";
 import Router, { useRouter } from "next/router";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { useAsync } from "../../hooks/useAsync";
 import { LoaingPage } from "components/LoadingPage";
 import { isQueryString, isUidString } from "utils/type-guard";
@@ -45,7 +45,12 @@ const JoinGroupPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title={`${invitationAndGroup.data.group.name}に参加`} />
+      <NextSeo
+        title={`${invitationAndGroup.data.group.name}に参加`}
+        openGraph={{
+          description: `${invitationAndGroup.data.group.name}に参加して予定を共有`,
+        }}
+      />
       <JoinGroupForm
         authUser={authUser}
         user={user.data}
