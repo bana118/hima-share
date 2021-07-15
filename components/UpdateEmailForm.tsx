@@ -4,12 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import firebase from "firebase/app";
-import { useContext } from "react";
-import { AuthContext } from "context/AuthContext";
-
-interface UpdateEmailFormProps {
-  onUpdated?: (newEmail: string) => void;
-}
 
 interface InputsType {
   email: string;
@@ -50,10 +44,15 @@ const schema = yup.object().shape({
     ),
 });
 
+type UpdateEmailFormProps = {
+  authUser: firebase.User;
+  onUpdated?: (newEmail: string) => void;
+};
+
 export const UpdateEmailForm = ({
+  authUser,
   onUpdated,
 }: UpdateEmailFormProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -68,20 +67,16 @@ export const UpdateEmailForm = ({
   };
 
   const updateEmail = async (data: InputsType) => {
-    if (authUser == null) {
-      setUnexpectedError();
-    } else {
-      try {
-        await authUser.updateEmail(data["email"]);
-        await authUser.sendEmailVerification({
-          url: `${document.location.origin}`,
-        });
-        if (onUpdated != null) {
-          onUpdated(data["email"]);
-        }
-      } catch {
-        setUnexpectedError();
+    try {
+      await authUser.updateEmail(data["email"]);
+      await authUser.sendEmailVerification({
+        url: `${document.location.origin}`,
+      });
+      if (onUpdated != null) {
+        onUpdated(data["email"]);
       }
+    } catch {
+      setUnexpectedError();
     }
   };
   // TODO エラーメッセージがなぜかでない？

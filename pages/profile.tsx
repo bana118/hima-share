@@ -117,6 +117,7 @@ const ProfilePage = (): JSX.Element => {
           <MyHead title="メールアドレス更新" />
           <Row className="justify-content-center">
             <UpdateEmailForm
+              authUser={authUser}
               onUpdated={() => {
                 setReadyUpdateEmail(false);
                 setUpdated("updateEmail");
