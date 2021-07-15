@@ -1,12 +1,12 @@
 import { Form, Button } from "react-bootstrap";
 import Router from "next/router";
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { GroupWithId } from "../interfaces/Group";
 import { Invitation, storeInvitation } from "../interfaces/Invitation";
 import { useForm } from "react-hook-form";
+import firebase from "firebase/app";
 
 type Props = {
+  authUser: firebase.User;
   group: GroupWithId;
 };
 
@@ -15,8 +15,10 @@ type InputsType = {
   empty: undefined;
 };
 
-export const CreateInvitationForm = ({ group }: Props): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
+export const CreateInvitationForm = ({
+  authUser,
+  group,
+}: Props): JSX.Element => {
   const {
     handleSubmit,
     formState: { errors },

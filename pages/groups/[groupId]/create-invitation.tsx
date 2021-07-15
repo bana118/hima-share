@@ -43,7 +43,7 @@ const CreateInvitationPage = (): JSX.Element => {
     <Layout>
       <MyHead title="招待を作成" />
       <Row className="justify-content-center">
-        <CreateInvitationForm group={group.data} />
+        <CreateInvitationForm authUser={authUser} group={group.data} />
       </Row>
       <Row className="justify-content-center">
         <Link href={`/groups/${group.data.id}`}>
