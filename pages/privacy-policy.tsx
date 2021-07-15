@@ -4,6 +4,7 @@ import Obfuscate from "react-obfuscate";
 
 const PrivacyPolicyPage = (): JSX.Element => {
   const url = typeof window !== "undefined" ? document.location.origin : "";
+
   return (
     <Layout>
       <MyHead title="プライバシーポリシー" />
@@ -40,4 +41,5 @@ const PrivacyPolicyPage = (): JSX.Element => {
     </Layout>
   );
 };
+
 export default PrivacyPolicyPage;

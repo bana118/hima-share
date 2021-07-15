@@ -8,8 +8,10 @@ import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
 
 const EmailVerifyPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   const buttonRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
+
   useEffect(() => {
     if (authUser === null) {
       Router.push("/login");
@@ -17,6 +19,7 @@ const EmailVerifyPage = (): JSX.Element => {
       Router.push("/");
     }
   }, [authUser]);
+
   const sendVerifyMail = async () => {
     if (authUser != null) {
       try {
@@ -29,6 +32,7 @@ const EmailVerifyPage = (): JSX.Element => {
       }
     }
   };
+
   return (
     <Layout>
       {authUser != null && (
@@ -72,4 +76,5 @@ const EmailVerifyPage = (): JSX.Element => {
     </Layout>
   );
 };
+
 export default EmailVerifyPage;

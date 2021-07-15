@@ -10,6 +10,7 @@ import Link from "next/link";
 
 const CreateGroupPage = (): JSX.Element => {
   const { authUser } = useContext(AuthContext);
+
   useEffect(() => {
     if (authUser === null) {
       Router.push("/login");
@@ -17,6 +18,7 @@ const CreateGroupPage = (): JSX.Element => {
       Router.push("/email-verify");
     }
   }, [authUser]);
+
   return (
     <Layout>
       {authUser && !(authUser != null && !authUser.emailVerified) && (

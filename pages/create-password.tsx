@@ -45,4 +45,5 @@ const CreatePasswordPage = (): JSX.Element => {
     </Layout>
   );
 };
+
 export default CreatePasswordPage;
