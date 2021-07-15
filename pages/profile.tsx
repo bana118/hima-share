@@ -237,6 +237,7 @@ const ProfilePage = (): JSX.Element => {
           <Row className="justify-content-center">
             <Col md={6}>
               <UpdateUserForm
+                authUser={authUser}
                 user={userAndGroups.data.user}
                 defaultValues={{
                   name: userAndGroups.data.user.name,

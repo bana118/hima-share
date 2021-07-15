@@ -3,13 +3,8 @@ import { Form, Button, Overlay, Tooltip } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { updateUser, UserWithId } from "interfaces/User";
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "context/AuthContext";
-
-interface UpdateUserFormProps {
-  user: UserWithId;
-  defaultValues: InputsType;
-}
+import { useRef, useState } from "react";
+import firebase from "firebase/app";
 
 interface InputsType {
   name: string;
@@ -21,12 +16,17 @@ const schema = yup.object().shape({
   description: yup.string().max(100, "プロフィールは100文字までです"),
 });
 
+type UpdateUserFormProps = {
+  authUser: firebase.User;
+  user: UserWithId;
+  defaultValues: InputsType;
+};
+
 export const UpdateUserForm = ({
+  authUser,
   user,
   defaultValues,
 }: UpdateUserFormProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
-
   const {
     register,
     handleSubmit,
@@ -47,23 +47,20 @@ export const UpdateUserForm = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   const onSubmit = async (data: InputsType) => {
-    if (authUser == null) {
-      setUnexpectedError();
-    } else {
-      Promise.all([
-        authUser.updateProfile({
-          displayName: data["name"],
-        }),
-        updateUser(user, data["name"], data["description"]),
-      ])
-        .then(() => {
-          setShowTooltip(true);
-        })
-        .catch(() => {
-          setUnexpectedError();
-        });
-    }
+    Promise.all([
+      authUser.updateProfile({
+        displayName: data["name"],
+      }),
+      updateUser(user, data["name"], data["description"]),
+    ])
+      .then(() => {
+        setShowTooltip(true);
+      })
+      .catch(() => {
+        setUnexpectedError();
+      });
   };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
