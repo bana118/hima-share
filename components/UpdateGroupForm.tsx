@@ -10,10 +10,10 @@ type UpdateGroupFormProps = {
   defaultValues: InputsType;
 };
 
-interface InputsType {
+type InputsType = {
   name: string;
   description: string;
-}
+};
 
 const schema = yup.object().shape({
   name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),

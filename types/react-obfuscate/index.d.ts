@@ -1,11 +1,11 @@
-interface headersType {
+type headersType = {
   cc: string;
   bcc: string;
   subject: string;
   body: string;
-}
+};
 
-interface ObfuscateProps {
+type ObfuscateProps = {
   email?: string | null;
   headers?: headersType | null;
   tel?: string | null;
@@ -17,7 +17,7 @@ interface ObfuscateProps {
   obfuscateChildren?: boolean;
   element?: string;
   onClick?: function;
-}
+};
 
 export default function Obfuscate({
   email = null,

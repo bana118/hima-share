@@ -1,14 +1,14 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-interface ConfirmModalProps {
+type ConfirmModalProps = {
   show: boolean;
   setShow: (show: boolean) => void;
   headerText: string;
   bodyText: string;
   confirmButtonText: string;
   onClickConfirmButton: () => void;
-}
+};
 
 export const ConfirmModal = ({
   show,

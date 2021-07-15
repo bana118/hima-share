@@ -12,15 +12,15 @@ import Link from "next/link";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 import firebase from "firebase/app";
 
-interface JoinGroupFormProps {
+type JoinGroupFormProps = {
   authUser: firebase.User | null;
   user: UserWithId | null | undefined;
   group: GroupWithId;
-}
+};
 
-interface InputsType {
+type InputsType = {
   chatId: string;
-}
+};
 
 const schema = yup.object().shape({
   chatId: yup.string().max(20, "チャットIDは20文字までです"),

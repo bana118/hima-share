@@ -1,8 +1,8 @@
 import Head from "next/head";
 
-interface MyHeadProps {
+type MyHeadProps = {
   title?: string;
-}
+};
 
 export const MyHead = ({
   title = "Default Title",

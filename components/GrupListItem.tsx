@@ -6,16 +6,16 @@ import { Button, Col, Form, Overlay, Tooltip } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { ConfirmModal } from "./ConfirmModal";
 
-interface GroupListItemProps {
+type GroupListItemProps = {
   group: GroupWithId;
   user: UserWithId;
   groups: GroupWithId[];
   setGroups: (groups: GroupWithId[]) => void;
-}
+};
 
-interface InputsType {
+type InputsType = {
   chatId: string;
-}
+};
 
 export const GroupListItem = ({
   group,

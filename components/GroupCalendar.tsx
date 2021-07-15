@@ -7,10 +7,10 @@ import {
 } from "../interfaces/DateStatus";
 import { UserInfoOfDay } from "./UserInfoOfDay";
 
-interface GroupCalendarProps {
+type GroupCalendarProps = {
   groupDateStatusList: UserDateStatusList[];
   group: GroupWithId;
-}
+};
 
 export const GroupCalendar = ({
   groupDateStatusList,

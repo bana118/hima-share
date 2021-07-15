@@ -5,9 +5,9 @@ import * as yup from "yup";
 import { auth } from "../utils/firebase";
 import { useRef, useState } from "react";
 
-interface InputsType {
+type InputsType = {
   email: string;
-}
+};
 
 const schema = yup.object().shape({
   email: yup

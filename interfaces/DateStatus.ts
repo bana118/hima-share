@@ -27,20 +27,20 @@ export type DateStatusList = {
   [dateTimeOrWeekDay in DateTimeOrWeekDay]?: Status | undefined;
 };
 
-export interface UserDateStatusList {
+export type UserDateStatusList = {
   user: UserWithId;
   dateStatusList: DateStatusList;
-}
+};
 
-export interface UsersStatus {
+export type UsersStatus = {
   [uid: string]: Status | undefined;
-}
+};
 
-export interface StatusInfo {
+export type StatusInfo = {
   free: number;
   busy: number;
   usersStatus: UsersStatus;
-}
+};
 
 export const storeDateStatusList = async (
   dateStatusList: DateStatusList,

@@ -6,11 +6,11 @@ import Router from "next/router";
 import { Group, storeGroup } from "../interfaces/Group";
 import firebase from "firebase/app";
 
-interface InputsType {
+type InputsType = {
   name: string;
   description: string;
   chatId: string;
-}
+};
 
 const schema = yup.object().shape({
   name: yup.string().max(20, "名前は20文字までです").required("名前は必須です"),

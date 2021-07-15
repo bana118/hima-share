@@ -7,13 +7,13 @@ import React from "react";
 import { Button, Card, Table } from "react-bootstrap";
 import { EventMessage } from "./EventMessage";
 
-interface UserInfoOfDayProps {
+type UserInfoOfDayProps = {
   date: Date | null;
   groupId: string;
   invitationId?: string;
   groupDateStatusList: UserDateStatusList[];
   close: () => void;
-}
+};
 
 export const UserInfoOfDay = ({
   date,

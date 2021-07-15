@@ -4,11 +4,11 @@ import { Button } from "react-bootstrap";
 import { ConfirmModal } from "./ConfirmModal";
 import firebase from "firebase/app";
 
-interface DeleteUserButtonProps {
+type DeleteUserButtonProps = {
   authUser: firebase.User;
   user: UserWithId;
   onDeleted?: () => void;
-}
+};
 
 export const DeleteUserButton = ({
   authUser,

@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import { Button, Form, Overlay, Tooltip } from "react-bootstrap";
 
-interface EventMessageProps {
+type EventMessageProps = {
   dateText: string;
   freeChatIds: string[];
   unEnteredChatIds: string[];
   invitationId?: string;
-}
+};
 
 export const EventMessage = ({
   dateText,

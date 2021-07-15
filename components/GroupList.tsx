@@ -2,9 +2,9 @@ import { GroupWithId } from "interfaces/Group";
 import Link from "next/link";
 import { ListGroup } from "react-bootstrap";
 
-interface GroupListProps {
+type GroupListProps = {
   groups: GroupWithId[];
-}
+};
 
 export const GroupList = ({ groups }: GroupListProps): JSX.Element => {
   const itemsComponent = groups.map((group) => (

@@ -7,9 +7,9 @@ import { Navbar, Nav, Container, Row, ListGroup } from "react-bootstrap";
 import Router from "next/router";
 import Image from "next/image";
 
-interface LayoutProps {
+type LayoutProps = {
   children?: ReactNode;
-}
+};
 
 export const Layout = ({ children }: LayoutProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);

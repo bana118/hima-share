@@ -5,10 +5,10 @@ import * as yup from "yup";
 import { getProviderUserData } from "utils/auth-provider";
 import firebase from "firebase/app";
 
-interface InputsType {
+type InputsType = {
   password: string;
   confirmPassword: string;
-}
+};
 
 const schema = yup.object().shape({
   password: yup
