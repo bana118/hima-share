@@ -20,7 +20,7 @@ const LoginPage = (): JSX.Element => {
     }
   }, [authUser]);
 
-  if (authUser === undefined || authUser != null) {
+  if (authUser !== null) {
     return <LoaingPage />;
   }
 
