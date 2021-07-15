@@ -16,7 +16,7 @@ export const defaultSeoConfig: NextSeoProps = {
     url: url,
     title: "Hima Share",
     description: "あなたの暇な日をシェアしよう",
-    images: [{ url: `${origin}/about1.png` }],
+    images: [{ url: `${origin}/calender_writing_color.png` }],
   },
   twitter: {
     handle: twiiterId,
