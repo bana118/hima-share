@@ -1,5 +1,5 @@
 import { Layout } from "components/Layout";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import Obfuscate from "react-obfuscate";
 
 const PrivacyPolicyPage = (): JSX.Element => {
@@ -7,7 +7,7 @@ const PrivacyPolicyPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="プライバシーポリシー" />
+      <NextSeo title="プライバシーポリシー" />
       <h1>プライバシーポリシー</h1>
       <p>
         「{url}

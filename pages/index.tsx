@@ -2,7 +2,7 @@ import { AboutPage } from "components/AboutPage";
 import { ErrorPage } from "components/ErrorPage";
 import { GroupList } from "components/GroupList";
 import { LoaingPage } from "components/LoadingPage";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { WeekDayButtons } from "components/WeekDayButtons";
 import { useAsync } from "hooks/useAsync";
 import { loadUserAndGroups } from "interfaces/User";
@@ -80,7 +80,7 @@ const IndexPage = (): JSX.Element => {
   return (
     <Layout>
       <React.Fragment>
-        <MyHead title="ユーザーカレンダー" />
+        <NextSeo title="ユーザーカレンダー" />
         <Row className="justify-content-center">
           <h1>{userAndGroups.data.user.name}</h1>
         </Row>

@@ -8,7 +8,7 @@ import React, { useContext, useRef, useState } from "react";
 import Router, { useRouter } from "next/router";
 import { AuthContext } from "../../context/AuthContext";
 import { Overlay, Row, Tooltip } from "react-bootstrap";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useAsync } from "hooks/useAsync";
 import { isQueryString } from "utils/type-guard";
@@ -79,7 +79,7 @@ const InvitationPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <MyHead title="招待URL" />
+      <NextSeo title="招待URL" />
       <Row className="justify-content-center">
         <p>招待URLは以下です(クリックでコピー)</p>
       </Row>

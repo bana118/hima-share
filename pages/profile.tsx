@@ -12,7 +12,7 @@ import { Layout } from "../components/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { GroupWithId } from "../interfaces/Group";
 import { loadUserAndGroups } from "../interfaces/User";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import firebase from "firebase/app";
 import {
   getProviderUserData,
@@ -88,7 +88,7 @@ const ProfilePage = (): JSX.Element => {
     <Layout>
       {updated && (
         <React.Fragment>
-          <MyHead title="更新完了" />
+          <NextSeo title="更新完了" />
           <Row className="justify-content-center">
             <h2>
               {updated == "updateEmail" && "メールアドレスを更新しました"}
@@ -114,7 +114,7 @@ const ProfilePage = (): JSX.Element => {
       )}
       {readyUpdateEmail && (
         <React.Fragment>
-          <MyHead title="メールアドレス更新" />
+          <NextSeo title="メールアドレス更新" />
           <Row className="justify-content-center">
             <UpdateEmailForm
               authUser={authUser}
@@ -128,7 +128,7 @@ const ProfilePage = (): JSX.Element => {
       )}
       {readyUpdatePassword && (
         <React.Fragment>
-          <MyHead title="パスワード更新" />
+          <NextSeo title="パスワード更新" />
           <Row className="justify-content-center">
             <UpdatePasswordForm
               authUser={authUser}
@@ -142,7 +142,7 @@ const ProfilePage = (): JSX.Element => {
       )}
       {readyDeleteUser && (
         <React.Fragment>
-          <MyHead title="ユーザー削除" />
+          <NextSeo title="ユーザー削除" />
           <Row className="justify-content-center">
             <h2>本当に{userAndGroups.data.user.name}を削除しますか？</h2>
           </Row>
@@ -174,7 +174,7 @@ const ProfilePage = (): JSX.Element => {
         !readyDeleteUser &&
         !updated && (
           <React.Fragment>
-            <MyHead title="ログイン" />
+            <NextSeo title="ログイン" />
             <Row className="justify-content-center">
               {passwordUserData != null && (
                 <LoginForm
@@ -225,7 +225,7 @@ const ProfilePage = (): JSX.Element => {
         )}
       {onLoginedAction == null && (
         <React.Fragment>
-          <MyHead title="ユーザー情報" />
+          <NextSeo title="ユーザー情報" />
           <Row className="justify-content-center">
             <Link href="/">
               <a>戻る</a>

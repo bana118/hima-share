@@ -7,7 +7,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Link from "next/link";
 import { UpdateGroupForm } from "components/UpdateGroupForm";
-import { MyHead } from "components/MyHead";
+import { NextSeo } from "next-seo";
 import { LoaingPage } from "components/LoadingPage";
 import { useAsync } from "hooks/useAsync";
 import { isQueryString } from "utils/type-guard";
@@ -38,7 +38,7 @@ const GroupSettingsPage = (): JSX.Element => {
     <Layout>
       {group != null && (
         <React.Fragment>
-          <MyHead title="グループの設定" />
+          <NextSeo title="グループの設定" />
           <Row className="justify-content-center">
             <Link href={`/groups/${group.data.id}`}>
               <a>戻る</a>

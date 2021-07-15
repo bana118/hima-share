@@ -2,13 +2,13 @@ import React from "react";
 import Image from "next/image";
 import { Button, Col, Row } from "react-bootstrap";
 import Router from "next/router";
-import { MyHead } from "./MyHead";
+import { NextSeo } from "next-seo";
 import { Layout } from "./Layout";
 
 export const AboutPage = (): JSX.Element => {
   return (
     <Layout>
-      <MyHead title="Hima Share" />
+      <NextSeo />
       <Row className="hima-share-index mt-5">
         <Col md={6} className="text-center align-self-center">
           <h1>Hima Share(β)</h1>
