@@ -32,12 +32,9 @@ const InvitationPage = (): JSX.Element => {
     return <LoaingPage />;
   }
 
-  if (invitationAndGroup.data === null) {
-    return <ErrorPage errorMessage={"Invalid URL"} />;
-  }
-
   if (
     authUser === null ||
+    invitationAndGroup.data === null ||
     invitationAndGroup.data.group.members == null ||
     !Object.keys(invitationAndGroup.data.group.members).includes(authUser.uid)
   ) {
