@@ -101,7 +101,7 @@ export const JoinGroupForm = ({
           </Row>
           {loginOrRegister == "login" && (
             <Row className="justify-content-center">
-              <LoginForm />
+              <LoginForm authUser={authUser} />
             </Row>
           )}
           {loginOrRegister == "register" && (
