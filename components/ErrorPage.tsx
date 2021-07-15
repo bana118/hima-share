@@ -1,5 +1,6 @@
 import { Layout } from "./Layout";
 import { MyHead } from "./MyHead";
+import { Row } from "react-bootstrap";
 
 type ErrorPageProps = {
   errorMessage?: string;
@@ -11,9 +12,11 @@ export const ErrorPage = ({
   return (
     <Layout>
       <MyHead title="エラー" />
-      <p>
-        <span style={{ color: "red" }}>Error:</span> {errorMessage}
-      </p>
+      <Row className="justify-content-center mt-3">
+        <p>
+          <span style={{ color: "red" }}>Error:</span> {errorMessage}
+        </p>
+      </Row>
     </Layout>
   );
 };
