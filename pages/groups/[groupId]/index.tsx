@@ -14,7 +14,7 @@ import Link from "next/link";
 import { MyHead } from "components/MyHead";
 import { useRouter } from "next/router";
 import { useAsync } from "hooks/useAsync";
-import { isQueryString } from "utils/query";
+import { isQueryString } from "utils/type-guard";
 import { LoaingPage } from "components/LoadingPage";
 
 const GroupCalendarPage = (): JSX.Element => {

@@ -11,7 +11,7 @@ import { Overlay, Row, Tooltip } from "react-bootstrap";
 import { MyHead } from "components/MyHead";
 import Link from "next/link";
 import { useAsync } from "hooks/useAsync";
-import { isQueryString } from "utils/query";
+import { isQueryString } from "utils/type-guard";
 import { LoaingPage } from "components/LoadingPage";
 
 const InvitationPage = (): JSX.Element => {

@@ -10,7 +10,7 @@ import Router, { useRouter } from "next/router";
 import React from "react";
 import Link from "next/link";
 import { useAsync } from "hooks/useAsync";
-import { isQueryString } from "utils/query";
+import { isQueryString } from "utils/type-guard";
 import { LoaingPage } from "components/LoadingPage";
 
 const CreateInvitationPage = (): JSX.Element => {

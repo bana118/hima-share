@@ -8,7 +8,8 @@ import Router, { useRouter } from "next/router";
 import { MyHead } from "components/MyHead";
 import { useAsync } from "../../hooks/useAsync";
 import { LoaingPage } from "components/LoadingPage";
-import { isQueryString } from "utils/query";
+import { isQueryString, isUidString } from "utils/type-guard";
+import { loadUser } from "interfaces/User";
 
 const JoinGroupPage = (): JSX.Element => {
   const router = useRouter();
@@ -28,6 +29,8 @@ const JoinGroupPage = (): JSX.Element => {
     isQueryString
   );
 
+  const user = useAsync(loadUser, authUser?.uid, isUidString);
+
   if (
     invitationAndGroup.data === undefined ||
     authUser === undefined ||
@@ -43,7 +46,11 @@ const JoinGroupPage = (): JSX.Element => {
   return (
     <Layout>
       <MyHead title={`${invitationAndGroup.data.group.name}に参加`} />
-      <JoinGroupForm group={invitationAndGroup.data.group} />
+      <JoinGroupForm
+        authUser={authUser}
+        user={user.data}
+        group={invitationAndGroup.data.group}
+      />
     </Layout>
   );
 };

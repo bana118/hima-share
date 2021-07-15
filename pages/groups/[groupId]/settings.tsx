@@ -10,7 +10,7 @@ import { UpdateGroupForm } from "components/UpdateGroupForm";
 import { MyHead } from "components/MyHead";
 import { LoaingPage } from "components/LoadingPage";
 import { useAsync } from "hooks/useAsync";
-import { isQueryString } from "utils/query";
+import { isQueryString } from "utils/type-guard";
 import { useRouter } from "next/router";
 
 const GroupSettingsPage = (): JSX.Element => {
