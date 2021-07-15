@@ -1,52 +1,69 @@
-import { GetServerSideProps } from "next";
 import { Layout } from "../../../components/Layout";
 import { ErrorPage } from "../../../components/ErrorPage";
-import { GroupWithId, loadGroup } from "../../../interfaces/Group";
-import { useContext, useRef, useState } from "react";
+import {
+  GroupWithId,
+  loadGroupAndGroupDateStatusList,
+} from "../../../interfaces/Group";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import React from "react";
-import {
-  loadDateStatusList,
-  UserDateStatusList,
-} from "../../../interfaces/DateStatus";
+import { UserDateStatusList } from "../../../interfaces/DateStatus";
 import { GroupCalendar } from "../../../components/GroupCalendar";
-import { loadUser } from "../../../interfaces/User";
 import { Button, Overlay, Row, Tooltip } from "react-bootstrap";
 import Link from "next/link";
 import { MyHead } from "components/MyHead";
+import { useRouter } from "next/router";
+import { useAsync } from "hooks/useAsync";
+import { isQueryString } from "utils/query";
+import { LoaingPage } from "components/LoadingPage";
 
-type GroupCalendarPageProps = {
-  initGroup?: GroupWithId;
-  initGroupDateStatusList?: UserDateStatusList[];
-  errors?: string;
-};
+const GroupCalendarPage = (): JSX.Element => {
+  const router = useRouter();
+  const { groupId } = router.query;
 
-const GroupCalendarPage = ({
-  initGroup,
-  initGroupDateStatusList,
-  errors,
-}: GroupCalendarPageProps): JSX.Element => {
   const { authUser } = useContext(AuthContext);
-  const [group, setGroup] = useState(initGroup);
-  const [groupDateStatusList, setGroupDateStatusList] = useState(
-    initGroupDateStatusList
+
+  const initGroupAndUserDateStatusList = useAsync(
+    loadGroupAndGroupDateStatusList,
+    groupId,
+    isQueryString
   );
+
+  const [group, setGroup] = useState<GroupWithId | null | undefined>(undefined);
+  const [groupDateStatusList, setGroupDateStatusList] = useState<
+    UserDateStatusList[] | null | undefined
+  >(undefined);
   const reloadButtonRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  if (errors) {
-    return <ErrorPage errorMessage={errors} />;
-  }
-  if (!group || !groupDateStatusList) {
-    return <ErrorPage />;
-  }
-  if (authUser === undefined) {
-    return <React.Fragment />;
+  useEffect(() => {
+    if (initGroupAndUserDateStatusList.data === undefined) {
+      setGroup(undefined);
+      setGroupDateStatusList(undefined);
+    } else if (initGroupAndUserDateStatusList.data === null) {
+      setGroup(null);
+      setGroupDateStatusList(null);
+    } else {
+      setGroup(initGroupAndUserDateStatusList.data.group);
+      setGroupDateStatusList(
+        initGroupAndUserDateStatusList.data.groupDateStatusList
+      );
+    }
+  }, [initGroupAndUserDateStatusList.data]);
+
+  if (
+    authUser === undefined ||
+    group === undefined ||
+    groupDateStatusList === undefined
+  ) {
+    return <LoaingPage />;
   }
   if (
     authUser === null ||
+    group === null ||
     group.members == null ||
-    !Object.keys(group.members).includes(authUser.uid)
+    !Object.keys(group.members).includes(authUser.uid) ||
+    groupDateStatusList === null
   ) {
     return <ErrorPage errorMessage={"Invalid URL"} />;
   }
@@ -54,46 +71,15 @@ const GroupCalendarPage = ({
   // TODO Firebaseのon()メソッドを用いてリアルタイムでカレンダーが変わるようにする
   const reload = async () => {
     try {
-      const newGroup = await loadGroup(group.id);
-      if (newGroup != null && newGroup.members != null) {
-        const userIds = Object.keys(newGroup.members);
-        const newGroupDateStatusList = [];
-
-        const usersDateStatusList = await Promise.all(
-          userIds.map(async (userId) => {
-            return {
-              user: await loadUser(userId),
-              dateStatusList: await loadDateStatusList(userId),
-            };
-          })
-        );
-
-        for (let i = 0; i < userIds.length; i++) {
-          const user = usersDateStatusList[i].user;
-          const userDateStatusList = usersDateStatusList[i].dateStatusList;
-          if (user == null) {
-            return { props: { errors: "Unexpected Error" } };
-          }
-          newGroupDateStatusList.push({
-            user: user,
-            dateStatusList: userDateStatusList,
-          });
-        }
-        newGroupDateStatusList.sort((a, b) => {
-          const nameA = a.user.name.toUpperCase();
-          const nameB = b.user.name.toUpperCase();
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        });
-
-        setGroup(newGroup);
-        setGroupDateStatusList(newGroupDateStatusList);
+      const newGroupAndDateStatusList = await loadGroupAndGroupDateStatusList(
+        group.id
+      );
+      if (newGroupAndDateStatusList != null) {
+        setGroup(newGroupAndDateStatusList.group);
+        setGroupDateStatusList(newGroupAndDateStatusList.groupDateStatusList);
         setShowTooltip(true);
+      } else {
+        console.error("Unexpected Error");
       }
     } catch {
       console.error("Unexpected Error");
@@ -102,99 +88,53 @@ const GroupCalendarPage = ({
 
   return (
     <Layout>
-      {groupDateStatusList && group && (
-        <React.Fragment>
-          <MyHead title={`${group.name}のカレンダー`} />
-          <Row className="justify-content-center">
-            <h2>{group.name}</h2>
-          </Row>
-          <Row className="justify-content-center">
-            <Button
-              ref={reloadButtonRef}
-              className="m-2"
-              variant="accent"
-              type="button"
-              onClick={reload}
-              onBlur={() => {
-                setShowTooltip(false);
-              }}
-            >
-              更新
-            </Button>
-            <Overlay
-              target={reloadButtonRef.current}
-              show={showTooltip}
-              placement="right"
-            >
-              {(props) => (
-                <Tooltip id="update-group-tooltip" {...props}>
-                  更新しました！
-                </Tooltip>
-              )}
-            </Overlay>
-          </Row>
-          <Row className="justify-content-center">
-            <GroupCalendar
-              groupDateStatusList={groupDateStatusList}
-              group={group}
-            />
-          </Row>
-          <Row className="justify-content-center">
-            <Link href="/">
-              <a>自分のカレンダー</a>
-            </Link>
-          </Row>
-          <Row className="justify-content-center mt-3">
-            <Link href={`/groups/${group.id}/settings`}>
-              <a>グループの設定</a>
-            </Link>
-          </Row>
-        </React.Fragment>
-      )}
+      <MyHead title={`${group.name}のカレンダー`} />
+      <Row className="justify-content-center">
+        <h2>{group.name}</h2>
+      </Row>
+      <Row className="justify-content-center">
+        <Button
+          ref={reloadButtonRef}
+          className="m-2"
+          variant="accent"
+          type="button"
+          onClick={reload}
+          onBlur={() => {
+            setShowTooltip(false);
+          }}
+        >
+          更新
+        </Button>
+        <Overlay
+          target={reloadButtonRef.current}
+          show={showTooltip}
+          placement="right"
+        >
+          {(props) => (
+            <Tooltip id="update-group-tooltip" {...props}>
+              更新しました！
+            </Tooltip>
+          )}
+        </Overlay>
+      </Row>
+      <Row className="justify-content-center">
+        <GroupCalendar
+          groupDateStatusList={groupDateStatusList}
+          group={group}
+        />
+      </Row>
+      <Row className="justify-content-center">
+        <Link href="/">
+          <a>自分のカレンダー</a>
+        </Link>
+      </Row>
+      <Row className="justify-content-center mt-3">
+        <Link href={`/groups/${group.id}/settings`}>
+          <a>グループの設定</a>
+        </Link>
+      </Row>
     </Layout>
   );
 };
 
 export default GroupCalendarPage;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { groupId } = context.query;
-  if (groupId == null || Array.isArray(groupId)) {
-    return { props: { errors: "Invalid URL" } };
-  } else {
-    try {
-      const initGroup = await loadGroup(groupId);
-      if (initGroup == null || initGroup.members == null) {
-        return { props: { errors: "Invalid URL" } };
-      } else {
-        const userIds = Object.keys(initGroup.members);
-        const initGroupDateStatusList: UserDateStatusList[] = [];
-
-        const usersDateStatusList = await Promise.all(
-          userIds.map(async (userId) => {
-            return {
-              user: await loadUser(userId),
-              dateStatusList: await loadDateStatusList(userId),
-            };
-          })
-        );
-        for (let i = 0; i < userIds.length; i++) {
-          const user = usersDateStatusList[i].user;
-          const userDateStatusList = usersDateStatusList[i].dateStatusList;
-          if (user == null) {
-            console.error("Unexpected Error");
-            return { props: { errors: "Unexpected Error" } };
-          }
-          initGroupDateStatusList.push({
-            user: user,
-            dateStatusList: userDateStatusList,
-          });
-        }
-        return { props: { initGroup, initGroupDateStatusList } };
-      }
-    } catch {
-      console.error("Unexpected Error");
-      return { props: { errors: "Unexpected Error" } };
-    }
-  }
-};
