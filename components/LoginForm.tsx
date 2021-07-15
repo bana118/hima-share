@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { auth } from "../utils/firebase";
-import { AuthContext } from "context/AuthContext";
-import { useContext } from "react";
 import firebase from "firebase/app";
 
 type InputsType = {
@@ -11,17 +9,20 @@ type InputsType = {
 };
 
 type LoginFormProps = {
+  authUser: firebase.User | null;
   onLogined?: () => void;
 };
 
-export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
+export const LoginForm = ({
+  authUser,
+  onLogined,
+}: LoginFormProps): JSX.Element => {
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<InputsType>();
-  const { authUser } = useContext(AuthContext);
 
   const login = async (data: InputsType) => {
     auth
@@ -80,7 +81,7 @@ export const LoginForm = ({ onLogined }: LoginFormProps): JSX.Element => {
       } catch {
         console.error("Unexpected Error");
       }
-    } else if (authUser != null) {
+    } else {
       try {
         await updateCredential(data);
       } catch {

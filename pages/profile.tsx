@@ -176,6 +176,7 @@ const ProfilePage = (): JSX.Element => {
             <Row className="justify-content-center">
               {passwordUserData != null && (
                 <LoginForm
+                  authUser={authUser}
                   onLogined={() => {
                     if (onLoginedAction == "updateEmail") {
                       setReadyUpdateEmail(true);
