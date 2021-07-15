@@ -1,8 +1,7 @@
-import { AuthContext } from "context/AuthContext";
 import { GroupWithId } from "interfaces/Group";
 import { UserWithId, updateGroupChatId, leaveGroup } from "interfaces/User";
 import Link from "next/link";
-import React, { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Col, Form, Overlay, Tooltip } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { ConfirmModal } from "./ConfirmModal";
@@ -24,7 +23,6 @@ export const GroupListItem = ({
   groups,
   setGroups,
 }: GroupListItemProps): JSX.Element => {
-  const { authUser } = useContext(AuthContext);
   const initChatId = user.groups == null ? "" : user.groups[group.id];
   const updateButtonRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -45,33 +43,25 @@ export const GroupListItem = ({
   };
 
   const updateChatId = async (data: InputsType) => {
-    if (authUser == null) {
-      setUnexpectedError();
-    } else {
-      updateGroupChatId(user.id, group.id, data["chatId"])
-        .then(() => {
-          setShowTooltip(true);
-        })
-        .catch(() => {
-          setUnexpectedError();
-        });
-    }
+    updateGroupChatId(user.id, group.id, data["chatId"])
+      .then(() => {
+        setShowTooltip(true);
+      })
+      .catch(() => {
+        setUnexpectedError();
+      });
   };
 
   const onClickLeaveButton = async () => {
-    if (authUser == null) {
-      setShowModal(false);
-    } else {
-      setShowModal(false);
-      leaveGroup(user.id, group)
-        .then(() => {
-          const newGroups = groups.filter((g) => g.id !== group.id);
-          setGroups(newGroups);
-        })
-        .catch(() => {
-          console.error("Unexpected Error");
-        });
-    }
+    setShowModal(false);
+    leaveGroup(user.id, group)
+      .then(() => {
+        const newGroups = groups.filter((g) => g.id !== group.id);
+        setGroups(newGroups);
+      })
+      .catch(() => {
+        console.error("Unexpected Error");
+      });
   };
   return (
     <tr key={group.id}>
