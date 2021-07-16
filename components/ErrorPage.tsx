@@ -1,6 +1,6 @@
 import { Layout } from "./Layout";
 import { NextSeo } from "next-seo";
-import { Row } from "react-bootstrap";
+import Link from "next/link";
 
 type ErrorPageProps = {
   errorMessage?: string;
@@ -12,11 +12,12 @@ export const ErrorPage = ({
   return (
     <Layout>
       <NextSeo title="エラー" />
-      <Row className="justify-content-center mt-3">
-        <p>
-          <span style={{ color: "red" }}>Error:</span> {errorMessage}
-        </p>
-      </Row>
+      <h1>エラー</h1>
+      <p>エラーが発生しました</p>
+      <p>
+        <span style={{ color: "red" }}>Error:</span> {errorMessage}
+      </p>
+      <Link href="/">トップページ</Link>
     </Layout>
   );
 };
