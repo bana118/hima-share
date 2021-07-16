@@ -45,12 +45,7 @@ const JoinGroupPage = (): JSX.Element => {
 
   return (
     <Layout>
-      <NextSeo
-        title={`${invitationAndGroup.data.group.name}に参加`}
-        openGraph={{
-          description: `${invitationAndGroup.data.group.name}に参加して予定を共有`,
-        }}
-      />
+      <NextSeo title={`${invitationAndGroup.data.group.name}に参加`} />
       <JoinGroupForm
         authUser={authUser}
         user={user.data}

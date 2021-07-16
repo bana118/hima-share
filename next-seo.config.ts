@@ -1,7 +1,7 @@
 import { NextSeoProps } from "next-seo";
 
 const url = typeof window !== "undefined" ? document.location.href : "";
-const origin = typeof window !== "undefined" ? document.location.origin : "";
+const origin = process.env.NEXT_PUBLIC_APP_URL;
 const twiiterId = process.env.NEXT_PUBLIC_TWITTER_ID;
 
 export const defaultSeoConfig: NextSeoProps = {
@@ -16,7 +16,7 @@ export const defaultSeoConfig: NextSeoProps = {
     url: url,
     title: "Hima Share",
     description: "あなたの暇な日をシェアしよう",
-    images: [{ url: `${origin}/about1.png` }],
+    images: [{ url: `${origin}/calender_writing_color.png` }],
   },
   twitter: {
     handle: twiiterId,
