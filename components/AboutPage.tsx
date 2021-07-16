@@ -13,12 +13,14 @@ export const AboutPage = (): JSX.Element => {
           <p>あなたの暇な日をシェアしよう</p>
         </Col>
         <Col md={6} className="align-self-center">
-          <Image
-            src="/calender_writing_color.png"
-            alt="Calender writing color"
-            width={396.3}
-            height={250}
-          />
+          <div className="d-flex justify-content-center">
+            <Image
+              src="/calender_writing_color.png"
+              alt="Calender writing color"
+              width={396.3}
+              height={250}
+            />
+          </div>
         </Col>
       </Row>
 
@@ -27,31 +29,37 @@ export const AboutPage = (): JSX.Element => {
       </Row>
 
       <Row className="justify-content-center mt-5">
-        <Col md={4} className="align-self-center">
-          <Image
-            src="/about1.png"
-            alt="Hima share about1"
-            width={300}
-            height={300}
-          />
+        <Col md={4}>
+          <div className="d-flex justify-content-center">
+            <Image
+              src="/about1.png"
+              alt="Hima share about1"
+              width={300}
+              height={300}
+            />
+          </div>
           <h4 className="text-center">暇な日をカレンダーに入力</h4>
         </Col>
-        <Col md={4} className="align-self-center">
-          <Image
-            src="/about2.png"
-            alt="Hima share about2"
-            width={300}
-            height={300}
-          />
+        <Col md={4}>
+          <div className="d-flex justify-content-center">
+            <Image
+              src="/about2.png"
+              alt="Hima share about2"
+              width={300}
+              height={300}
+            />
+          </div>
           <h4 className="text-center">グループ内で暇な日を共有</h4>
         </Col>
-        <Col md={4} className="align-self-center">
-          <Image
-            src="/about3.png"
-            alt="Hima share about3"
-            width={300}
-            height={300}
-          />
+        <Col md={4}>
+          <div className="d-flex justify-content-center">
+            <Image
+              src="/about3.png"
+              alt="Hima share about3"
+              width={300}
+              height={300}
+            />
+          </div>
           <h4 className="text-center">暇な人を誘うメッセージを生成</h4>
         </Col>
       </Row>
