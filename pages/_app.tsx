@@ -39,7 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="theme-color" content="#ff0033" />
+        <meta name="theme-color" content="#ffffff" />
         <meta name="msapplication-navbutton-color" content="#ff0033" />
         <meta name="apple-mobile-web-app-status-bar-style" content="#ff0033" />
         <meta name="application-name" content="Hima Share" />
